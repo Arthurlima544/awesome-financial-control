@@ -68,7 +68,7 @@ jobs:
         run: ./mvnw clean package -DskipTests -q
 
       - name: SonarQube analysis
-        if: ${{ secrets.SONAR_TOKEN != '' }}
+        if: env.SONAR_TOKEN != ''
         run: ./mvnw sonar:sonar -q
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
