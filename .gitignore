@@ -1,0 +1,59 @@
+# =============================
+# Geral
+# =============================
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# =============================
+# IDEs
+# =============================
+*.iml
+*.ipr
+*.iws
+.idea/
+#.vscode/
+
+# =============================
+# Backend (Java/Maven)
+# =============================
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# =============================
+# Mobile (Flutter/Dart)
+# =============================
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+mobile/build/
+mobile/coverage/
+
+# Android
+mobile/android/app/debug/
+mobile/android/app/profile/
+mobile/android/app/release/
+mobile/android/.gradle/
+mobile/android/local.properties
+
+# Symbolication / Obfuscation
+app.*.symbols
+app.*.map.json
+
+# =============================
+# Projeto
+# =============================
+CLAUDE.md
+ROADMAP.md
