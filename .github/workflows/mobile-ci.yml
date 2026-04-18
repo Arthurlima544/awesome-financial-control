@@ -7,17 +7,6 @@ on:
   pull_request:
     branches: [main]
     paths: ["mobile/**"]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version tag to deploy (e.g. v1.0.0)"
-        required: true
-        type: string
-      environment:
-        description: "Target environment"
-        required: true
-        type: choice
-        options: [staging, production]
 
 jobs:
   quality:
@@ -29,8 +18,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.version || github.sha }}
 
       - uses: subosito/flutter-action@v2
         with:
@@ -53,7 +40,7 @@ jobs:
     name: Deploy to Play Store (Internal Testing)
     runs-on: ubuntu-latest
     needs: quality
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'push'
     environment: staging
 
     steps:
@@ -101,61 +88,4 @@ jobs:
           packageName: com.awesome.financial.control.afc
           releaseFiles: mobile/build/app/outputs/bundle/release/app-release.aab
           track: internal
-          status: completed
-
-  deploy-android:
-    name: Build & Deploy Android (${{ github.event.inputs.environment }})
-    runs-on: ubuntu-latest
-    needs: quality
-    if: github.event_name == 'workflow_dispatch'
-    environment: ${{ github.event.inputs.environment }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.version }}
-
-      - uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: temurin
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-
-      - name: Decode keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode \
-            > mobile/android/app/keystore.jks
-
-      - name: Create key.properties
-        run: |
-          cat > mobile/android/key.properties <<EOF
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          storeFile=keystore.jks
-          EOF
-
-      - name: Get dependencies
-        working-directory: mobile
-        run: flutter pub get
-
-      - name: Build release AAB
-        working-directory: mobile
-        run: |
-          flutter build appbundle --release \
-            --dart-define=FLAVOR=${{ github.event.inputs.environment == 'production' && 'prod' || 'staging' }} \
-            --dart-define=API_BASE_URL=${{ github.event.inputs.environment == 'production' && secrets.PROD_API_URL || secrets.STAGING_API_URL }}
-
-      - name: Upload to Play Store
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_JSON_KEY }}
-          packageName: com.awesome.financial.control.afc
-          releaseFiles: mobile/build/app/outputs/bundle/release/app-release.aab
-          track: ${{ github.event.inputs.environment == 'production' && 'production' || 'internal' }}
-          releaseName: ${{ github.event.inputs.version }}
           status: completed
