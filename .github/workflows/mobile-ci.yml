@@ -1,0 +1,61 @@
+name: Mobile CI
+
+on:
+  push:
+    branches: [main, sprint-*]
+    paths: ["mobile/**"]
+  pull_request:
+    branches: [main]
+    paths: ["mobile/**"]
+
+jobs:
+  quality:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Format check
+        run: dart format --set-exit-if-changed .
+
+      - name: Test
+        run: flutter test
+
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+    needs: quality
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Build web (staging)
+        run: |
+          flutter build web \
+            --dart-define=FLAVOR=staging \
+            --dart-define=API_BASE_URL=${{ secrets.STAGING_API_URL }}
