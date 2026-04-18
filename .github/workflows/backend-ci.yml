@@ -89,6 +89,6 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy to ${{ github.event.inputs.environment }}
-        run: railway up --environment ${{ github.event.inputs.environment }} --service api --detach
+        run: railway up --environment ${{ github.event.inputs.environment }} --service awesome-financial-control --detach
         env:
           RAILWAY_TOKEN: ${{ github.event.inputs.environment == 'production' && secrets.RAILWAY_TOKEN_PROD || secrets.RAILWAY_TOKEN_STAGING }}
