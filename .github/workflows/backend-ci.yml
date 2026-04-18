@@ -9,10 +9,13 @@ on:
     paths: ["backend/**"]
   workflow_dispatch:
     inputs:
-      deploy_env:
-        description: "Deploy to environment"
+      version:
+        description: "Version tag to deploy (e.g. v1.0.0)"
         required: true
-        default: staging
+        type: string
+      environment:
+        description: "Target environment"
+        required: true
         type: choice
         options: [staging, production]
 
@@ -41,6 +44,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version || github.sha }}
 
       - uses: actions/setup-java@v4
         with:
@@ -68,38 +73,22 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  deploy-staging:
-    name: Deploy to Railway (Staging)
+  deploy:
+    name: Deploy to Railway (${{ github.event.inputs.environment }})
     runs-on: ubuntu-latest
     needs: quality
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment: staging
+    if: github.event_name == 'workflow_dispatch'
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version }}
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Deploy to staging
-        run: railway up --environment staging --service api --detach
+      - name: Deploy to ${{ github.event.inputs.environment }}
+        run: railway up --environment ${{ github.event.inputs.environment }} --service api --detach
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-
-  deploy-production:
-    name: Deploy to Railway (Production)
-    runs-on: ubuntu-latest
-    needs: quality
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_env == 'production'
-    environment: production
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy to production
-        run: railway up --environment production --service api --detach
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PROD }}
+          RAILWAY_TOKEN: ${{ github.event.inputs.environment == 'production' && secrets.RAILWAY_TOKEN_PROD || secrets.RAILWAY_TOKEN_STAGING }}
