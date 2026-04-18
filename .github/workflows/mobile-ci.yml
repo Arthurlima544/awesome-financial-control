@@ -80,6 +80,13 @@ jobs:
             --dart-define=FLAVOR=staging \
             --dart-define=API_BASE_URL=${{ secrets.STAGING_API_URL }}
 
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: mobile/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 7
+
       - name: Upload to Play Store internal track
         uses: r0adkll/upload-google-play@v1
         with:
