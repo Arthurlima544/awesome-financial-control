@@ -155,7 +155,9 @@ class _HorizontalDatePickerView extends StatelessWidget {
                                     dayName,
                                     style: TextStyle(
                                       color: isSelected
-                                          ? selectedTextColor.withValues(alpha: 0.9)
+                                          ? selectedTextColor.withValues(
+                                              alpha: 0.9,
+                                            )
                                           : unselectedDayColor,
                                       fontSize: dayFontSize,
                                       fontWeight: FontWeight.w600,

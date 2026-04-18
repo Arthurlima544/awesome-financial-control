@@ -92,10 +92,7 @@ void main() {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: const [
                   PaginationDots(totalPages: 2, initialPage: 1),
-                  PaginationDots(
-                    totalPages: 5,
-                    initialPage: 1,
-                  ),
+                  PaginationDots(totalPages: 5, initialPage: 1),
                 ],
               ),
             ),

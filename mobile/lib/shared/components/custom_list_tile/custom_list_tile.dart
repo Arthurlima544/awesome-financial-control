@@ -239,7 +239,10 @@ class CustomListTileView extends StatelessWidget {
           CircleAvatar(
             radius: 20.0,
             backgroundColor: primaryColor.withValues(alpha: 0.15),
-            child: Icon(Icons.person, color: primaryColor.withValues(alpha: 0.5)),
+            child: Icon(
+              Icons.person,
+              color: primaryColor.withValues(alpha: 0.5),
+            ),
           );
     }
     return const SizedBox.shrink();

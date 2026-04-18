@@ -116,7 +116,9 @@ class AdaptiveSegmentedControl extends StatelessWidget {
                                   ? null
                                   : [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.08),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.08,
+                                        ),
                                         blurRadius: 4.0,
                                         offset: const Offset(0, 2),
                                       ),

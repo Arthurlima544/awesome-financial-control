@@ -47,7 +47,7 @@ class AdaptiveNavBarCubit extends Cubit<AdaptiveNavBarState> {
   void setError(String? message) {
     emit(state.copyWith(errorMessage: message));
   }
-  
+
   /// Resets the state to initial values.
   void reset() {
     emit(const AdaptiveNavBarState());

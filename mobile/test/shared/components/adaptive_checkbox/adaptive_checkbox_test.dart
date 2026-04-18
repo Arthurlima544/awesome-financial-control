@@ -53,7 +53,10 @@ void main() {
       expect(semanticsNode.label, 'Terms and Conditions');
       expect(semanticsNode.flagsCollection.isEnabled, Tristate.isTrue);
       expect(semanticsNode.flagsCollection.isChecked, CheckedState.isFalse);
-      expect(semanticsNode.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      expect(
+        semanticsNode.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
+      );
     });
 
     testWidgets('taps trigger onChanged callback and update UI', (

@@ -54,7 +54,10 @@ void main() {
       expect(semanticsNode.flagsCollection.isEnabled, Tristate.isTrue);
       expect(semanticsNode.flagsCollection.isInMutuallyExclusiveGroup, isTrue);
       expect(semanticsNode.flagsCollection.isChecked, CheckedState.isFalse);
-      expect(semanticsNode.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      expect(
+        semanticsNode.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
+      );
     });
 
     testWidgets('taps trigger onSelected callback and update UI state', (

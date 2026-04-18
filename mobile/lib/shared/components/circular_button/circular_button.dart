@@ -72,7 +72,9 @@ class CircularButton extends StatelessWidget {
               : Colors.transparent;
           foregroundColor = Theme.of(context).disabledColor;
           if (variant == CircularButtonVariant.outlined) {
-            borderColor = Theme.of(context).disabledColor.withValues(alpha: 0.2);
+            borderColor = Theme.of(
+              context,
+            ).disabledColor.withValues(alpha: 0.2);
           }
         } else {
           switch (variant) {

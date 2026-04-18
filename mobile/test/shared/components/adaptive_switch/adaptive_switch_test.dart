@@ -52,7 +52,10 @@ void main() {
       expect(semanticsNode.label, 'Enable Notifications');
       expect(semanticsNode.flagsCollection.isEnabled, Tristate.isTrue);
       expect(semanticsNode.flagsCollection.isToggled, Tristate.isFalse);
-      expect(semanticsNode.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      expect(
+        semanticsNode.getSemanticsData().hasAction(SemanticsAction.tap),
+        isTrue,
+      );
     });
 
     testWidgets('taps trigger onChanged callback and update UI', (
