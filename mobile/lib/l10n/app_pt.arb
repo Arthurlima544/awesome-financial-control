@@ -1,0 +1,42 @@
+{
+  "@@locale": "pt",
+
+  "appTitle": "AFC — Controle Financeiro",
+  "@appTitle": { "description": "App title shown in the header" },
+
+  "genericError": "Ocorreu um erro inesperado",
+  "@genericError": { "description": "Generic fallback error message" },
+
+  "retry": "Tentar novamente",
+  "@retry": { "description": "Retry button label" },
+
+  "cancel": "Cancelar",
+  "@cancel": { "description": "Cancel button label" },
+
+  "confirm": "Confirmar",
+  "@confirm": { "description": "Confirm button label" },
+
+  "save": "Salvar",
+  "@save": { "description": "Save button label" },
+
+  "delete": "Excluir",
+  "@delete": { "description": "Delete button label" },
+
+  "edit": "Editar",
+  "@edit": { "description": "Edit button label" },
+
+  "loading": "Carregando...",
+  "@loading": { "description": "Generic loading indicator label" },
+
+  "emptyState": "Nenhum item encontrado",
+  "@emptyState": { "description": "Empty list placeholder" },
+
+  "income": "Receita",
+  "@income": { "description": "Income label" },
+
+  "expense": "Despesa",
+  "@expense": { "description": "Expense label" },
+
+  "balance": "Saldo",
+  "@balance": { "description": "Balance label" }
+}

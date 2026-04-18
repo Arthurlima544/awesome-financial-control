@@ -47,10 +47,19 @@ mobile/android/app/profile/
 mobile/android/app/release/
 mobile/android/.gradle/
 mobile/android/local.properties
+mobile/android/key.properties
+mobile/android/app/keystore.jks
 
 # Symbolication / Obfuscation
 app.*.symbols
 app.*.map.json
+
+# =============================
+# Environment / Secrets
+# =============================
+.env
+.env.*
+!.env.example
 
 # =============================
 # Projeto

@@ -1,5 +1,5 @@
 name: afc
-description: "A new Flutter project."
+description: "Awesome Financial Control — personal finance app"
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -7,17 +7,21 @@ environment:
   sdk: ^3.11.5
 
 dependencies:
-  bloc_test: ^10.0.0
   equatable: ^2.0.8
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   provider: ^6.1.5+1
 
 dev_dependencies:
+  bloc_test: ^10.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
 
 flutter:
+  generate: true
   uses-material-design: true

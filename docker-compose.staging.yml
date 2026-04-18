@@ -1,0 +1,9 @@
+services:
+  postgres:
+    restart: always
+    ports: []
+
+  api:
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: staging
