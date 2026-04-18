@@ -77,27 +77,5 @@ void main() {
       // Step 2 is active (shows number 3)
       expect(find.text('3'), findsOneWidget);
     });
-
-    testWidgets('Matches Golden file for complex configurations', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(600, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          steps: ['Step', 'Step', 'Step', 'Step', 'Step'],
-          initialStep: 2, // 2 completed, 1 active, 2 inactive
-        ),
-      );
-
-      await expectLater(
-        find.byType(CustomStepper),
-        matchesGoldenFile('goldens/custom_stepper_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

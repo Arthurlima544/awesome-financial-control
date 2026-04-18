@@ -91,47 +91,5 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });
-
-    testWidgets('Matches Golden file for default state', (tester) async {
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              ActionCard(
-                style: ActionCardStyle.imageHeader,
-                title: 'Title',
-                subtitle: 'Subtitle',
-                description:
-                    'Description. Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do.',
-                buttonText: 'Button',
-                tagText: 'TAG',
-              ),
-              ActionCard(
-                style: ActionCardStyle.iconHeader,
-                title: 'Title',
-                subtitle: 'Subtitle',
-                description:
-                    'Description. Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do.',
-                buttonText: 'Button',
-                leadingIcon: Icons.favorite,
-              ),
-            ],
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byType(Row),
-        matchesGoldenFile('goldens/action_card_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

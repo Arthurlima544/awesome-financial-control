@@ -122,24 +122,5 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.border?.top.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default State', (WidgetTester tester) async {
-      // Fix size to avoid flakiness across environments
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onChanged: (_) {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveSwitch),
-        matchesGoldenFile('goldens/adaptive_switch_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

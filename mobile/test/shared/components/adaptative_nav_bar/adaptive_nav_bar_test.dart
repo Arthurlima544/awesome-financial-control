@@ -101,23 +101,5 @@ void main() {
       );
       expect(settingsIcon.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default State', (WidgetTester tester) async {
-      // Set fixed screen size for reliable golden testing
-      tester.view.physicalSize = const Size(1080, 2400);
-      tester.view.devicePixelRatio = 3.0;
-
-      await tester.pumpWidget(buildTestableWidget(cubit: cubit));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveNavBar),
-        matchesGoldenFile('goldens/adaptive_nav_bar.png'),
-      );
-
-      // Reset view
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

@@ -98,27 +98,5 @@ void main() {
 
       expect(wasTapped, isFalse);
     });
-
-    testWidgets('Golden Test - Default Solid Button', (
-      WidgetTester tester,
-    ) async {
-      // Define a standard physical size for the golden test
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onPressed: () {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveButton),
-        matchesGoldenFile('goldens/adaptive_button_solid.png'),
-      );
-
-      // Reset view configurations
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

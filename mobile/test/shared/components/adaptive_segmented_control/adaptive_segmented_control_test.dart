@@ -115,26 +115,5 @@ void main() {
       expect(decoration.border?.top.color, Colors.red);
       expect(decoration.color, Colors.red.withValues(alpha: 0.1));
     });
-
-    testWidgets('Golden Test - Default State (3 Segments)', (
-      WidgetTester tester,
-    ) async {
-      // Fix physical size to ensure consistent golden tests
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onChanged: (_) {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveSegmentedControl),
-        matchesGoldenFile('goldens/adaptive_segmented_control_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

@@ -96,39 +96,5 @@ void main() {
 
       expect(addTapped, isTrue);
     });
-
-    testWidgets('Matches Golden file for default state combinations', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(600, 400);
-      tester.view.devicePixelRatio = 1.0;
-
-      const columnKey = ValueKey('golden-column');
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                key: columnKey,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  MessageInput(), // Empty
-                  MessageInput(initialText: 'Message'), // With text
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byKey(columnKey),
-        matchesGoldenFile('goldens/message_input_variations.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

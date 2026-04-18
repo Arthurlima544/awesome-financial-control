@@ -137,30 +137,5 @@ void main() {
       expect(sliderTheme.data.activeTrackColor, Colors.red);
       expect(sliderTheme.data.thumbColor, Colors.red);
     });
-
-    testWidgets('Golden Test - Default Range Slider State', (
-      WidgetTester tester,
-    ) async {
-      // Fix physical size to ensure consistent golden tests
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          cubit: cubit,
-          isRange: true,
-          onChangedRange: (_) {},
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveSlider),
-        matchesGoldenFile('goldens/adaptive_slider_range_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

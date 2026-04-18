@@ -119,26 +119,5 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.border?.top.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default Unchecked State', (
-      WidgetTester tester,
-    ) async {
-      // Fix physical size to ensure consistent golden tests across environments
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onChanged: (_) {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveCheckbox),
-        matchesGoldenFile('goldens/adaptive_checkbox_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

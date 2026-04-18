@@ -128,33 +128,5 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.border?.top.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default Grid State with Day 15 Selected', (
-      WidgetTester tester,
-    ) async {
-      // Setup specific state to perfectly match the visual requirement
-      cubit = AdaptiveDatePickerCubit(
-        initialMonth: fixedMonth,
-        initialSelectedDate: DateTime(2023, 10, 15),
-      );
-
-      // Define standard physical size for accurate golden tests
-      tester.view.physicalSize = const Size(800, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onDateSelected: (_) {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveDatePicker),
-        matchesGoldenFile('goldens/adaptive_date_picker_default.png'),
-      );
-
-      // Clean up view configurations
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

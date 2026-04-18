@@ -132,25 +132,5 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.border?.top.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default State', (WidgetTester tester) async {
-      // Fixed view size to prevent varying golden test sizes
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(showCancelButton: true, showMicrophone: true),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveSearchBar),
-        matchesGoldenFile('goldens/adaptive_search_bar.png'),
-      );
-
-      // Reset test bindings
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

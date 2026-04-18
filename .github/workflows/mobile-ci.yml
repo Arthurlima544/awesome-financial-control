@@ -47,7 +47,7 @@ jobs:
         run: dart format --set-exit-if-changed .
 
       - name: Test
-        run: flutter test --name "^(?!.*Golden Test).*$"
+        run: flutter test
 
   deploy-internal:
     name: Deploy to Play Store (Internal Testing)

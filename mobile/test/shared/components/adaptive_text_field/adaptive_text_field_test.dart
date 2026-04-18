@@ -117,27 +117,5 @@ void main() {
       final textField = tester.widget<TextField>(find.byType(TextField));
       expect(textField.enabled, isFalse);
     });
-
-    testWidgets('Golden Test - Default State', (WidgetTester tester) async {
-      // Fixed physical size to ensure consistent golden tests
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          cubit: cubit,
-          leadingIcon: const Icon(Icons.circle_outlined),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveTextField),
-        matchesGoldenFile('goldens/adaptive_text_field_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

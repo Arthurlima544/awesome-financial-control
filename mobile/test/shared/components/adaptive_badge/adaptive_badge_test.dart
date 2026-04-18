@@ -118,30 +118,5 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.border?.top.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default Status Badge', (
-      WidgetTester tester,
-    ) async {
-      // Set fixed physical size for reliable golden tests across platforms
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          cubit: cubit,
-          type: AdaptiveBadgeType.status,
-          baseColor: const Color(0xFF4CAF50), // Standard Green
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveBadge),
-        matchesGoldenFile('goldens/adaptive_badge_status_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

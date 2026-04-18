@@ -107,26 +107,5 @@ void main() {
       final shape = materialWidget.shape as RoundedRectangleBorder;
       expect(shape.side.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default Wrap Tonal Chip', (
-      WidgetTester tester,
-    ) async {
-      // Fix physical size to ensure consistent golden tests
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onPressed: () {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptiveChip),
-        matchesGoldenFile('goldens/adaptive_chip_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

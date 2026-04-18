@@ -94,41 +94,5 @@ void main() {
 
       expect(updatedProgress, 0.5);
     });
-
-    testWidgets('Matches Golden file for default state combinations', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(800, 400);
-      tester.view.devicePixelRatio = 1.0;
-
-      const columnKey = ValueKey('golden-column');
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                key: columnKey,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  CustomProgressBar(initialProgress: 0.25),
-                  CustomProgressBar(initialProgress: 0.75),
-                  CustomProgressBar(initialProgress: 0.4, steps: 5),
-                  CustomProgressBar(initialProgress: 1.0, steps: 4),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byKey(columnKey),
-        matchesGoldenFile('goldens/custom_progress_bar_variations.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

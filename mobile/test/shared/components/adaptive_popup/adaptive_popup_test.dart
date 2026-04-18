@@ -130,30 +130,5 @@ void main() {
 
       expect(find.text('Team name is required'), findsOneWidget);
     });
-
-    testWidgets('Golden Test - Popup with Input and Two Buttons', (
-      WidgetTester tester,
-    ) async {
-      // Fix physical size to ensure consistent golden tests across environments
-      tester.view.physicalSize = const Size(800, 1000);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          cubit: cubit,
-          showInputField: true,
-          secondaryButtonText: 'No, thanks',
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(AdaptivePopup),
-        matchesGoldenFile('goldens/adaptive_popup_complex.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

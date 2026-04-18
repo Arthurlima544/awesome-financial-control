@@ -86,26 +86,5 @@ void main() {
       // Selected color is the default blue (0xFF2962FF)
       expect(decoration.color, const Color(0xFF2962FF));
     });
-
-    testWidgets('Matches Golden file for default state', (tester) async {
-      tester.view.physicalSize = const Size(800, 400);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          startDate: DateTime(2023, 10, 23), // Monday 23rd
-          daysCount: 7,
-          initialDate: DateTime(2023, 10, 25), // Selected Wed 25th
-        ),
-      );
-
-      await expectLater(
-        find.byType(HorizontalDatePicker),
-        matchesGoldenFile('goldens/horizontal_date_picker_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

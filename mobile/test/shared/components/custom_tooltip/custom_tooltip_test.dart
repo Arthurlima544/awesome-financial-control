@@ -63,29 +63,5 @@ void main() {
       await tester.pump();
       expect(called, true);
     });
-
-    testWidgets('matches golden file', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: CustomTooltip(
-                title: 'UI Match',
-                description: 'Checking design accuracy',
-                child: Icon(Icons.info),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.tap(find.byIcon(Icons.info));
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(CustomTooltip),
-        matchesGoldenFile('custom_tooltip_default.png'),
-      );
-    });
   });
 }

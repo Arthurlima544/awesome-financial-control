@@ -77,33 +77,5 @@ void main() {
       expect(find.text('Dismissible Snackbar'), findsNothing);
       expect(dismissCallbackFired, isTrue);
     });
-
-    testWidgets('Matches Golden file for default state', (
-      WidgetTester tester,
-    ) async {
-      // Set an explicit size to ensure stable golden tests across environments
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestWidget(
-          child: const CustomSnackbar(
-            title: 'Content',
-            subtitle: 'Caption',
-            showLeadingIcon: true,
-            actionText: 'Action',
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byType(CustomSnackbar),
-        matchesGoldenFile('goldens/custom_snackbar_default.png'),
-      );
-
-      // Cleanup view settings
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

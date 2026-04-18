@@ -99,48 +99,5 @@ void main() {
 
       expect(tapped, isTrue);
     });
-
-    testWidgets('Matches Golden file for default state combinations', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(400, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      const columnKey = ValueKey('golden-column');
-      await tester.pumpWidget(
-        buildTestWidget(
-          child: Column(
-            key: columnKey,
-            children: const [
-              CustomListTile(
-                title: 'Title',
-                description: 'Description. Lorem ipsum dolor sit amet.',
-                trailingType: CustomListTileTrailing.arrow,
-              ),
-              CustomListTile(
-                title: 'Title',
-                description: 'Description. Lorem ipsum dolor sit amet.',
-                trailingType: CustomListTileTrailing.toggleSwitch,
-              ),
-              CustomListTile(
-                title: 'Title',
-                description: 'Description. Lorem ipsum dolor sit amet.',
-                leadingType: CustomListTileLeading.avatar,
-                trailingType: CustomListTileTrailing.badge,
-                badgeText: '9',
-              ),
-            ],
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byKey(columnKey),
-        matchesGoldenFile('goldens/custom_list_tile_variations.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

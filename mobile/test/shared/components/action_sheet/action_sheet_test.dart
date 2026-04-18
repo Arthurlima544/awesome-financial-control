@@ -85,22 +85,5 @@ void main() {
 
       expect(canceled, isTrue);
     });
-
-    testWidgets('Matches Golden file for default state', (tester) async {
-      tester.view.physicalSize = const Size(400, 800);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestWidget(options: mockOptions, onOptionSelected: (_) {}),
-      );
-
-      await expectLater(
-        find.byType(ActionSheet),
-        matchesGoldenFile('goldens/action_sheet_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

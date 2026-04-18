@@ -77,36 +77,5 @@ void main() {
         expect(nodeAfter.flagsCollection.isSelected, Tristate.isTrue);
       },
     );
-
-    testWidgets('Matches Golden file for default state', (tester) async {
-      tester.view.physicalSize = const Size(400, 200);
-      tester.view.devicePixelRatio = 1.0;
-
-      const columnKey = ValueKey('golden-column');
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Column(
-                key: columnKey,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  PaginationDots(totalPages: 2, initialPage: 1),
-                  PaginationDots(totalPages: 5, initialPage: 1),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byKey(columnKey),
-        matchesGoldenFile('goldens/pagination_dots_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

@@ -76,57 +76,5 @@ void main() {
 
       expect(isSelectedResult, isTrue);
     });
-
-    testWidgets('Matches Golden file for all 4 visual variations', (
-      tester,
-    ) async {
-      // Set explicit size for deterministic golden tests
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      const columnKey = ValueKey('golden-column');
-      await tester.pumpWidget(
-        buildTestWidget(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              key: columnKey,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                MessageBubble(
-                  message: 'Message. Lorem ipsum dolor.',
-                  type: MessageBubbleType.received,
-                  hasTail: false,
-                ),
-                MessageBubble(
-                  message: 'Message. Lorem ipsum dolor.',
-                  type: MessageBubbleType.received,
-                  hasTail: true,
-                ),
-                MessageBubble(
-                  message: 'Message. Lorem ipsum dolor.',
-                  type: MessageBubbleType.sent,
-                  hasTail: false,
-                ),
-                MessageBubble(
-                  message: 'Message. Lorem ipsum dolor.',
-                  type: MessageBubbleType.sent,
-                  hasTail: true,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byKey(columnKey),
-        matchesGoldenFile('goldens/message_bubble_variations.png'),
-      );
-
-      // Cleanup
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }

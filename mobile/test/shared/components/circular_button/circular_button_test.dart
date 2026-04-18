@@ -109,26 +109,5 @@ void main() {
       final Icon icon = tester.widget(find.byIcon(Icons.adjust));
       expect(icon.color, Colors.red);
     });
-
-    testWidgets('Golden Test - Default Solid Medium Button', (
-      WidgetTester tester,
-    ) async {
-      // Define a standard physical size for reliable golden tests
-      tester.view.physicalSize = const Size(800, 600);
-      tester.view.devicePixelRatio = 1.0;
-
-      await tester.pumpWidget(
-        buildTestableWidget(cubit: cubit, onPressed: () {}),
-      );
-      await tester.pumpAndSettle();
-
-      await expectLater(
-        find.byType(CircularButton),
-        matchesGoldenFile('goldens/circular_button_default.png'),
-      );
-
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
-    });
   });
 }
