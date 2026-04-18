@@ -7,6 +7,14 @@ on:
   pull_request:
     branches: [main]
     paths: ["backend/**"]
+  workflow_dispatch:
+    inputs:
+      deploy_env:
+        description: "Deploy to environment"
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
 
 jobs:
   quality:
@@ -59,3 +67,39 @@ jobs:
         run: ./mvnw sonar:sonar -q
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deploy-staging:
+    name: Deploy to Railway (Staging)
+    runs-on: ubuntu-latest
+    needs: quality
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to staging
+        run: railway up --environment staging --service api --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
+
+  deploy-production:
+    name: Deploy to Railway (Production)
+    runs-on: ubuntu-latest
+    needs: quality
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_env == 'production'
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to production
+        run: railway up --environment production --service api --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PROD }}

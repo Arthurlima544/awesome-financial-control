@@ -1,0 +1,5 @@
+# Copy this file to key.properties — never commit key.properties or keystore.jks
+storePassword=<your-keystore-password>
+keyPassword=<your-key-password>
+keyAlias=<your-key-alias>
+storeFile=app/keystore.jks
