@@ -79,4 +79,23 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get homeErrorLoading => 'Erro ao carregar dados';
+
+  @override
+  String get limitTitle => 'Limites do mês';
+
+  @override
+  String get limitNoLimits => 'Nenhum limite cadastrado';
+
+  @override
+  String get limitErrorLoading => 'Erro ao carregar limites';
+
+  @override
+  String limitSpent(String amount) {
+    return 'Gasto: $amount';
+  }
+
+  @override
+  String limitOf(String amount) {
+    return 'Limite: $amount';
+  }
 }

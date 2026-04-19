@@ -71,5 +71,30 @@
   "@homeNoTransactions": { "description": "Empty state for transactions list on home screen" },
 
   "homeErrorLoading": "Erro ao carregar dados",
-  "@homeErrorLoading": { "description": "Error message when home data fails to load" }
+  "@homeErrorLoading": { "description": "Error message when home data fails to load" },
+
+  "limitTitle": "Limites do mês",
+  "@limitTitle": { "description": "Spending limits screen title" },
+
+  "limitNoLimits": "Nenhum limite cadastrado",
+  "@limitNoLimits": { "description": "Empty state for limits list" },
+
+  "limitErrorLoading": "Erro ao carregar limites",
+  "@limitErrorLoading": { "description": "Error message when limits data fails to load" },
+
+  "limitSpent": "Gasto: {amount}",
+  "@limitSpent": {
+    "description": "Amount spent label on limit card",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+
+  "limitOf": "Limite: {amount}",
+  "@limitOf": {
+    "description": "Limit amount label on limit card",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  }
 }
