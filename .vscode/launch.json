@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "AFC — local",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "${workspaceFolder}/mobile",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=local",
+        "--dart-define=API_BASE_URL=http://localhost:8080"
+      ]
+    },
+    {
+      "name": "AFC — staging",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "${workspaceFolder}/mobile",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=FLAVOR=staging",
+        "--dart-define=API_BASE_URL=https://api-staging.afc.app"
+      ]
+    }
+  ]
+}
