@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+
 enum AppFlavor { local, staging, prod }
 
 class AppConfig {
@@ -6,10 +10,13 @@ class AppConfig {
     defaultValue: 'local',
   );
 
-  static const String apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://localhost:8080',
-  );
+  static const String _apiBaseUrlEnv = String.fromEnvironment('API_BASE_URL');
+
+  static String get apiBaseUrl {
+    if (_apiBaseUrlEnv.isNotEmpty) return _apiBaseUrlEnv;
+    if (!kIsWeb && Platform.isAndroid) return 'http://10.0.2.2:8080';
+    return 'http://localhost:8080';
+  }
 
   static AppFlavor get flavor => switch (_flavor) {
     'staging' => AppFlavor.staging,

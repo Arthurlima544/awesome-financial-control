@@ -41,6 +41,7 @@ class _AfcAppState extends State<AfcApp> {
       value: _authBloc,
       child: MaterialApp.router(
         title: 'AFC',
+        debugShowCheckedModeBanner: false,
         routerConfig: _router,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
