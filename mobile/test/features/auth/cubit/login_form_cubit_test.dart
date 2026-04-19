@@ -46,5 +46,12 @@ void main() {
         const LoginFormState(email: 'new@test.com', password: 'pass'),
       ],
     );
+
+    blocTest<LoginFormCubit, LoginFormState>(
+      'toggles isPasswordVisible when togglePasswordVisibility is called',
+      build: LoginFormCubit.new,
+      act: (cubit) => cubit.togglePasswordVisibility(),
+      expect: () => [const LoginFormState(isPasswordVisible: true)],
+    );
   });
 }

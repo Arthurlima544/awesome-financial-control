@@ -11,6 +11,7 @@ class AdaptiveTextField extends StatelessWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final Widget? prefixWidget; // e.g., for the country flag/code
+  final bool obscureText;
   final Color? focusedBorderColor;
   final Color? errorBorderColor;
   final TextStyle? customTextStyle;
@@ -26,6 +27,7 @@ class AdaptiveTextField extends StatelessWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.prefixWidget,
+    this.obscureText = false,
     this.focusedBorderColor,
     this.errorBorderColor,
     this.customTextStyle,
@@ -109,6 +111,7 @@ class AdaptiveTextField extends StatelessWidget {
                               controller: controller,
                               focusNode: focusNode,
                               enabled: !state.isDisabled,
+                              obscureText: obscureText,
                               onChanged: (val) {
                                 context
                                     .read<AdaptiveTextFieldCubit>()
