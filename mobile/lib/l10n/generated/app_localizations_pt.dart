@@ -46,4 +46,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get balance => 'Saldo';
+
+  @override
+  String get loginEmailLabel => 'E-mail';
+
+  @override
+  String get loginPasswordLabel => 'Senha';
+
+  @override
+  String get loginButton => 'Entrar';
+
+  @override
+  String get homeTitle => 'Início';
 }

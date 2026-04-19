@@ -171,6 +171,30 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Saldo'**
   String get balance;
+
+  /// Email field label on login screen
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get loginEmailLabel;
+
+  /// Password field label on login screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha'**
+  String get loginPasswordLabel;
+
+  /// Sign-in button label on login screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar'**
+  String get loginButton;
+
+  /// Home screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get homeTitle;
 }
 
 class _AppLocalizationsDelegate

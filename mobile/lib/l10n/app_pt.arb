@@ -38,5 +38,17 @@
   "@expense": { "description": "Expense label" },
 
   "balance": "Saldo",
-  "@balance": { "description": "Balance label" }
+  "@balance": { "description": "Balance label" },
+
+  "loginEmailLabel": "E-mail",
+  "@loginEmailLabel": { "description": "Email field label on login screen" },
+
+  "loginPasswordLabel": "Senha",
+  "@loginPasswordLabel": { "description": "Password field label on login screen" },
+
+  "loginButton": "Entrar",
+  "@loginButton": { "description": "Sign-in button label on login screen" },
+
+  "homeTitle": "Início",
+  "@homeTitle": { "description": "Home screen title" }
 }
