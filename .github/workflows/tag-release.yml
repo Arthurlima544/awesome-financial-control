@@ -16,7 +16,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Bump patch version and push tag
+      - name: Bump patch version and push annotated tag
         run: |
           latest=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
           if [ -z "$latest" ]; then
@@ -25,8 +25,8 @@ jobs:
             IFS='.' read -ra parts <<< "${latest#v}"
             new_tag="v${parts[0]}.${parts[1]}.$((parts[2] + 1))"
           fi
-          echo "Creating tag $new_tag"
+          echo "Creating annotated tag $new_tag at ${{ github.sha }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag "$new_tag"
+          git tag -a "$new_tag" "${{ github.sha }}" -m "Release $new_tag"
           git push origin "$new_tag"
