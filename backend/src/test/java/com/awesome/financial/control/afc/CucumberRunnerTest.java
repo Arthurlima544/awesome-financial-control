@@ -12,4 +12,4 @@ import org.junit.platform.suite.api.Suite;
 @ConfigurationParameter(
         key = Constants.GLUE_PROPERTY_NAME,
         value = "com.awesome.financial.control.afc")
-public class CucumberRunner {}
+public class CucumberRunnerTest {}
