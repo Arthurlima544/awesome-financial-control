@@ -8,8 +8,7 @@
       "cwd": "${workspaceFolder}/mobile",
       "program": "lib/main.dart",
       "args": [
-        "--dart-define=FLAVOR=local",
-        "--dart-define=API_BASE_URL=http://localhost:8080"
+        "--dart-define=FLAVOR=local"
       ]
     },
     {
