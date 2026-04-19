@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../../../shared/components/adaptive_button/adaptive_button.dart';
-import '../../../shared/components/adaptive_button/adaptive_button_cubit.dart';
 import '../../../shared/components/custom_progress_bar/custom_progress_bar.dart';
+import '../../../shared/components/empty_state/empty_state.dart';
+import '../../../shared/components/error_view/error_view.dart';
 import '../bloc/limit_bloc.dart';
 import '../model/limit_progress_model.dart';
 
@@ -35,14 +35,19 @@ class _LimitView extends StatelessWidget {
           return switch (state) {
             LimitLoading() ||
             LimitInitial() => const Center(child: CircularProgressIndicator()),
-            LimitError() => _ErrorView(
+            LimitError() => ErrorView(
+              key: const ValueKey('limitError'),
               message: l10n.limitErrorLoading,
               onRetry: () =>
                   context.read<LimitBloc>().add(const LimitProgressLoaded()),
             ),
             LimitLoaded(:final limits) =>
               limits.isEmpty
-                  ? Center(child: Text(l10n.limitNoLimits))
+                  ? EmptyState(
+                      key: const ValueKey('limitEmpty'),
+                      icon: Icons.price_change_outlined,
+                      title: l10n.limitNoLimits,
+                    )
                   : RefreshIndicator(
                       onRefresh: () async => context.read<LimitBloc>().add(
                         const LimitProgressLoaded(),
@@ -122,37 +127,6 @@ class _LimitCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message),
-          const SizedBox(height: 16),
-          BlocProvider(
-            create: (_) => AdaptiveButtonCubit(),
-            child: AdaptiveButton(
-              key: const ValueKey('retryButton'),
-              text: l10n.retry,
-              primaryColor: AppColors.primary,
-              onPressed: onRetry,
-            ),
-          ),
-        ],
       ),
     );
   }

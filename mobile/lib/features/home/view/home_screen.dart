@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../l10n/generated/app_localizations.dart';
+import '../../../shared/components/empty_state/empty_state.dart';
+import '../../../shared/components/error_view/error_view.dart';
+import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
 import '../bloc/home_bloc.dart';
 import '../model/transaction_model.dart';
 
@@ -31,7 +34,8 @@ class _HomeView extends StatelessWidget {
           return switch (state) {
             HomeLoading() ||
             HomeInitial() => const Center(child: CircularProgressIndicator()),
-            HomeError() => _ErrorView(
+            HomeError() => ErrorView(
+              key: const ValueKey('homeError'),
               message: l10n.homeErrorLoading,
               onRetry: () =>
                   context.read<HomeBloc>().add(const HomeDashboardLoaded()),
@@ -60,16 +64,23 @@ class _HomeView extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   if (transactions.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(l10n.homeNoTransactions),
-                      ),
+                    EmptyState(
+                      key: const ValueKey('homeEmptyTransactions'),
+                      icon: Icons.receipt_long_outlined,
+                      title: l10n.homeNoTransactions,
                     )
                   else
                     ...transactions.map(
-                      (t) =>
-                          _TransactionTile(key: ValueKey(t.id), transaction: t),
+                      (t) => TransactionListItem(
+                        key: ValueKey(t.id),
+                        description: t.description,
+                        amount: t.amount,
+                        type: t.type == TransactionType.income
+                            ? TransactionItemType.income
+                            : TransactionItemType.expense,
+                        category: t.category,
+                        occurredAt: t.occurredAt,
+                      ),
                     ),
                 ],
               ),
@@ -155,58 +166,6 @@ class _SummaryItem extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _TransactionTile extends StatelessWidget {
-  const _TransactionTile({super.key, required this.transaction});
-
-  final TransactionModel transaction;
-
-  @override
-  Widget build(BuildContext context) {
-    final isIncome = transaction.type == TransactionType.income;
-
-    return ListTile(
-      leading: Icon(
-        isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-        color: isIncome ? Colors.green : Colors.red,
-      ),
-      title: Text(transaction.description),
-      subtitle: transaction.category != null
-          ? Text(transaction.category!)
-          : null,
-      trailing: Text(
-        '${isIncome ? '+' : '-'} R\$ ${transaction.amount.toStringAsFixed(2)}',
-        style: TextStyle(
-          color: isIncome ? Colors.green : Colors.red,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message),
-          const SizedBox(height: 16),
-          ElevatedButton(onPressed: onRetry, child: Text(l10n.retry)),
-        ],
-      ),
     );
   }
 }
