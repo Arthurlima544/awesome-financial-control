@@ -50,5 +50,26 @@
   "@loginButton": { "description": "Sign-in button label on login screen" },
 
   "homeTitle": "Início",
-  "@homeTitle": { "description": "Home screen title" }
+  "@homeTitle": { "description": "Home screen title" },
+
+  "homeSummaryTitle": "Resumo do mês",
+  "@homeSummaryTitle": { "description": "Financial summary section title on home screen" },
+
+  "homeTotalIncome": "Receitas",
+  "@homeTotalIncome": { "description": "Total income label on home screen" },
+
+  "homeTotalExpenses": "Despesas",
+  "@homeTotalExpenses": { "description": "Total expenses label on home screen" },
+
+  "homeBalance": "Saldo",
+  "@homeBalance": { "description": "Balance label on home screen" },
+
+  "homeRecentTransactions": "Últimas transações",
+  "@homeRecentTransactions": { "description": "Recent transactions section title on home screen" },
+
+  "homeNoTransactions": "Nenhuma transação encontrada",
+  "@homeNoTransactions": { "description": "Empty state for transactions list on home screen" },
+
+  "homeErrorLoading": "Erro ao carregar dados",
+  "@homeErrorLoading": { "description": "Error message when home data fails to load" }
 }
