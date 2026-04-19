@@ -56,8 +56,8 @@ jobs:
       - name: Spotless check
         run: ./mvnw spotless:check -q
 
-      - name: Test
-        run: ./mvnw test -q
+      - name: Test & Coverage
+        run: ./mvnw test jacoco:report -q
         env:
           SPRING_PROFILES_ACTIVE: local
           DB_URL: jdbc:postgresql://localhost:5432/afc_test
