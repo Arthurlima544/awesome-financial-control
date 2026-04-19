@@ -98,4 +98,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String limitOf(String amount) {
     return 'Limite: $amount';
   }
+
+  @override
+  String get statsTitle => 'Evolução mensal';
+
+  @override
+  String get statsNoData => 'Nenhum dado disponível';
+
+  @override
+  String get statsErrorLoading => 'Erro ao carregar estatísticas';
 }

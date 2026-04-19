@@ -96,5 +96,14 @@
     "placeholders": {
       "amount": { "type": "String" }
     }
-  }
+  },
+
+  "statsTitle": "Evolução mensal",
+  "@statsTitle": { "description": "Stats screen title" },
+
+  "statsNoData": "Nenhum dado disponível",
+  "@statsNoData": { "description": "Empty state for stats chart" },
+
+  "statsErrorLoading": "Erro ao carregar estatísticas",
+  "@statsErrorLoading": { "description": "Error message when stats data fails to load" }
 }

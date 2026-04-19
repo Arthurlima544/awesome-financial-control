@@ -267,6 +267,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Limite: {amount}'**
   String limitOf(String amount);
+
+  /// Stats screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Evolução mensal'**
+  String get statsTitle;
+
+  /// Empty state for stats chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum dado disponível'**
+  String get statsNoData;
+
+  /// Error message when stats data fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar estatísticas'**
+  String get statsErrorLoading;
 }
 
 class _AppLocalizationsDelegate

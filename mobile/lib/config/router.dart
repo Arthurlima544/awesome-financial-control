@@ -8,6 +8,7 @@ import '../features/auth/view/login_screen.dart';
 import '../features/auth/view/splash_screen.dart';
 import '../features/home/view/home_screen.dart';
 import '../features/limit/view/limit_screen.dart';
+import '../features/stats/view/stats_screen.dart';
 
 class _RouterRefreshStream extends ChangeNotifier {
   _RouterRefreshStream(Stream<dynamic> stream) {
@@ -45,6 +46,7 @@ GoRouter createRouter(AuthBloc authBloc) {
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
       GoRoute(path: '/limits', builder: (_, _) => const LimitScreen()),
+      GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
     ],
   );
 }
