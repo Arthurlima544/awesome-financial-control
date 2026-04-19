@@ -38,11 +38,13 @@ public class TransactionService {
         Instant to = current.plusMonths(1).atDay(1).atStartOfDay().toInstant(ZoneOffset.UTC);
 
         BigDecimal totalIncome =
-                transactionRepository.sumAmountByTypeAndOccurredAtBetween(
-                        TransactionType.INCOME, from, to);
+                transactionRepository
+                        .sumAmountByTypeAndOccurredAtBetween(TransactionType.INCOME, from, to)
+                        .orElse(BigDecimal.ZERO);
         BigDecimal totalExpenses =
-                transactionRepository.sumAmountByTypeAndOccurredAtBetween(
-                        TransactionType.EXPENSE, from, to);
+                transactionRepository
+                        .sumAmountByTypeAndOccurredAtBetween(TransactionType.EXPENSE, from, to)
+                        .orElse(BigDecimal.ZERO);
         BigDecimal balance = totalIncome.subtract(totalExpenses);
 
         return SummaryResponse.builder()

@@ -26,7 +26,7 @@ public class Transaction {
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "transaction_type")
+    @Column(nullable = false, length = 20)
     private TransactionType type;
 
     private String category;
