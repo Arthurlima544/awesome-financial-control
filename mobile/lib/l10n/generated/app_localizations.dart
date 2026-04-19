@@ -171,6 +171,72 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Saldo'**
   String get balance;
+
+  /// Email field label on login screen
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get loginEmailLabel;
+
+  /// Password field label on login screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha'**
+  String get loginPasswordLabel;
+
+  /// Sign-in button label on login screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Entrar'**
+  String get loginButton;
+
+  /// Home screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get homeTitle;
+
+  /// Financial summary section title on home screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo do mês'**
+  String get homeSummaryTitle;
+
+  /// Total income label on home screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Receitas'**
+  String get homeTotalIncome;
+
+  /// Total expenses label on home screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesas'**
+  String get homeTotalExpenses;
+
+  /// Balance label on home screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo'**
+  String get homeBalance;
+
+  /// Recent transactions section title on home screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Últimas transações'**
+  String get homeRecentTransactions;
+
+  /// Empty state for transactions list on home screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma transação encontrada'**
+  String get homeNoTransactions;
+
+  /// Error message when home data fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar dados'**
+  String get homeErrorLoading;
 }
 
 class _AppLocalizationsDelegate

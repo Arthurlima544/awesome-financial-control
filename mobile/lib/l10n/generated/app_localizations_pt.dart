@@ -46,4 +46,37 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get balance => 'Saldo';
+
+  @override
+  String get loginEmailLabel => 'E-mail';
+
+  @override
+  String get loginPasswordLabel => 'Senha';
+
+  @override
+  String get loginButton => 'Entrar';
+
+  @override
+  String get homeTitle => 'Início';
+
+  @override
+  String get homeSummaryTitle => 'Resumo do mês';
+
+  @override
+  String get homeTotalIncome => 'Receitas';
+
+  @override
+  String get homeTotalExpenses => 'Despesas';
+
+  @override
+  String get homeBalance => 'Saldo';
+
+  @override
+  String get homeRecentTransactions => 'Últimas transações';
+
+  @override
+  String get homeNoTransactions => 'Nenhuma transação encontrada';
+
+  @override
+  String get homeErrorLoading => 'Erro ao carregar dados';
 }
