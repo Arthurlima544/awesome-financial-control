@@ -5,6 +5,7 @@ import '../../../config/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/adaptive_popup/adaptive_popup.dart';
 import '../../../shared/components/adaptive_popup/adaptive_popup_cubit.dart';
+import '../../../shared/components/dismissible_delete_background/dismissible_delete_background.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
@@ -112,12 +113,7 @@ class _DismissibleItem extends StatelessWidget {
       onDismissed: (_) => context.read<TransactionListBloc>().add(
         TransactionDeleteRequested(transaction.id),
       ),
-      background: Container(
-        color: AppColors.error,
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        child: const Icon(Icons.delete_outline, color: Colors.white),
-      ),
+      background: const DismissibleDeleteBackground(),
       child: InkWell(
         onTap: () => context.push(
           '/transactions/${transaction.id}/edit',

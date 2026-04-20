@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../bloc/limit_list_bloc.dart';
 
@@ -55,7 +56,7 @@ class _LimitEditScreenState extends State<LimitEditScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.limitEditTitle)),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Form(
           key: _formKey,
           child: Column(
@@ -82,7 +83,7 @@ class _LimitEditScreenState extends State<LimitEditScreen> {
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submit(),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(onPressed: _submit, child: Text(l10n.save)),

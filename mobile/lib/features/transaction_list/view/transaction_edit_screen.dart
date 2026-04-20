@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../bloc/transaction_list_bloc.dart';
 import '../model/transaction_model.dart';
@@ -79,7 +80,7 @@ class _TransactionEditScreenState extends State<TransactionEditScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.transactionEditTitle)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Form(
           key: _formKey,
           child: Column(
@@ -95,7 +96,7 @@ class _TransactionEditScreenState extends State<TransactionEditScreen> {
                     : null,
                 textInputAction: TextInputAction.next,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               TextFormField(
                 controller: _amountController,
                 decoration: InputDecoration(
@@ -117,7 +118,7 @@ class _TransactionEditScreenState extends State<TransactionEditScreen> {
                 },
                 textInputAction: TextInputAction.next,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<TransactionType>(
                 initialValue: _type,
                 decoration: InputDecoration(
@@ -136,7 +137,7 @@ class _TransactionEditScreenState extends State<TransactionEditScreen> {
                 ],
                 onChanged: (v) => setState(() => _type = v!),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               TextFormField(
                 controller: _categoryController,
                 decoration: InputDecoration(
@@ -145,7 +146,7 @@ class _TransactionEditScreenState extends State<TransactionEditScreen> {
                 ),
                 textInputAction: TextInputAction.done,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(onPressed: _submit, child: Text(l10n.save)),

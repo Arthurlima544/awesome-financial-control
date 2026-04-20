@@ -24,7 +24,7 @@ class ScaffoldShell extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.onPrimary,
         tooltip: l10n.fabAddTransaction,
         child: const Icon(Icons.add),
       ),

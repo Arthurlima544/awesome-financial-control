@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 import '../../../config/app_colors.dart';
+import '../../../config/app_spacing.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../bloc/stats_bloc.dart';
@@ -72,12 +73,12 @@ class _StatsChart extends StatelessWidget {
     final stats = state.stats;
 
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _Legend(l10n: l10n),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.lg),
           Expanded(
             child: _BarChart(stats: stats, state: state),
           ),
@@ -99,7 +100,7 @@ class _Legend extends StatelessWidget {
         _LegendDot(color: AppColors.primary),
         const SizedBox(width: 6),
         Text(l10n.income, style: Theme.of(context).textTheme.bodySmall),
-        const SizedBox(width: 16),
+        const SizedBox(width: AppSpacing.md),
         _LegendDot(color: AppColors.error),
         const SizedBox(width: 6),
         Text(l10n.expense, style: Theme.of(context).textTheme.bodySmall),
@@ -246,7 +247,7 @@ class _XLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.only(top: AppSpacing.xs),
       child: Text(_abbrev, style: Theme.of(context).textTheme.labelSmall),
     );
   }

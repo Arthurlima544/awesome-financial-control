@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../config/app_colors.dart';
+import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
@@ -44,7 +46,7 @@ class _HomeView extends StatelessWidget {
               onRefresh: () async =>
                   context.read<HomeBloc>().add(const HomeDashboardLoaded()),
               child: ListView(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 children: [
                   Text(
                     l10n.homeSummaryTitle,
@@ -57,7 +59,7 @@ class _HomeView extends StatelessWidget {
                     totalExpenses: summary.totalExpenses,
                     balance: summary.balance,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.lg),
                   Text(
                     l10n.homeRecentTransactions,
                     style: Theme.of(context).textTheme.titleMedium,
@@ -111,7 +113,7 @@ class _SummaryCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -119,19 +121,19 @@ class _SummaryCard extends StatelessWidget {
               key: const ValueKey('totalIncome'),
               label: l10n.homeTotalIncome,
               amount: totalIncome,
-              color: Colors.green,
+              color: AppColors.success,
             ),
             _SummaryItem(
               key: const ValueKey('totalExpenses'),
               label: l10n.homeTotalExpenses,
               amount: totalExpenses,
-              color: Colors.red,
+              color: AppColors.error,
             ),
             _SummaryItem(
               key: const ValueKey('balance'),
               label: l10n.homeBalance,
               amount: balance,
-              color: balance >= 0 ? Colors.green : Colors.red,
+              color: balance >= 0 ? AppColors.success : AppColors.error,
             ),
           ],
         ),
@@ -157,12 +159,12 @@ class _SummaryItem extends StatelessWidget {
     return Column(
       children: [
         Text(label, style: Theme.of(context).textTheme.bodySmall),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           'R\$ ${amount.toStringAsFixed(2)}',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: color,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
