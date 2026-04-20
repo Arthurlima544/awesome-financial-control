@@ -8,6 +8,7 @@ import '../features/auth/view/login_screen.dart';
 import '../features/auth/view/splash_screen.dart';
 import '../features/home/view/home_screen.dart';
 import '../features/limit/view/limit_screen.dart';
+import '../features/shell/view/scaffold_shell.dart';
 import '../features/stats/view/stats_screen.dart';
 import '../features/transaction_list/view/transaction_list_screen.dart';
 
@@ -45,12 +46,34 @@ GoRouter createRouter(AuthBloc authBloc) {
     routes: [
       GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
-      GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
-      GoRoute(path: '/limits', builder: (_, _) => const LimitScreen()),
-      GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
-      GoRoute(
-        path: '/transactions',
-        builder: (_, _) => const TransactionListScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            ScaffoldShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/transactions',
+                builder: (_, _) => const TransactionListScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/limits', builder: (_, _) => const LimitScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
+            ],
+          ),
+        ],
       ),
     ],
   );

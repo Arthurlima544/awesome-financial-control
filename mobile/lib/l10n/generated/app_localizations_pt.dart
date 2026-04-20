@@ -123,4 +123,19 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get transactionDeleteConfirmMessage =>
       'Deseja excluir esta transação? Esta ação não pode ser desfeita.';
+
+  @override
+  String get navHome => 'Início';
+
+  @override
+  String get navTransactions => 'Transações';
+
+  @override
+  String get navLimits => 'Limites';
+
+  @override
+  String get navStats => 'Gráficos';
+
+  @override
+  String get fabAddTransaction => 'Adicionar transação';
 }

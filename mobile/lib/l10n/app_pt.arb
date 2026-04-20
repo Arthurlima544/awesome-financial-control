@@ -120,5 +120,20 @@
   "@transactionDeleteConfirmTitle": { "description": "Title of delete transaction confirmation dialog" },
 
   "transactionDeleteConfirmMessage": "Deseja excluir esta transação? Esta ação não pode ser desfeita.",
-  "@transactionDeleteConfirmMessage": { "description": "Body of delete transaction confirmation dialog" }
+  "@transactionDeleteConfirmMessage": { "description": "Body of delete transaction confirmation dialog" },
+
+  "navHome": "Início",
+  "@navHome": { "description": "Bottom nav bar home tab label" },
+
+  "navTransactions": "Transações",
+  "@navTransactions": { "description": "Bottom nav bar transactions tab label" },
+
+  "navLimits": "Limites",
+  "@navLimits": { "description": "Bottom nav bar limits tab label" },
+
+  "navStats": "Gráficos",
+  "@navStats": { "description": "Bottom nav bar stats tab label" },
+
+  "fabAddTransaction": "Adicionar transação",
+  "@fabAddTransaction": { "description": "FAB tooltip for adding a new transaction" }
 }

@@ -315,6 +315,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Deseja excluir esta transação? Esta ação não pode ser desfeita.'**
   String get transactionDeleteConfirmMessage;
+
+  /// Bottom nav bar home tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get navHome;
+
+  /// Bottom nav bar transactions tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Transações'**
+  String get navTransactions;
+
+  /// Bottom nav bar limits tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Limites'**
+  String get navLimits;
+
+  /// Bottom nav bar stats tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Gráficos'**
+  String get navStats;
+
+  /// FAB tooltip for adding a new transaction
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar transação'**
+  String get fabAddTransaction;
 }
 
 class _AppLocalizationsDelegate
