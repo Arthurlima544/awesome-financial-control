@@ -16,7 +16,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 
 public class TransactionSteps {
 
@@ -131,5 +134,52 @@ public class TransactionSteps {
     @And("the transaction no longer exists")
     public void theTransactionNoLongerExists() {
         assertThat(transactionRepository.existsById(ctx.lastTransactionId)).isFalse();
+    }
+
+    @When(
+            "I update the last created transaction with description {string} amount {bigdecimal} type {word}")
+    public void iUpdateTheLastCreatedTransaction(
+            String description, BigDecimal amount, String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"occurredAt\":\"%s\"}",
+                        description, amount.toPlainString(), type, Instant.now().toString());
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/transactions/" + ctx.lastTransactionId,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(body, headers),
+                        String.class);
+    }
+
+    @When(
+            "I update transaction with id {string} with description {string} amount {bigdecimal} type {word}")
+    public void iUpdateTransactionWithId(
+            String id, String description, BigDecimal amount, String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"occurredAt\":\"%s\"}",
+                        description, amount.toPlainString(), type, Instant.now().toString());
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/transactions/" + UUID.fromString(id),
+                        HttpMethod.PUT,
+                        new HttpEntity<>(body, headers),
+                        String.class);
+    }
+
+    @And("the transaction description is {string}")
+    public void theTransactionDescriptionIs(String description) {
+        assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
+    }
+
+    @And("the transaction amount is {bigdecimal}")
+    public void theTransactionAmountIs(BigDecimal amount) {
+        assertThat(ctx.response.getBody())
+                .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
     }
 }

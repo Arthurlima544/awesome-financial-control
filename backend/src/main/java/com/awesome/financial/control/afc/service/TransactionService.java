@@ -2,8 +2,10 @@ package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.SummaryResponse;
 import com.awesome.financial.control.afc.dto.TransactionResponse;
+import com.awesome.financial.control.afc.dto.UpdateTransactionRequest;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.TransactionMapper;
+import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import java.math.BigDecimal;
@@ -37,6 +39,21 @@ public class TransactionService {
             throw new ResourceNotFoundException("Transaction", id);
         }
         transactionRepository.deleteById(id);
+    }
+
+    @Transactional
+    public TransactionResponse updateTransaction(UUID id, UpdateTransactionRequest request) {
+        Transaction transaction =
+                transactionRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Transaction", id));
+        transaction.setDescription(request.description());
+        transaction.setAmount(request.amount());
+        transaction.setType(request.type());
+        transaction.setCategory(request.category());
+        transaction.setOccurredAt(request.occurredAt());
+        Transaction saved = transactionRepository.save(transaction);
+        return transactionMapper.toResponse(saved);
     }
 
     @Transactional(readOnly = true)
