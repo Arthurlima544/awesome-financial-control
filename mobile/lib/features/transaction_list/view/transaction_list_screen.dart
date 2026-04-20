@@ -8,6 +8,8 @@ import '../../../shared/components/adaptive_popup/adaptive_popup_cubit.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
+import 'package:go_router/go_router.dart';
+
 import '../bloc/transaction_list_bloc.dart';
 import '../model/transaction_model.dart';
 
@@ -116,14 +118,20 @@ class _DismissibleItem extends StatelessWidget {
         padding: const EdgeInsets.only(right: 20),
         child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
-      child: TransactionListItem(
-        description: transaction.description,
-        amount: transaction.amount,
-        type: transaction.type == TransactionType.income
-            ? TransactionItemType.income
-            : TransactionItemType.expense,
-        category: transaction.category,
-        occurredAt: transaction.occurredAt,
+      child: InkWell(
+        onTap: () => context.push(
+          '/transactions/${transaction.id}/edit',
+          extra: context.read<TransactionListBloc>(),
+        ),
+        child: TransactionListItem(
+          description: transaction.description,
+          amount: transaction.amount,
+          type: transaction.type == TransactionType.income
+              ? TransactionItemType.income
+              : TransactionItemType.expense,
+          category: transaction.category,
+          occurredAt: transaction.occurredAt,
+        ),
       ),
     );
   }

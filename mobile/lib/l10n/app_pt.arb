@@ -135,5 +135,56 @@
   "@navStats": { "description": "Bottom nav bar stats tab label" },
 
   "fabAddTransaction": "Adicionar transação",
-  "@fabAddTransaction": { "description": "FAB tooltip for adding a new transaction" }
+  "@fabAddTransaction": { "description": "FAB tooltip for adding a new transaction" },
+
+  "categoryListTitle": "Categorias",
+  "@categoryListTitle": { "description": "Category list screen title" },
+
+  "categoryListEmpty": "Nenhuma categoria cadastrada",
+  "@categoryListEmpty": { "description": "Empty state for category list screen" },
+
+  "categoryListError": "Erro ao carregar categorias",
+  "@categoryListError": { "description": "Error message when category list fails to load" },
+
+  "categoryDeleteConfirmTitle": "Excluir categoria",
+  "@categoryDeleteConfirmTitle": { "description": "Title of delete category confirmation dialog" },
+
+  "categoryDeleteConfirmMessage": "Deseja excluir esta categoria? Esta ação não pode ser desfeita.",
+  "@categoryDeleteConfirmMessage": { "description": "Body of delete category confirmation dialog" },
+
+  "categoryEditTitle": "Editar categoria",
+  "@categoryEditTitle": { "description": "Category edit screen title" },
+
+  "categoryNameLabel": "Nome",
+  "@categoryNameLabel": { "description": "Category name field label" },
+
+  "limitListTitle": "Gerenciar limites",
+  "@limitListTitle": { "description": "Limit list management screen title" },
+
+  "limitListEmpty": "Nenhum limite cadastrado",
+  "@limitListEmpty": { "description": "Empty state for limit list management screen" },
+
+  "limitListError": "Erro ao carregar limites",
+  "@limitListError": { "description": "Error message when limit list fails to load" },
+
+  "limitDeleteConfirmTitle": "Excluir limite",
+  "@limitDeleteConfirmTitle": { "description": "Title of delete limit confirmation dialog" },
+
+  "limitDeleteConfirmMessage": "Deseja excluir este limite? Esta ação não pode ser desfeita.",
+  "@limitDeleteConfirmMessage": { "description": "Body of delete limit confirmation dialog" },
+
+  "limitEditTitle": "Editar limite",
+  "@limitEditTitle": { "description": "Limit edit screen title" },
+
+  "limitAmountLabel": "Valor (R$)",
+  "@limitAmountLabel": { "description": "Limit amount field label" },
+
+  "transactionEditTitle": "Editar transação",
+  "@transactionEditTitle": { "description": "Transaction edit screen title" },
+
+  "transactionDescriptionLabel": "Descrição",
+  "@transactionDescriptionLabel": { "description": "Transaction description field label" },
+
+  "transactionAmountLabel": "Valor (R$)",
+  "@transactionAmountLabel": { "description": "Transaction amount field label" }
 }

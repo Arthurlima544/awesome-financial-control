@@ -10,4 +10,20 @@ class TransactionListRepository {
   Future<List<TransactionModel>> getAll() => _service.fetchAll();
 
   Future<void> delete(String id) => _service.delete(id);
+
+  Future<TransactionModel> update(
+    String id, {
+    required String description,
+    required double amount,
+    required String type,
+    String? category,
+    required DateTime occurredAt,
+  }) => _service.update(
+    id,
+    description: description,
+    amount: amount,
+    type: type,
+    category: category,
+    occurredAt: occurredAt,
+  );
 }

@@ -345,6 +345,108 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Adicionar transação'**
   String get fabAddTransaction;
+
+  /// Category list screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Categorias'**
+  String get categoryListTitle;
+
+  /// Empty state for category list screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma categoria cadastrada'**
+  String get categoryListEmpty;
+
+  /// Error message when category list fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar categorias'**
+  String get categoryListError;
+
+  /// Title of delete category confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir categoria'**
+  String get categoryDeleteConfirmTitle;
+
+  /// Body of delete category confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir esta categoria? Esta ação não pode ser desfeita.'**
+  String get categoryDeleteConfirmMessage;
+
+  /// Category edit screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar categoria'**
+  String get categoryEditTitle;
+
+  /// Category name field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get categoryNameLabel;
+
+  /// Limit list management screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerenciar limites'**
+  String get limitListTitle;
+
+  /// Empty state for limit list management screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum limite cadastrado'**
+  String get limitListEmpty;
+
+  /// Error message when limit list fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar limites'**
+  String get limitListError;
+
+  /// Title of delete limit confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir limite'**
+  String get limitDeleteConfirmTitle;
+
+  /// Body of delete limit confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir este limite? Esta ação não pode ser desfeita.'**
+  String get limitDeleteConfirmMessage;
+
+  /// Limit edit screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar limite'**
+  String get limitEditTitle;
+
+  /// Limit amount field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor (R\$)'**
+  String get limitAmountLabel;
+
+  /// Transaction edit screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar transação'**
+  String get transactionEditTitle;
+
+  /// Transaction description field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get transactionDescriptionLabel;
+
+  /// Transaction amount field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor (R\$)'**
+  String get transactionAmountLabel;
 }
 
 class _AppLocalizationsDelegate

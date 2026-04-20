@@ -24,6 +24,34 @@ class TransactionDeleteRequested extends TransactionListEvent {
   List<Object?> get props => [id];
 }
 
+class TransactionUpdateRequested extends TransactionListEvent {
+  const TransactionUpdateRequested({
+    required this.id,
+    required this.description,
+    required this.amount,
+    required this.type,
+    this.category,
+    required this.occurredAt,
+  });
+
+  final String id;
+  final String description;
+  final double amount;
+  final String type;
+  final String? category;
+  final DateTime occurredAt;
+
+  @override
+  List<Object?> get props => [
+    id,
+    description,
+    amount,
+    type,
+    category,
+    occurredAt,
+  ];
+}
+
 // States
 
 abstract class TransactionListState extends Equatable {
@@ -63,6 +91,7 @@ class TransactionListBloc
       super(TransactionListInitial()) {
     on<TransactionListFetchRequested>(_onFetchRequested);
     on<TransactionDeleteRequested>(_onDeleteRequested);
+    on<TransactionUpdateRequested>(_onUpdateRequested);
   }
 
   final TransactionListRepository _repository;
@@ -92,6 +121,30 @@ class TransactionListBloc
           .where((t) => t.id != event.id)
           .toList();
       emit(TransactionListData(updated));
+    } catch (e) {
+      emit(TransactionListError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateRequested(
+    TransactionUpdateRequested event,
+    Emitter<TransactionListState> emit,
+  ) async {
+    final current = state;
+    if (current is! TransactionListData) return;
+    try {
+      final updated = await _repository.update(
+        event.id,
+        description: event.description,
+        amount: event.amount,
+        type: event.type,
+        category: event.category,
+        occurredAt: event.occurredAt,
+      );
+      final updatedList = current.transactions.map((t) {
+        return t.id == event.id ? updated : t;
+      }).toList();
+      emit(TransactionListData(updatedList));
     } catch (e) {
       emit(TransactionListError(e.toString()));
     }

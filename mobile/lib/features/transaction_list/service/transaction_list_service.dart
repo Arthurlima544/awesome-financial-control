@@ -32,4 +32,25 @@ class TransactionListService {
   Future<void> delete(String id) async {
     await _dio.delete<void>('/api/v1/transactions/$id');
   }
+
+  Future<TransactionModel> update(
+    String id, {
+    required String description,
+    required double amount,
+    required String type,
+    String? category,
+    required DateTime occurredAt,
+  }) async {
+    final response = await _dio.put<Map<String, dynamic>>(
+      '/api/v1/transactions/$id',
+      data: {
+        'description': description,
+        'amount': amount,
+        'type': type.toUpperCase(),
+        'category': category,
+        'occurredAt': occurredAt.toUtc().toIso8601String(),
+      },
+    );
+    return TransactionModel.fromJson(response.data!);
+  }
 }
