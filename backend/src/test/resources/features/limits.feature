@@ -1,4 +1,40 @@
-Feature: Spending limits progress
+Feature: Spending limits management and progress
+
+  Scenario: List all limits when none exist
+    When I request all limits
+    Then the response status is 200
+    And the all-limits list is empty
+
+  Scenario: List all limits returns existing ones
+    Given a category named "Alimentação"
+    And a spending limit of 500.00 for category "Alimentação"
+    Given a category named "Transporte"
+    And a spending limit of 300.00 for category "Transporte"
+    When I request all limits
+    Then the response status is 200
+    And the all-limits list has 2 items
+
+  Scenario: Delete an existing limit returns 204 and removes it
+    Given a category named "Lazer"
+    And a spending limit of 200.00 for category "Lazer"
+    When I delete the last created limit
+    Then the response status is 204
+    And the limit no longer exists
+
+  Scenario: Delete a non-existing limit returns 404
+    When I delete limit with id "00000000-0000-0000-0000-000000000000"
+    Then the response status is 404
+
+  Scenario: Update a limit amount returns updated limit
+    Given a category named "Saúde"
+    And a spending limit of 100.00 for category "Saúde"
+    When I update the last created limit amount to 250.00
+    Then the response status is 200
+    And the limit amount is 250.00
+
+  Scenario: Update a non-existing limit returns 404
+    When I update limit with id "00000000-0000-0000-0000-000000000000" amount to 100.00
+    Then the response status is 404
 
   Scenario: Get limits progress when no limits exist
     When I request the limits progress

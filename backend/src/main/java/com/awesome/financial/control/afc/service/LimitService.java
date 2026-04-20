@@ -1,6 +1,10 @@
 package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.LimitProgressResponse;
+import com.awesome.financial.control.afc.dto.LimitResponse;
+import com.awesome.financial.control.afc.dto.UpdateLimitRequest;
+import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
+import com.awesome.financial.control.afc.model.Limit;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.LimitRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
@@ -10,6 +14,7 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +25,44 @@ public class LimitService {
 
     private final LimitRepository limitRepository;
     private final TransactionRepository transactionRepository;
+
+    @Transactional(readOnly = true)
+    public List<LimitResponse> getAllLimits() {
+        return limitRepository.findAllWithCategory().stream()
+                .map(
+                        l ->
+                                LimitResponse.builder()
+                                        .id(l.getId())
+                                        .categoryName(l.getCategory().getName())
+                                        .amount(l.getAmount())
+                                        .createdAt(l.getCreatedAt())
+                                        .build())
+                .toList();
+    }
+
+    @Transactional
+    public void deleteLimit(UUID id) {
+        if (!limitRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Limit", id);
+        }
+        limitRepository.deleteById(id);
+    }
+
+    @Transactional
+    public LimitResponse updateLimit(UUID id, UpdateLimitRequest request) {
+        Limit limit =
+                limitRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Limit", id));
+        limit.setAmount(request.amount());
+        Limit saved = limitRepository.save(limit);
+        return LimitResponse.builder()
+                .id(saved.getId())
+                .categoryName(saved.getCategory().getName())
+                .amount(saved.getAmount())
+                .createdAt(saved.getCreatedAt())
+                .build();
+    }
 
     @Transactional(readOnly = true)
     public List<LimitProgressResponse> getLimitsWithProgress() {

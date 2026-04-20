@@ -15,8 +15,13 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 
 public class LimitSteps {
 
@@ -41,7 +46,7 @@ public class LimitSteps {
     public void aCategoryNamed(String name) {
         Category category = new Category();
         category.setName(name);
-        categoryRepository.save(category);
+        ctx.lastCategoryId = categoryRepository.save(category).getId();
     }
 
     @Given("a spending limit of {bigdecimal} for category {string}")
@@ -57,7 +62,7 @@ public class LimitSteps {
         Limit limit = new Limit();
         limit.setCategory(category);
         limit.setAmount(amount);
-        limitRepository.save(limit);
+        ctx.lastLimitId = limitRepository.save(limit).getId();
     }
 
     @Given(
@@ -90,5 +95,74 @@ public class LimitSteps {
         assertThat(ctx.response.getBody())
                 .contains("\"spent\":" + spent.stripTrailingZeros().toPlainString());
         assertThat(ctx.response.getBody()).contains("\"percentage\":" + percentage);
+    }
+
+    @When("I request all limits")
+    public void iRequestAllLimits() {
+        ctx.response = restTemplate.getForEntity("/api/v1/limits", String.class);
+    }
+
+    @When("I delete the last created limit")
+    public void iDeleteTheLastCreatedLimit() {
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/limits/" + ctx.lastLimitId, HttpMethod.DELETE, null, String.class);
+    }
+
+    @When("I delete limit with id {string}")
+    public void iDeleteLimitWithId(String id) {
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/limits/" + UUID.fromString(id),
+                        HttpMethod.DELETE,
+                        null,
+                        String.class);
+    }
+
+    @When("I update the last created limit amount to {bigdecimal}")
+    public void iUpdateTheLastCreatedLimitAmountTo(BigDecimal amount) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity =
+                new HttpEntity<>("{\"amount\":" + amount.toPlainString() + "}", headers);
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/limits/" + ctx.lastLimitId, HttpMethod.PUT, entity, String.class);
+    }
+
+    @When("I update limit with id {string} amount to {bigdecimal}")
+    public void iUpdateLimitWithIdAmountTo(String id, BigDecimal amount) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity =
+                new HttpEntity<>("{\"amount\":" + amount.toPlainString() + "}", headers);
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/limits/" + UUID.fromString(id),
+                        HttpMethod.PUT,
+                        entity,
+                        String.class);
+    }
+
+    @And("the all-limits list is empty")
+    public void theAllLimitsListIsEmpty() {
+        assertThat(ctx.response.getBody()).isEqualTo("[]");
+    }
+
+    @And("the all-limits list has {int} items")
+    public void theAllLimitsListHasItems(int count) {
+        long objCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        assertThat(objCount).isEqualTo(count);
+    }
+
+    @And("the limit no longer exists")
+    public void theLimitNoLongerExists() {
+        assertThat(limitRepository.existsById(ctx.lastLimitId)).isFalse();
+    }
+
+    @And("the limit amount is {bigdecimal}")
+    public void theLimitAmountIs(BigDecimal amount) {
+        assertThat(ctx.response.getBody())
+                .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
     }
 }
