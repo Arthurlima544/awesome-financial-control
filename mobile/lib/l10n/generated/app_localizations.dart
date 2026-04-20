@@ -237,6 +237,54 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao carregar dados'**
   String get homeErrorLoading;
+
+  /// Spending limits screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Limites do mês'**
+  String get limitTitle;
+
+  /// Empty state for limits list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum limite cadastrado'**
+  String get limitNoLimits;
+
+  /// Error message when limits data fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar limites'**
+  String get limitErrorLoading;
+
+  /// Amount spent label on limit card
+  ///
+  /// In pt, this message translates to:
+  /// **'Gasto: {amount}'**
+  String limitSpent(String amount);
+
+  /// Limit amount label on limit card
+  ///
+  /// In pt, this message translates to:
+  /// **'Limite: {amount}'**
+  String limitOf(String amount);
+
+  /// Stats screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Evolução mensal'**
+  String get statsTitle;
+
+  /// Empty state for stats chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum dado disponível'**
+  String get statsNoData;
+
+  /// Error message when stats data fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar estatísticas'**
+  String get statsErrorLoading;
 }
 
 class _AppLocalizationsDelegate
