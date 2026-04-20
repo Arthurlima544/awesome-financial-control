@@ -11,4 +11,6 @@ public class ScenarioContext {
 
     public ResponseEntity<String> response;
     public UUID lastTransactionId;
+    public UUID lastCategoryId;
+    public UUID lastLimitId;
 }
