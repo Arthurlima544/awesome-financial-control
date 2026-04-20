@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.ResponseEntity;
 
 public class TransactionSteps {
 
@@ -23,7 +22,7 @@ public class TransactionSteps {
 
     @Autowired private TransactionRepository transactionRepository;
 
-    private ResponseEntity<String> response;
+    @Autowired private ScenarioContext ctx;
 
     @After
     public void cleanUp() {
@@ -54,50 +53,51 @@ public class TransactionSteps {
 
     @When("I request the financial summary")
     public void iRequestTheSummary() {
-        response = restTemplate.getForEntity("/api/v1/summary", String.class);
+        ctx.response = restTemplate.getForEntity("/api/v1/summary", String.class);
     }
 
     @When("I request the last {int} transactions")
     public void iRequestLastTransactions(int limit) {
-        response = restTemplate.getForEntity("/api/v1/transactions?limit=" + limit, String.class);
+        ctx.response =
+                restTemplate.getForEntity("/api/v1/transactions?limit=" + limit, String.class);
     }
 
     @Then("the response status is {int}")
     public void theResponseStatusIs(int status) {
-        assertThat(response.getStatusCode().value()).isEqualTo(status);
+        assertThat(ctx.response.getStatusCode().value()).isEqualTo(status);
     }
 
     @And("the total income is {bigdecimal}")
     public void theTotalIncomeIs(BigDecimal expected) {
-        assertThat(response.getBody())
+        assertThat(ctx.response.getBody())
                 .contains("\"totalIncome\":" + expected.stripTrailingZeros().toPlainString());
     }
 
     @And("the total expenses is {bigdecimal}")
     public void theTotalExpensesIs(BigDecimal expected) {
-        assertThat(response.getBody())
+        assertThat(ctx.response.getBody())
                 .contains("\"totalExpenses\":" + expected.stripTrailingZeros().toPlainString());
     }
 
     @And("the balance is {bigdecimal}")
     public void theBalanceIs(BigDecimal expected) {
-        assertThat(response.getBody())
+        assertThat(ctx.response.getBody())
                 .contains("\"balance\":" + expected.stripTrailingZeros().toPlainString());
     }
 
     @And("the transaction list is empty")
     public void theTransactionListIsEmpty() {
-        assertThat(response.getBody()).isEqualTo("[]");
+        assertThat(ctx.response.getBody()).isEqualTo("[]");
     }
 
     @And("the transaction list has {int} items")
     public void theTransactionListHasItems(int count) {
-        long commaCount = response.getBody().chars().filter(c -> c == '{').count();
+        long commaCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
         assertThat(commaCount).isEqualTo(count);
     }
 
     @And("the first transaction description is {string}")
     public void theFirstTransactionDescriptionIs(String description) {
-        assertThat(response.getBody()).contains("\"description\":\"" + description + "\"");
+        assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
     }
 }
