@@ -105,5 +105,20 @@
   "@statsNoData": { "description": "Empty state for stats chart" },
 
   "statsErrorLoading": "Erro ao carregar estatísticas",
-  "@statsErrorLoading": { "description": "Error message when stats data fails to load" }
+  "@statsErrorLoading": { "description": "Error message when stats data fails to load" },
+
+  "transactionListTitle": "Transações",
+  "@transactionListTitle": { "description": "Transaction list screen title" },
+
+  "transactionListEmpty": "Nenhuma transação encontrada",
+  "@transactionListEmpty": { "description": "Empty state for transaction list screen" },
+
+  "transactionListError": "Erro ao carregar transações",
+  "@transactionListError": { "description": "Error message when transaction list fails to load" },
+
+  "transactionDeleteConfirmTitle": "Excluir transação",
+  "@transactionDeleteConfirmTitle": { "description": "Title of delete transaction confirmation dialog" },
+
+  "transactionDeleteConfirmMessage": "Deseja excluir esta transação? Esta ação não pode ser desfeita.",
+  "@transactionDeleteConfirmMessage": { "description": "Body of delete transaction confirmation dialog" }
 }

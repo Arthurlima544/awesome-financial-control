@@ -16,6 +16,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
 
     List<Transaction> findAllByOrderByOccurredAtDesc(Pageable pageable);
 
+    List<Transaction> findAllByOrderByOccurredAtDesc();
+
     @Query(
             "SELECT SUM(t.amount) FROM Transaction t WHERE t.type = :type AND t.occurredAt >= :from AND t.occurredAt < :to")
     Optional<BigDecimal> sumAmountByTypeAndOccurredAtBetween(

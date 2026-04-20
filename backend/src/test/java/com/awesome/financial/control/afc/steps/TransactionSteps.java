@@ -13,8 +13,10 @@ import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpMethod;
 
 public class TransactionSteps {
 
@@ -36,7 +38,7 @@ public class TransactionSteps {
         transaction.setAmount(amount);
         transaction.setType(TransactionType.valueOf(type));
         transaction.setOccurredAt(Instant.now());
-        transactionRepository.save(transaction);
+        ctx.lastTransactionId = transactionRepository.save(transaction).getId();
     }
 
     @Given(
@@ -48,7 +50,7 @@ public class TransactionSteps {
         transaction.setAmount(amount);
         transaction.setType(TransactionType.valueOf(type));
         transaction.setOccurredAt(Instant.now().minus(days, ChronoUnit.DAYS));
-        transactionRepository.save(transaction);
+        ctx.lastTransactionId = transactionRepository.save(transaction).getId();
     }
 
     @When("I request the financial summary")
@@ -99,5 +101,35 @@ public class TransactionSteps {
     @And("the first transaction description is {string}")
     public void theFirstTransactionDescriptionIs(String description) {
         assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
+    }
+
+    @When("I request all transactions")
+    public void iRequestAllTransactions() {
+        ctx.response = restTemplate.getForEntity("/api/v1/transactions", String.class);
+    }
+
+    @When("I delete the last created transaction")
+    public void iDeleteTheLastCreatedTransaction() {
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/transactions/" + ctx.lastTransactionId,
+                        HttpMethod.DELETE,
+                        null,
+                        String.class);
+    }
+
+    @When("I delete transaction with id {string}")
+    public void iDeleteTransactionWithId(String id) {
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/transactions/" + UUID.fromString(id),
+                        HttpMethod.DELETE,
+                        null,
+                        String.class);
+    }
+
+    @And("the transaction no longer exists")
+    public void theTransactionNoLongerExists() {
+        assertThat(transactionRepository.existsById(ctx.lastTransactionId)).isFalse();
     }
 }

@@ -2,6 +2,7 @@ package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.SummaryResponse;
 import com.awesome.financial.control.afc.dto.TransactionResponse;
+import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.TransactionMapper;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
@@ -10,6 +11,7 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,21 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
+
+    @Transactional(readOnly = true)
+    public List<TransactionResponse> getAllTransactions() {
+        return transactionRepository.findAllByOrderByOccurredAtDesc().stream()
+                .map(transactionMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public void deleteTransaction(UUID id) {
+        if (!transactionRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Transaction", id);
+        }
+        transactionRepository.deleteById(id);
+    }
 
     @Transactional(readOnly = true)
     public List<TransactionResponse> getLastTransactions(int limit) {

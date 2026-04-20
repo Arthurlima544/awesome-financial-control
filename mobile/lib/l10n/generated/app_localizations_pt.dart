@@ -107,4 +107,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get statsErrorLoading => 'Erro ao carregar estatísticas';
+
+  @override
+  String get transactionListTitle => 'Transações';
+
+  @override
+  String get transactionListEmpty => 'Nenhuma transação encontrada';
+
+  @override
+  String get transactionListError => 'Erro ao carregar transações';
+
+  @override
+  String get transactionDeleteConfirmTitle => 'Excluir transação';
+
+  @override
+  String get transactionDeleteConfirmMessage =>
+      'Deseja excluir esta transação? Esta ação não pode ser desfeita.';
 }

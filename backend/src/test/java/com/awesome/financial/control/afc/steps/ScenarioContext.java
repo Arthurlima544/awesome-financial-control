@@ -1,5 +1,6 @@
 package com.awesome.financial.control.afc.steps;
 
+import java.util.UUID;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -9,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class ScenarioContext {
 
     public ResponseEntity<String> response;
+    public UUID lastTransactionId;
 }

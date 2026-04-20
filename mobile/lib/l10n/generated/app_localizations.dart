@@ -285,6 +285,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao carregar estatísticas'**
   String get statsErrorLoading;
+
+  /// Transaction list screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Transações'**
+  String get transactionListTitle;
+
+  /// Empty state for transaction list screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma transação encontrada'**
+  String get transactionListEmpty;
+
+  /// Error message when transaction list fails to load
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar transações'**
+  String get transactionListError;
+
+  /// Title of delete transaction confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir transação'**
+  String get transactionDeleteConfirmTitle;
+
+  /// Body of delete transaction confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir esta transação? Esta ação não pode ser desfeita.'**
+  String get transactionDeleteConfirmMessage;
 }
 
 class _AppLocalizationsDelegate
