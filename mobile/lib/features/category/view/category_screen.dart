@@ -6,6 +6,7 @@ import '../../../config/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/adaptive_popup/adaptive_popup.dart';
 import '../../../shared/components/adaptive_popup/adaptive_popup_cubit.dart';
+import '../../../shared/components/custom_list_tile/custom_list_tile.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../bloc/category_bloc.dart';
@@ -114,13 +115,12 @@ class _DismissibleItem extends StatelessWidget {
         padding: const EdgeInsets.only(right: 20),
         child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: AppColors.primaryContainer,
-          child: Icon(Icons.category_outlined, color: AppColors.primary),
-        ),
-        title: Text(category.name),
-        trailing: const Icon(Icons.chevron_right),
+      child: CustomListTile(
+        title: category.name,
+        leadingType: CustomListTileLeading.icon,
+        leadingIcon: Icons.category_outlined,
+        trailingType: CustomListTileTrailing.arrow,
+        primaryColor: AppColors.primary,
         onTap: () => context.push(
           '/categories/${category.id}/edit',
           extra: context.read<CategoryBloc>(),
