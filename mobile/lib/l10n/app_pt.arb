@@ -186,5 +186,20 @@
   "@transactionDescriptionLabel": { "description": "Transaction description field label" },
 
   "transactionAmountLabel": "Valor (R$)",
-  "@transactionAmountLabel": { "description": "Transaction amount field label" }
+  "@transactionAmountLabel": { "description": "Transaction amount field label" },
+
+  "devToolsTitle": "Dev Tools",
+  "@devToolsTitle": { "description": "Dev tools bottom sheet title" },
+
+  "devSeedButton": "Popular dados",
+  "@devSeedButton": { "description": "Dev seed button label" },
+
+  "devResetButton": "Limpar todos os dados",
+  "@devResetButton": { "description": "Dev reset button label" },
+
+  "devSeedSuccess": "Dados populados com sucesso",
+  "@devSeedSuccess": { "description": "Dev seed success snackbar message" },
+
+  "devResetSuccess": "Dados removidos com sucesso",
+  "@devResetSuccess": { "description": "Dev reset success snackbar message" }
 }

@@ -447,6 +447,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Valor (R\$)'**
   String get transactionAmountLabel;
+
+  /// Dev tools bottom sheet title
+  ///
+  /// In pt, this message translates to:
+  /// **'Dev Tools'**
+  String get devToolsTitle;
+
+  /// Dev seed button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Popular dados'**
+  String get devSeedButton;
+
+  /// Dev reset button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar todos os dados'**
+  String get devResetButton;
+
+  /// Dev seed success snackbar message
+  ///
+  /// In pt, this message translates to:
+  /// **'Dados populados com sucesso'**
+  String get devSeedSuccess;
+
+  /// Dev reset success snackbar message
+  ///
+  /// In pt, this message translates to:
+  /// **'Dados removidos com sucesso'**
+  String get devResetSuccess;
 }
 
 class _AppLocalizationsDelegate

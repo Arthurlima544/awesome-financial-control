@@ -191,4 +191,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get transactionAmountLabel => 'Valor (R\$)';
+
+  @override
+  String get devToolsTitle => 'Dev Tools';
+
+  @override
+  String get devSeedButton => 'Popular dados';
+
+  @override
+  String get devResetButton => 'Limpar todos os dados';
+
+  @override
+  String get devSeedSuccess => 'Dados populados com sucesso';
+
+  @override
+  String get devResetSuccess => 'Dados removidos com sucesso';
 }

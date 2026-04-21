@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/app_colors.dart';
+import '../../../config/app_config.dart';
 import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../dev/view/dev_tools_sheet.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
@@ -30,7 +32,17 @@ class _HomeView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.homeTitle)),
+      appBar: AppBar(
+        title: Text(l10n.homeTitle),
+        actions: [
+          if (AppConfig.isLocal)
+            IconButton(
+              icon: const Icon(Icons.developer_mode),
+              tooltip: l10n.devToolsTitle,
+              onPressed: () => showDevToolsSheet(context),
+            ),
+        ],
+      ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return switch (state) {
