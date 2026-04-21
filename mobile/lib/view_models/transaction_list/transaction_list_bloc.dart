@@ -1,0 +1,75 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/models/transaction_model.dart';
+import 'package:afc/repositories/transaction_list_repository.dart';
+
+part 'transaction_list_event.dart';
+part 'transaction_list_state.dart';
+
+class TransactionListBloc
+    extends Bloc<TransactionListEvent, TransactionListState> {
+  TransactionListBloc({TransactionListRepository? repository})
+    : _repository = repository ?? sl<TransactionListRepository>(),
+      super(TransactionListInitial()) {
+    on<TransactionListFetchRequested>(_onFetchRequested);
+    on<TransactionDeleteRequested>(_onDeleteRequested);
+    on<TransactionUpdateRequested>(_onUpdateRequested);
+  }
+
+  final TransactionListRepository _repository;
+
+  Future<void> _onFetchRequested(
+    TransactionListFetchRequested event,
+    Emitter<TransactionListState> emit,
+  ) async {
+    emit(TransactionListLoading());
+    try {
+      final transactions = await _repository.getAll();
+      emit(TransactionListData(transactions));
+    } catch (e) {
+      emit(TransactionListError(e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteRequested(
+    TransactionDeleteRequested event,
+    Emitter<TransactionListState> emit,
+  ) async {
+    final current = state;
+    if (current is! TransactionListData) return;
+    try {
+      await _repository.delete(event.id);
+      final updated = current.transactions
+          .where((t) => t.id != event.id)
+          .toList();
+      emit(TransactionListData(updated));
+    } catch (e) {
+      emit(TransactionListError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateRequested(
+    TransactionUpdateRequested event,
+    Emitter<TransactionListState> emit,
+  ) async {
+    final current = state;
+    if (current is! TransactionListData) return;
+    try {
+      final updated = await _repository.update(
+        event.id,
+        description: event.description,
+        amount: event.amount,
+        type: event.type,
+        category: event.category,
+        occurredAt: event.occurredAt,
+      );
+      final updatedList = current.transactions.map((t) {
+        return t.id == event.id ? updated : t;
+      }).toList();
+      emit(TransactionListData(updatedList));
+    } catch (e) {
+      emit(TransactionListError(e.toString()));
+    }
+  }
+}

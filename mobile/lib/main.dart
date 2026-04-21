@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'config/router.dart';
-import 'features/auth/bloc/auth_bloc.dart';
-import 'l10n/generated/app_localizations.dart';
+import 'package:afc/utils/config/app_theme.dart';
+import 'package:afc/utils/config/router.dart';
+import 'package:afc/view_models/auth/auth_bloc.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
-void main() {
+import 'package:afc/utils/config/injection.dart' as di;
+import 'package:afc/utils/config/injection.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(const AfcApp());
 }
 
@@ -24,13 +30,13 @@ class _AfcAppState extends State<AfcApp> {
   @override
   void initState() {
     super.initState();
-    _authBloc = AuthBloc();
+    _authBloc = sl<AuthBloc>();
     _router = createRouter(_authBloc);
+    _authBloc.add(const AppLaunched());
   }
 
   @override
   void dispose() {
-    _authBloc.close();
     _router.dispose();
     super.dispose();
   }
@@ -42,6 +48,7 @@ class _AfcAppState extends State<AfcApp> {
       child: MaterialApp.router(
         title: 'AFC',
         debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
         routerConfig: _router,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

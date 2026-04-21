@@ -1,5 +1,6 @@
 package com.awesome.financial.control.afc.controller;
 
+import com.awesome.financial.control.afc.dto.CreateTransactionRequest;
 import com.awesome.financial.control.afc.dto.SummaryResponse;
 import com.awesome.financial.control.afc.dto.TransactionResponse;
 import com.awesome.financial.control.afc.dto.UpdateTransactionRequest;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +56,14 @@ public class TransactionController {
     public TransactionResponse updateTransaction(
             @PathVariable UUID id, @Valid @RequestBody UpdateTransactionRequest request) {
         return transactionService.updateTransaction(id, request);
+    }
+
+    @PostMapping("/transactions")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create a new transaction")
+    public TransactionResponse createTransaction(
+            @Valid @RequestBody CreateTransactionRequest request) {
+        return transactionService.createTransaction(request);
     }
 
     @GetMapping("/summary")
