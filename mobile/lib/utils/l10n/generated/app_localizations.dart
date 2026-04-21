@@ -579,6 +579,72 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Galeria'**
   String get quickAddGallery;
+
+  /// Recurring transactions screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Recorrentes'**
+  String get recurringTitle;
+
+  /// Empty state for recurring list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma regra recorrente cadastrada'**
+  String get recurringEmpty;
+
+  /// Daily frequency label
+  ///
+  /// In pt, this message translates to:
+  /// **'Diário'**
+  String get recurringFrequencyDaily;
+
+  /// Weekly frequency label
+  ///
+  /// In pt, this message translates to:
+  /// **'Semanal'**
+  String get recurringFrequencyWeekly;
+
+  /// Monthly frequency label
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensal'**
+  String get recurringFrequencyMonthly;
+
+  /// Next due date label
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo vencimento: {date}'**
+  String recurringNextDue(String date);
+
+  /// Recurring form title
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova regra recorrente'**
+  String get recurringFormTitle;
+
+  /// Frequency field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Frequência'**
+  String get recurringFormFrequencyLabel;
+
+  /// Next due field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Primeiro vencimento'**
+  String get recurringFormNextDueLabel;
+
+  /// Title of delete recurring confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir regra'**
+  String get recurringDeleteConfirmTitle;
+
+  /// Body of delete recurring confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.'**
+  String get recurringDeleteConfirmMessage;
 }
 
 class _AppLocalizationsDelegate

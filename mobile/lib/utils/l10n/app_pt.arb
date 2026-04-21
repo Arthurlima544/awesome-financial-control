@@ -257,5 +257,43 @@
   "@quickAddCamera": { "description": "Camera button in quick add" },
 
   "quickAddGallery": "Galeria",
-  "@quickAddGallery": { "description": "Gallery button in quick add" }
+  "@quickAddGallery": { "description": "Gallery button in quick add" },
+
+  "recurringTitle": "Recorrentes",
+  "@recurringTitle": { "description": "Recurring transactions screen title" },
+
+  "recurringEmpty": "Nenhuma regra recorrente cadastrada",
+  "@recurringEmpty": { "description": "Empty state for recurring list" },
+
+  "recurringFrequencyDaily": "Diário",
+  "@recurringFrequencyDaily": { "description": "Daily frequency label" },
+
+  "recurringFrequencyWeekly": "Semanal",
+  "@recurringFrequencyWeekly": { "description": "Weekly frequency label" },
+
+  "recurringFrequencyMonthly": "Mensal",
+  "@recurringFrequencyMonthly": { "description": "Monthly frequency label" },
+
+  "recurringNextDue": "Próximo vencimento: {date}",
+  "@recurringNextDue": {
+    "description": "Next due date label",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "recurringFormTitle": "Nova regra recorrente",
+  "@recurringFormTitle": { "description": "Recurring form title" },
+
+  "recurringFormFrequencyLabel": "Frequência",
+  "@recurringFormFrequencyLabel": { "description": "Frequency field label" },
+
+  "recurringFormNextDueLabel": "Primeiro vencimento",
+  "@recurringFormNextDueLabel": { "description": "Next due field label" },
+
+  "recurringDeleteConfirmTitle": "Excluir regra",
+  "@recurringDeleteConfirmTitle": { "description": "Title of delete recurring confirmation dialog" },
+
+  "recurringDeleteConfirmMessage": "Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.",
+  "@recurringDeleteConfirmMessage": { "description": "Body of delete recurring confirmation dialog" }
 }

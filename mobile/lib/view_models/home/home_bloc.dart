@@ -5,18 +5,32 @@ import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/summary_model.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/repositories/home_repository.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'dart:async';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc({HomeRepository? repository})
+  final HomeRepository _repository;
+  final AppRefreshBloc _refreshBloc;
+  late final StreamSubscription _refreshSubscription;
+
+  HomeBloc({HomeRepository? repository, AppRefreshBloc? refreshBloc})
     : _repository = repository ?? sl<HomeRepository>(),
+      _refreshBloc = refreshBloc ?? sl<AppRefreshBloc>(),
       super(HomeInitial()) {
     on<HomeDashboardLoaded>(_onDashboardLoaded);
+    _refreshSubscription = _refreshBloc.stream.listen(
+      (_) => add(const HomeDashboardLoaded()),
+    );
   }
 
-  final HomeRepository _repository;
+  @override
+  Future<void> close() {
+    _refreshSubscription.cancel();
+    return super.close();
+  }
 
   Future<void> _onDashboardLoaded(
     HomeDashboardLoaded event,

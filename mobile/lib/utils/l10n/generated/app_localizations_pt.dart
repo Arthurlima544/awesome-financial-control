@@ -259,4 +259,40 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get quickAddGallery => 'Galeria';
+
+  @override
+  String get recurringTitle => 'Recorrentes';
+
+  @override
+  String get recurringEmpty => 'Nenhuma regra recorrente cadastrada';
+
+  @override
+  String get recurringFrequencyDaily => 'Diário';
+
+  @override
+  String get recurringFrequencyWeekly => 'Semanal';
+
+  @override
+  String get recurringFrequencyMonthly => 'Mensal';
+
+  @override
+  String recurringNextDue(String date) {
+    return 'Próximo vencimento: $date';
+  }
+
+  @override
+  String get recurringFormTitle => 'Nova regra recorrente';
+
+  @override
+  String get recurringFormFrequencyLabel => 'Frequência';
+
+  @override
+  String get recurringFormNextDueLabel => 'Primeiro vencimento';
+
+  @override
+  String get recurringDeleteConfirmTitle => 'Excluir regra';
+
+  @override
+  String get recurringDeleteConfirmMessage =>
+      'Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.';
 }

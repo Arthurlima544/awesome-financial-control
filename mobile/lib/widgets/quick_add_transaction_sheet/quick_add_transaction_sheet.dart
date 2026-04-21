@@ -11,6 +11,11 @@ import 'package:afc/widgets/adaptive_chip/adaptive_chip_cubit.dart';
 import 'package:afc/view_models/quick_add_transaction/quick_add_transaction_cubit.dart';
 import 'package:afc/view_models/quick_add_transaction/quick_add_transaction_state.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/models/recurring_transaction_model.dart';
+import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
+import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
+import 'package:afc/widgets/adaptive_segmented_control/adaptive_segmented_control.dart';
+import 'package:afc/widgets/adaptive_segmented_control/adaptive_segmented_control_cubit.dart';
 
 class QuickAddTransactionSheet extends StatelessWidget {
   const QuickAddTransactionSheet({super.key});
@@ -34,6 +39,20 @@ class _QuickAddTransactionForm extends StatefulWidget {
 
 class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
   final _formKey = GlobalKey<FormState>();
+
+  late final TextEditingController _descriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _descriptionController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   void _submit() {
     final cubit = context.read<QuickAddTransactionCubit>();
@@ -69,8 +88,9 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
         } else if (state.status == QuickAddTransactionStatus.failure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.errorMessage ?? l10n.transactionListError),
+              content: Text(state.errorMessage ?? l10n.genericError),
               backgroundColor: AppColors.error,
+              behavior: SnackBarBehavior.floating,
             ),
           );
         }
@@ -107,7 +127,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Modelos',
+                            l10n.quickAddTemplates,
                             style: Theme.of(context).textTheme.titleSmall
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
@@ -116,9 +136,17 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                _buildChip('Supermercado'),
+                                _buildChip(
+                                  l10n.quickAddTemplateSupermarket,
+                                  l10n.categoryFood,
+                                  context,
+                                ),
                                 const SizedBox(width: 8),
-                                _buildChip('Uber trabalho'),
+                                _buildChip(
+                                  l10n.quickAddTemplateUberWork,
+                                  l10n.categoryTransport,
+                                  context,
+                                ),
                               ],
                             ),
                           ),
@@ -193,7 +221,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                           ),
                           const SizedBox(height: 24),
                           Text(
-                            'Categoria',
+                            l10n.quickAddCategory,
                             style: Theme.of(context).textTheme.titleSmall
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
@@ -205,14 +233,14 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                             buildWhen: (p, c) => p.category != c.category,
                             builder: (context, state) {
                               final categories = [
-                                'Salário',
-                                'Transporte',
-                                'Investimentos',
-                                'Saúde',
-                                'Alimentação',
-                                'Moradia',
-                                'Lazer',
-                                'Educação',
+                                l10n.categorySalary,
+                                l10n.categoryTransport,
+                                l10n.categoryInvestments,
+                                l10n.categoryHealth,
+                                l10n.categoryFood,
+                                l10n.categoryHousing,
+                                l10n.categoryLeisure,
+                                l10n.categoryEducation,
                               ];
                               return Wrap(
                                 spacing: 8,
@@ -236,28 +264,96 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                             QuickAddTransactionState
                           >(
                             buildWhen: (p, c) => p.description != c.description,
-                            builder: (context, state) => TextFormField(
-                              decoration: InputDecoration(
-                                hintText: 'Título (opcional)',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Colors.grey[300]!,
+                            builder: (context, state) {
+                              if (_descriptionController.text !=
+                                  state.description) {
+                                _descriptionController.text = state.description;
+                              }
+                              return TextFormField(
+                                controller: _descriptionController,
+                                decoration: InputDecoration(
+                                  hintText: l10n.quickAddTitleHint,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[300]!,
+                                    ),
                                   ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Colors.grey[300]!,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[300]!,
+                                    ),
                                   ),
+                                  filled: true,
+                                  fillColor: Colors.white,
                                 ),
-                                filled: true,
-                                fillColor: Colors.white,
-                              ),
-                              onChanged: (v) => context
-                                  .read<QuickAddTransactionCubit>()
-                                  .descriptionChanged(v),
-                            ),
+                                onChanged: (v) => context
+                                    .read<QuickAddTransactionCubit>()
+                                    .descriptionChanged(v),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          BlocBuilder<
+                            QuickAddTransactionCubit,
+                            QuickAddTransactionState
+                          >(
+                            buildWhen: (p, c) =>
+                                p.isRecurring != c.isRecurring ||
+                                p.frequency != c.frequency,
+                            builder: (context, state) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        l10n.recurringTitle, // Or add a specific "Repeat" key
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge,
+                                      ),
+                                      BlocProvider(
+                                        create: (_) => AdaptiveSwitchCubit(
+                                          initialValue: state.isRecurring,
+                                        ),
+                                        child: AdaptiveSwitch(
+                                          semanticLabel: l10n.recurringTitle,
+                                          onChanged: (v) => context
+                                              .read<QuickAddTransactionCubit>()
+                                              .setRecurring(v),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (state.isRecurring) ...[
+                                    const SizedBox(height: 12),
+                                    BlocProvider(
+                                      create: (_) =>
+                                          AdaptiveSegmentedControlCubit(
+                                            initialIndex: state.frequency.index,
+                                          ),
+                                      child: AdaptiveSegmentedControl(
+                                        semanticLabel:
+                                            l10n.recurringFormFrequencyLabel,
+                                        segments: [
+                                          l10n.recurringFrequencyDaily,
+                                          l10n.recurringFrequencyWeekly,
+                                          l10n.recurringFrequencyMonthly,
+                                        ],
+                                        onChanged: (index) => context
+                                            .read<QuickAddTransactionCubit>()
+                                            .frequencyChanged(
+                                              RecurrenceFrequency.values[index],
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              );
+                            },
                           ),
                           const SizedBox(height: 16),
                           Row(
@@ -266,7 +362,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                 child: BlocProvider(
                                   create: (_) => AdaptiveButtonCubit(),
                                   child: AdaptiveButton(
-                                    text: 'Câmera',
+                                    text: l10n.quickAddCamera,
                                     leadingIcon: Icons.camera_alt_outlined,
                                     variant: AdaptiveButtonVariant.outlined,
                                     primaryColor: AppColors.primary,
@@ -279,7 +375,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                 child: BlocProvider(
                                   create: (_) => AdaptiveButtonCubit(),
                                   child: AdaptiveButton(
-                                    text: 'Galeria',
+                                    text: l10n.quickAddGallery,
                                     leadingIcon: Icons.image_outlined,
                                     variant: AdaptiveButtonVariant.outlined,
                                     primaryColor: AppColors.primary,
@@ -332,13 +428,18 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
     );
   }
 
-  Widget _buildChip(String label) {
+  Widget _buildChip(String label, String category, BuildContext context) {
     return BlocProvider(
       create: (_) => AdaptiveChipCubit(),
       child: AdaptiveChip(
         label: label,
         variant: AdaptiveChipVariant.tonal,
-        onPressed: () {},
+        onPressed: () {
+          context.read<QuickAddTransactionCubit>().applyTemplate(
+            label,
+            category,
+          );
+        },
       ),
     );
   }
@@ -361,13 +462,18 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
   }
 
   Widget _buildNewCategoryChip() {
-    return BlocProvider(
-      create: (_) => AdaptiveChipCubit(),
-      child: AdaptiveChip(
-        label: '+ Nova',
-        variant: AdaptiveChipVariant.outlined,
-        onPressed: () {},
-      ),
+    return BlocBuilder<QuickAddTransactionCubit, QuickAddTransactionState>(
+      builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
+        return BlocProvider(
+          create: (_) => AdaptiveChipCubit(),
+          child: AdaptiveChip(
+            label: l10n.quickAddCategoryNew,
+            variant: AdaptiveChipVariant.outlined,
+            onPressed: () {},
+          ),
+        );
+      },
     );
   }
 
