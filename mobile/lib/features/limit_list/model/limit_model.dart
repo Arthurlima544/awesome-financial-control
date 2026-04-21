@@ -1,3 +1,5 @@
+import '../../../shared/utils/currency_formatter.dart';
+
 class LimitModel {
   const LimitModel({
     required this.id,
@@ -10,6 +12,8 @@ class LimitModel {
   final String categoryName;
   final double amount;
   final DateTime createdAt;
+
+  String get formattedAmount => CurrencyFormatter.format(amount);
 
   factory LimitModel.fromJson(Map<String, dynamic> json) => LimitModel(
     id: json['id'] as String,

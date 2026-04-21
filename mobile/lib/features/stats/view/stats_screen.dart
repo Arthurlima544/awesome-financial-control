@@ -5,6 +5,7 @@ import '../../../l10n/generated/app_localizations.dart';
 
 import '../../../config/app_colors.dart';
 import '../../../config/app_spacing.dart';
+import '../../../config/injection.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../bloc/stats_bloc.dart';
@@ -16,7 +17,7 @@ class StatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => StatsBloc()..add(const StatsLoaded()),
+      create: (_) => sl<StatsBloc>()..add(const StatsLoaded()),
       child: const _StatsView(),
     );
   }
@@ -142,7 +143,11 @@ class _BarChart extends StatelessWidget {
               showTitles: true,
               reservedSize: 56,
               interval: state.yInterval,
-              getTitlesWidget: (value, meta) => _YLabel(value: value),
+              getTitlesWidget: (value, meta) => Text(
+                state.formatYLabel(value),
+                style: Theme.of(context).textTheme.labelSmall,
+                textAlign: TextAlign.right,
+              ),
             ),
           ),
           bottomTitles: AxisTitles(
@@ -154,7 +159,13 @@ class _BarChart extends StatelessWidget {
                 if (index < 0 || index >= stats.length) {
                   return const SizedBox.shrink();
                 }
-                return _XLabel(month: stats[index].month);
+                return Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
+                  child: Text(
+                    stats[index].monthAbbreviation,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                );
               },
             ),
           ),
@@ -197,58 +208,5 @@ class _BarChart extends StatelessWidget {
         ],
       );
     });
-  }
-}
-
-class _YLabel extends StatelessWidget {
-  const _YLabel({required this.value});
-
-  final double value;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = value >= 1000
-        ? 'R\$${(value / 1000).toStringAsFixed(1)}k'
-        : 'R\$${value.toStringAsFixed(0)}';
-    return Text(
-      label,
-      style: Theme.of(context).textTheme.labelSmall,
-      textAlign: TextAlign.right,
-    );
-  }
-}
-
-class _XLabel extends StatelessWidget {
-  const _XLabel({required this.month});
-
-  final String month;
-
-  String get _abbrev {
-    if (month.length < 7) return month;
-    final m = int.tryParse(month.substring(5, 7)) ?? 0;
-    const abbrevs = [
-      '',
-      'Jan',
-      'Fev',
-      'Mar',
-      'Abr',
-      'Mai',
-      'Jun',
-      'Jul',
-      'Ago',
-      'Set',
-      'Out',
-      'Nov',
-      'Dez',
-    ];
-    return m >= 1 && m <= 12 ? abbrevs[m] : month;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xs),
-      child: Text(_abbrev, style: Theme.of(context).textTheme.labelSmall),
-    );
   }
 }

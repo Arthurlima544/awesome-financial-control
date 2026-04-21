@@ -1,74 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../config/injection.dart';
 import '../model/category_model.dart';
 import '../repository/category_repository.dart';
 
-// Events
-
-abstract class CategoryEvent extends Equatable {
-  const CategoryEvent();
-  @override
-  List<Object?> get props => [];
-}
-
-class CategoryFetchRequested extends CategoryEvent {
-  const CategoryFetchRequested();
-}
-
-class CategoryDeleteRequested extends CategoryEvent {
-  const CategoryDeleteRequested(this.id);
-
-  final String id;
-
-  @override
-  List<Object?> get props => [id];
-}
-
-class CategoryUpdateRequested extends CategoryEvent {
-  const CategoryUpdateRequested({required this.id, required this.name});
-
-  final String id;
-  final String name;
-
-  @override
-  List<Object?> get props => [id, name];
-}
-
-// States
-
-abstract class CategoryState extends Equatable {
-  const CategoryState();
-  @override
-  List<Object?> get props => [];
-}
-
-class CategoryInitial extends CategoryState {}
-
-class CategoryLoading extends CategoryState {}
-
-class CategoryData extends CategoryState {
-  const CategoryData(this.categories);
-
-  final List<CategoryModel> categories;
-
-  @override
-  List<Object?> get props => [categories];
-}
-
-class CategoryError extends CategoryState {
-  const CategoryError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// Bloc
+part 'category_event.dart';
+part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc({CategoryRepository? repository})
-    : _repository = repository ?? CategoryRepository(),
+    : _repository = repository ?? sl<CategoryRepository>(),
       super(CategoryInitial()) {
     on<CategoryFetchRequested>(_onFetchRequested);
     on<CategoryDeleteRequested>(_onDeleteRequested);

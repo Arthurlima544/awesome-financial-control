@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/app_colors.dart';
 import '../../../config/app_spacing.dart';
+import '../../../config/injection.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/custom_progress_bar/custom_progress_bar.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
@@ -16,7 +17,7 @@ class LimitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LimitBloc()..add(const LimitProgressLoaded()),
+      create: (_) => sl<LimitBloc>()..add(const LimitProgressLoaded()),
       child: const _LimitView(),
     );
   }
@@ -79,7 +80,6 @@ class _LimitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final progress = (limit.percentage / 100).clamp(0.0, 1.0);
     final isOver = limit.isOverLimit;
     final barColor = isOver ? AppColors.error : AppColors.primary;
 
@@ -97,7 +97,7 @@ class _LimitCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Text(
-                  '${limit.percentage.toStringAsFixed(0)}%',
+                  limit.percentageFormatted,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: barColor,
                     fontWeight: FontWeight.w600,
@@ -108,7 +108,7 @@ class _LimitCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             CustomProgressBar(
               key: ValueKey('progress_${limit.id}'),
-              initialProgress: progress,
+              initialProgress: limit.progress,
               activeColor: barColor,
               inactiveColor: AppColors.neutral100,
             ),
@@ -117,11 +117,11 @@ class _LimitCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  l10n.limitSpent('R\$ ${limit.spent.toStringAsFixed(2)}'),
+                  l10n.limitSpent(limit.spentFormatted),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
-                  l10n.limitOf('R\$ ${limit.limitAmount.toStringAsFixed(2)}'),
+                  l10n.limitOf(limit.limitAmountFormatted),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],

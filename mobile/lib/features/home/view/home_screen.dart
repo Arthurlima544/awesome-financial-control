@@ -57,51 +57,59 @@ class _HomeView extends StatelessWidget {
               onRetry: () =>
                   context.read<HomeBloc>().add(const HomeDashboardLoaded()),
             ),
-            HomeLoaded(:final summary, :final transactions) => RefreshIndicator(
-              onRefresh: () async =>
-                  context.read<HomeBloc>().add(const HomeDashboardLoaded()),
-              child: ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                children: [
-                  Text(
-                    l10n.homeSummaryTitle,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  _SummaryCard(
-                    key: const ValueKey('summaryCard'),
-                    totalIncome: summary.totalIncome,
-                    totalExpenses: summary.totalExpenses,
-                    balance: summary.balance,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    l10n.homeRecentTransactions,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  if (transactions.isEmpty)
-                    EmptyState(
-                      key: const ValueKey('homeEmptyTransactions'),
-                      icon: Icons.receipt_long_outlined,
-                      title: l10n.homeNoTransactions,
-                    )
-                  else
-                    ...transactions.map(
-                      (t) => TransactionListItem(
-                        key: ValueKey(t.id),
-                        description: t.description,
-                        amount: t.amount,
-                        type: t.type == TransactionType.income
-                            ? TransactionItemType.income
-                            : TransactionItemType.expense,
-                        category: t.category,
-                        occurredAt: t.occurredAt,
-                      ),
+            HomeLoaded(
+              :final transactions,
+              :final totalIncomeFormatted,
+              :final totalExpensesFormatted,
+              :final balanceFormatted,
+              :final isBalancePositive,
+            ) =>
+              RefreshIndicator(
+                onRefresh: () async =>
+                    context.read<HomeBloc>().add(const HomeDashboardLoaded()),
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  children: [
+                    Text(
+                      l10n.homeSummaryTitle,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                ],
+                    const SizedBox(height: 12),
+                    _SummaryCard(
+                      key: const ValueKey('summaryCard'),
+                      totalIncome: totalIncomeFormatted,
+                      totalExpenses: totalExpensesFormatted,
+                      balance: balanceFormatted,
+                      isBalancePositive: isBalancePositive,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      l10n.homeRecentTransactions,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 12),
+                    if (transactions.isEmpty)
+                      EmptyState(
+                        key: const ValueKey('homeEmptyTransactions'),
+                        icon: Icons.receipt_long_outlined,
+                        title: l10n.homeNoTransactions,
+                      )
+                    else
+                      ...transactions.map(
+                        (t) => TransactionListItem(
+                          key: ValueKey(t.id),
+                          description: t.description,
+                          amount: t.amount,
+                          type: t.type == TransactionType.income
+                              ? TransactionItemType.income
+                              : TransactionItemType.expense,
+                          category: t.category,
+                          occurredAt: t.occurredAt,
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
             _ => const SizedBox.shrink(),
           };
         },
@@ -116,11 +124,13 @@ class _SummaryCard extends StatelessWidget {
     required this.totalIncome,
     required this.totalExpenses,
     required this.balance,
+    required this.isBalancePositive,
   });
 
-  final double totalIncome;
-  final double totalExpenses;
-  final double balance;
+  final String totalIncome;
+  final String totalExpenses;
+  final String balance;
+  final bool isBalancePositive;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +158,7 @@ class _SummaryCard extends StatelessWidget {
               key: const ValueKey('balance'),
               label: l10n.homeBalance,
               amount: balance,
-              color: balance >= 0 ? AppColors.success : AppColors.error,
+              color: isBalancePositive ? AppColors.success : AppColors.error,
             ),
           ],
         ),
@@ -166,7 +176,7 @@ class _SummaryItem extends StatelessWidget {
   });
 
   final String label;
-  final double amount;
+  final String amount;
   final Color color;
 
   @override
@@ -176,7 +186,7 @@ class _SummaryItem extends StatelessWidget {
         Text(label, style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          'R\$ ${amount.toStringAsFixed(2)}',
+          amount,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: color,
             fontWeight: FontWeight.w600,

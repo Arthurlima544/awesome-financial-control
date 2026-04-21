@@ -1,0 +1,29 @@
+part of 'category_bloc.dart';
+
+abstract class CategoryState extends Equatable {
+  const CategoryState();
+  @override
+  List<Object?> get props => [];
+}
+
+class CategoryInitial extends CategoryState {}
+
+class CategoryLoading extends CategoryState {}
+
+class CategoryData extends CategoryState {
+  const CategoryData(this.categories);
+
+  final List<CategoryModel> categories;
+
+  @override
+  List<Object?> get props => [categories];
+}
+
+class CategoryError extends CategoryState {
+  const CategoryError(this.message);
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}

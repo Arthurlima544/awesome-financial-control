@@ -1,3 +1,5 @@
+import '../../../shared/utils/currency_formatter.dart';
+
 class LimitProgressModel {
   const LimitProgressModel({
     required this.id,
@@ -14,6 +16,12 @@ class LimitProgressModel {
   final double percentage;
 
   bool get isOverLimit => spent > limitAmount;
+
+  String get spentFormatted => CurrencyFormatter.format(spent);
+  String get limitAmountFormatted => CurrencyFormatter.format(limitAmount);
+  String get percentageFormatted => '${percentage.toStringAsFixed(0)}%';
+
+  double get progress => (percentage / 100).clamp(0.0, 1.0);
 
   factory LimitProgressModel.fromJson(Map<String, dynamic> json) {
     return LimitProgressModel(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../utils/currency_formatter.dart';
 import 'transaction_list_item_cubit.dart';
 
 enum TransactionItemType { income, expense }
@@ -115,10 +116,11 @@ class _TransactionListItemView extends StatelessWidget {
 
             final amountPrefix = isIncome ? '+' : '-';
             final icon = isIncome ? Icons.arrow_downward : Icons.arrow_upward;
+            final formattedAmount = CurrencyFormatter.format(amount);
 
             return Semantics(
               label:
-                  '$description ${isIncome ? "receita" : "despesa"} R\$ ${amount.toStringAsFixed(2)}',
+                  '$description ${isIncome ? "receita" : "despesa"} $amountPrefix $formattedAmount',
               button: onTap != null,
               child: Focus(
                 focusNode: focusNode,
@@ -197,7 +199,7 @@ class _TransactionListItemView extends StatelessWidget {
                           ),
                           SizedBox(width: screenWidth * 0.02),
                           Text(
-                            '$amountPrefix R\$ ${amount.toStringAsFixed(2)}',
+                            '$amountPrefix $formattedAmount',
                             style: TextStyle(
                               fontSize: amountSize,
                               fontWeight: FontWeight.bold,

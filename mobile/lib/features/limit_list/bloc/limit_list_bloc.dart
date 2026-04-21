@@ -1,74 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../config/injection.dart';
 import '../model/limit_model.dart';
 import '../repository/limit_list_repository.dart';
 
-// Events
-
-abstract class LimitListEvent extends Equatable {
-  const LimitListEvent();
-  @override
-  List<Object?> get props => [];
-}
-
-class LimitListFetchRequested extends LimitListEvent {
-  const LimitListFetchRequested();
-}
-
-class LimitListDeleteRequested extends LimitListEvent {
-  const LimitListDeleteRequested(this.id);
-
-  final String id;
-
-  @override
-  List<Object?> get props => [id];
-}
-
-class LimitListUpdateRequested extends LimitListEvent {
-  const LimitListUpdateRequested({required this.id, required this.amount});
-
-  final String id;
-  final double amount;
-
-  @override
-  List<Object?> get props => [id, amount];
-}
-
-// States
-
-abstract class LimitListState extends Equatable {
-  const LimitListState();
-  @override
-  List<Object?> get props => [];
-}
-
-class LimitListInitial extends LimitListState {}
-
-class LimitListLoading extends LimitListState {}
-
-class LimitListData extends LimitListState {
-  const LimitListData(this.limits);
-
-  final List<LimitModel> limits;
-
-  @override
-  List<Object?> get props => [limits];
-}
-
-class LimitListError extends LimitListState {
-  const LimitListError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// Bloc
+part 'limit_list_event.dart';
+part 'limit_list_state.dart';
 
 class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
   LimitListBloc({LimitListRepository? repository})
-    : _repository = repository ?? LimitListRepository(),
+    : _repository = repository ?? sl<LimitListRepository>(),
       super(LimitListInitial()) {
     on<LimitListFetchRequested>(_onFetchRequested);
     on<LimitListDeleteRequested>(_onDeleteRequested);

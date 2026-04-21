@@ -1,57 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../config/injection.dart';
+import '../../../shared/utils/currency_formatter.dart';
 import '../model/summary_model.dart';
 import '../model/transaction_model.dart';
 import '../repository/home_repository.dart';
 
-// Events
-
-abstract class HomeEvent extends Equatable {
-  const HomeEvent();
-  @override
-  List<Object?> get props => [];
-}
-
-class HomeDashboardLoaded extends HomeEvent {
-  const HomeDashboardLoaded();
-}
-
-// States
-
-abstract class HomeState extends Equatable {
-  const HomeState();
-  @override
-  List<Object?> get props => [];
-}
-
-class HomeInitial extends HomeState {}
-
-class HomeLoading extends HomeState {}
-
-class HomeLoaded extends HomeState {
-  const HomeLoaded({required this.summary, required this.transactions});
-
-  final SummaryModel summary;
-  final List<TransactionModel> transactions;
-
-  @override
-  List<Object?> get props => [summary, transactions];
-}
-
-class HomeError extends HomeState {
-  const HomeError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// Bloc
+part 'home_event.dart';
+part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({HomeRepository? repository})
-    : _repository = repository ?? HomeRepository(),
+    : _repository = repository ?? sl<HomeRepository>(),
       super(HomeInitial()) {
     on<HomeDashboardLoaded>(_onDashboardLoaded);
   }

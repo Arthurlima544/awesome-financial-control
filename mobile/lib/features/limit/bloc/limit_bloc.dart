@@ -1,55 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../config/injection.dart';
 import '../model/limit_progress_model.dart';
 import '../repository/limit_repository.dart';
 
-// Events
-
-abstract class LimitEvent extends Equatable {
-  const LimitEvent();
-  @override
-  List<Object?> get props => [];
-}
-
-class LimitProgressLoaded extends LimitEvent {
-  const LimitProgressLoaded();
-}
-
-// States
-
-abstract class LimitState extends Equatable {
-  const LimitState();
-  @override
-  List<Object?> get props => [];
-}
-
-class LimitInitial extends LimitState {}
-
-class LimitLoading extends LimitState {}
-
-class LimitLoaded extends LimitState {
-  const LimitLoaded(this.limits);
-
-  final List<LimitProgressModel> limits;
-
-  @override
-  List<Object?> get props => [limits];
-}
-
-class LimitError extends LimitState {
-  const LimitError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// Bloc
+part 'limit_event.dart';
+part 'limit_state.dart';
 
 class LimitBloc extends Bloc<LimitEvent, LimitState> {
   LimitBloc({LimitRepository? repository})
-    : _repository = repository ?? LimitRepository(),
+    : _repository = repository ?? sl<LimitRepository>(),
       super(LimitInitial()) {
     on<LimitProgressLoaded>(_onProgressLoaded);
   }

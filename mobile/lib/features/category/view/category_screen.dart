@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../config/app_colors.dart';
+import '../../../config/injection.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/adaptive_popup/adaptive_popup.dart';
 import '../../../shared/components/adaptive_popup/adaptive_popup_cubit.dart';
@@ -10,6 +10,7 @@ import '../../../shared/components/custom_list_tile/custom_list_tile.dart';
 import '../../../shared/components/dismissible_delete_background/dismissible_delete_background.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
+import '../../../shared/services/navigation_service.dart';
 import '../bloc/category_bloc.dart';
 import '../model/category_model.dart';
 
@@ -19,7 +20,7 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CategoryBloc()..add(const CategoryFetchRequested()),
+      create: (_) => sl<CategoryBloc>()..add(const CategoryFetchRequested()),
       child: const _CategoryView(),
     );
   }
@@ -117,7 +118,7 @@ class _DismissibleItem extends StatelessWidget {
         leadingIcon: Icons.category_outlined,
         trailingType: CustomListTileTrailing.arrow,
         primaryColor: AppColors.primary,
-        onTap: () => context.push(
+        onTap: () => sl<NavigationService>().push(
           '/categories/${category.id}/edit',
           extra: context.read<CategoryBloc>(),
         ),
