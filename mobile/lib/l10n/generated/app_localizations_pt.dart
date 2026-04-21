@@ -107,4 +107,88 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get statsErrorLoading => 'Erro ao carregar estatísticas';
+
+  @override
+  String get transactionListTitle => 'Transações';
+
+  @override
+  String get transactionListEmpty => 'Nenhuma transação encontrada';
+
+  @override
+  String get transactionListError => 'Erro ao carregar transações';
+
+  @override
+  String get transactionDeleteConfirmTitle => 'Excluir transação';
+
+  @override
+  String get transactionDeleteConfirmMessage =>
+      'Deseja excluir esta transação? Esta ação não pode ser desfeita.';
+
+  @override
+  String get navHome => 'Início';
+
+  @override
+  String get navTransactions => 'Transações';
+
+  @override
+  String get navLimits => 'Limites';
+
+  @override
+  String get navStats => 'Gráficos';
+
+  @override
+  String get fabAddTransaction => 'Adicionar transação';
+
+  @override
+  String get categoryListTitle => 'Categorias';
+
+  @override
+  String get categoryListEmpty => 'Nenhuma categoria cadastrada';
+
+  @override
+  String get categoryListError => 'Erro ao carregar categorias';
+
+  @override
+  String get categoryDeleteConfirmTitle => 'Excluir categoria';
+
+  @override
+  String get categoryDeleteConfirmMessage =>
+      'Deseja excluir esta categoria? Esta ação não pode ser desfeita.';
+
+  @override
+  String get categoryEditTitle => 'Editar categoria';
+
+  @override
+  String get categoryNameLabel => 'Nome';
+
+  @override
+  String get limitListTitle => 'Gerenciar limites';
+
+  @override
+  String get limitListEmpty => 'Nenhum limite cadastrado';
+
+  @override
+  String get limitListError => 'Erro ao carregar limites';
+
+  @override
+  String get limitDeleteConfirmTitle => 'Excluir limite';
+
+  @override
+  String get limitDeleteConfirmMessage =>
+      'Deseja excluir este limite? Esta ação não pode ser desfeita.';
+
+  @override
+  String get limitEditTitle => 'Editar limite';
+
+  @override
+  String get limitAmountLabel => 'Valor (R\$)';
+
+  @override
+  String get transactionEditTitle => 'Editar transação';
+
+  @override
+  String get transactionDescriptionLabel => 'Descrição';
+
+  @override
+  String get transactionAmountLabel => 'Valor (R\$)';
 }

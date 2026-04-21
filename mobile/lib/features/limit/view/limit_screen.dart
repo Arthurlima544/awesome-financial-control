@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/app_colors.dart';
+import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/custom_progress_bar/custom_progress_bar.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
@@ -53,7 +54,7 @@ class _LimitView extends StatelessWidget {
                         const LimitProgressLoaded(),
                       ),
                       child: ListView.separated(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(AppSpacing.md),
                         itemCount: limits.length,
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
                         itemBuilder: (context, index) => _LimitCard(
@@ -84,7 +85,7 @@ class _LimitCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,19 +100,19 @@ class _LimitCard extends StatelessWidget {
                   '${limit.percentage.toStringAsFixed(0)}%',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: barColor,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             CustomProgressBar(
               key: ValueKey('progress_${limit.id}'),
               initialProgress: progress,
               activeColor: barColor,
               inactiveColor: AppColors.neutral100,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

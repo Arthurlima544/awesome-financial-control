@@ -105,5 +105,86 @@
   "@statsNoData": { "description": "Empty state for stats chart" },
 
   "statsErrorLoading": "Erro ao carregar estatísticas",
-  "@statsErrorLoading": { "description": "Error message when stats data fails to load" }
+  "@statsErrorLoading": { "description": "Error message when stats data fails to load" },
+
+  "transactionListTitle": "Transações",
+  "@transactionListTitle": { "description": "Transaction list screen title" },
+
+  "transactionListEmpty": "Nenhuma transação encontrada",
+  "@transactionListEmpty": { "description": "Empty state for transaction list screen" },
+
+  "transactionListError": "Erro ao carregar transações",
+  "@transactionListError": { "description": "Error message when transaction list fails to load" },
+
+  "transactionDeleteConfirmTitle": "Excluir transação",
+  "@transactionDeleteConfirmTitle": { "description": "Title of delete transaction confirmation dialog" },
+
+  "transactionDeleteConfirmMessage": "Deseja excluir esta transação? Esta ação não pode ser desfeita.",
+  "@transactionDeleteConfirmMessage": { "description": "Body of delete transaction confirmation dialog" },
+
+  "navHome": "Início",
+  "@navHome": { "description": "Bottom nav bar home tab label" },
+
+  "navTransactions": "Transações",
+  "@navTransactions": { "description": "Bottom nav bar transactions tab label" },
+
+  "navLimits": "Limites",
+  "@navLimits": { "description": "Bottom nav bar limits tab label" },
+
+  "navStats": "Gráficos",
+  "@navStats": { "description": "Bottom nav bar stats tab label" },
+
+  "fabAddTransaction": "Adicionar transação",
+  "@fabAddTransaction": { "description": "FAB tooltip for adding a new transaction" },
+
+  "categoryListTitle": "Categorias",
+  "@categoryListTitle": { "description": "Category list screen title" },
+
+  "categoryListEmpty": "Nenhuma categoria cadastrada",
+  "@categoryListEmpty": { "description": "Empty state for category list screen" },
+
+  "categoryListError": "Erro ao carregar categorias",
+  "@categoryListError": { "description": "Error message when category list fails to load" },
+
+  "categoryDeleteConfirmTitle": "Excluir categoria",
+  "@categoryDeleteConfirmTitle": { "description": "Title of delete category confirmation dialog" },
+
+  "categoryDeleteConfirmMessage": "Deseja excluir esta categoria? Esta ação não pode ser desfeita.",
+  "@categoryDeleteConfirmMessage": { "description": "Body of delete category confirmation dialog" },
+
+  "categoryEditTitle": "Editar categoria",
+  "@categoryEditTitle": { "description": "Category edit screen title" },
+
+  "categoryNameLabel": "Nome",
+  "@categoryNameLabel": { "description": "Category name field label" },
+
+  "limitListTitle": "Gerenciar limites",
+  "@limitListTitle": { "description": "Limit list management screen title" },
+
+  "limitListEmpty": "Nenhum limite cadastrado",
+  "@limitListEmpty": { "description": "Empty state for limit list management screen" },
+
+  "limitListError": "Erro ao carregar limites",
+  "@limitListError": { "description": "Error message when limit list fails to load" },
+
+  "limitDeleteConfirmTitle": "Excluir limite",
+  "@limitDeleteConfirmTitle": { "description": "Title of delete limit confirmation dialog" },
+
+  "limitDeleteConfirmMessage": "Deseja excluir este limite? Esta ação não pode ser desfeita.",
+  "@limitDeleteConfirmMessage": { "description": "Body of delete limit confirmation dialog" },
+
+  "limitEditTitle": "Editar limite",
+  "@limitEditTitle": { "description": "Limit edit screen title" },
+
+  "limitAmountLabel": "Valor (R$)",
+  "@limitAmountLabel": { "description": "Limit amount field label" },
+
+  "transactionEditTitle": "Editar transação",
+  "@transactionEditTitle": { "description": "Transaction edit screen title" },
+
+  "transactionDescriptionLabel": "Descrição",
+  "@transactionDescriptionLabel": { "description": "Transaction description field label" },
+
+  "transactionAmountLabel": "Valor (R$)",
+  "@transactionAmountLabel": { "description": "Transaction amount field label" }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/app_colors.dart';
+import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/adaptive_button/adaptive_button.dart';
 import '../../../shared/components/adaptive_button/adaptive_button_cubit.dart';
@@ -32,7 +33,7 @@ class _LoginView extends StatelessWidget {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -47,7 +48,7 @@ class _LoginView extends StatelessWidget {
                 onChanged: formCubit.emailChanged,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             BlocProvider(
               create: (_) => AdaptiveTextFieldCubit(),
               child: BlocBuilder<LoginFormCubit, LoginFormState>(
@@ -72,7 +73,7 @@ class _LoginView extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.lg),
             BlocProvider(
               create: (_) => AdaptiveButtonCubit(),
               child: AdaptiveButton(
