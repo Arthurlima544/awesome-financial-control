@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'config/app_theme.dart';
-import 'config/router.dart';
-import 'features/auth/bloc/auth_bloc.dart';
-import 'l10n/generated/app_localizations.dart';
+import 'package:afc/utils/config/app_theme.dart';
+import 'package:afc/utils/config/router.dart';
+import 'package:afc/view_models/auth/auth_bloc.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
-import 'config/injection.dart' as di;
-import 'config/injection.dart';
+import 'package:afc/utils/config/injection.dart' as di;
+import 'package:afc/utils/config/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
