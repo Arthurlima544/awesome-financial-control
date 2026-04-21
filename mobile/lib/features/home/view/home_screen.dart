@@ -4,8 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../config/app_colors.dart';
 import '../../../config/app_config.dart';
 import '../../../config/app_spacing.dart';
+import '../../../config/injection.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../dev/view/dev_tools_sheet.dart';
+import '../../limit/bloc/limit_bloc.dart';
+import '../../limit/view/month_limit_view.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
@@ -17,12 +20,22 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _HomeView();
+    return BlocProvider(
+      create: (_) => sl<LimitBloc>()..add(const LimitProgressLoaded()),
+      child: const _HomeView(),
+    );
   }
 }
 
-class _HomeView extends StatelessWidget {
+class _HomeView extends StatefulWidget {
   const _HomeView();
+
+  @override
+  State<_HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<_HomeView> {
+  bool _hasShownAlert = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,81 +51,157 @@ class _HomeView extends StatelessWidget {
               tooltip: l10n.devToolsTitle,
               onPressed: () {
                 final homeBloc = context.read<HomeBloc>();
+                final limitBloc = context.read<LimitBloc>();
                 showDevToolsSheet(
                   context,
-                  onSuccess: () => homeBloc.add(const HomeDashboardLoaded()),
+                  onSuccess: () {
+                    homeBloc.add(const HomeDashboardLoaded());
+                    limitBloc.add(const LimitProgressLoaded());
+                  },
                 );
               },
             ),
         ],
       ),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          return switch (state) {
-            HomeLoading() ||
-            HomeInitial() => const Center(child: CircularProgressIndicator()),
-            HomeError() => ErrorView(
-              key: const ValueKey('homeError'),
-              message: l10n.homeErrorLoading,
-              onRetry: () =>
-                  context.read<HomeBloc>().add(const HomeDashboardLoaded()),
-            ),
-            HomeLoaded(
-              :final transactions,
-              :final totalIncomeFormatted,
-              :final totalExpensesFormatted,
-              :final balanceFormatted,
-              :final isBalancePositive,
-            ) =>
-              RefreshIndicator(
-                onRefresh: () async =>
-                    context.read<HomeBloc>().add(const HomeDashboardLoaded()),
-                child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  children: [
-                    Text(
-                      l10n.homeSummaryTitle,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 12),
-                    _SummaryCard(
-                      key: const ValueKey('summaryCard'),
-                      totalIncome: totalIncomeFormatted,
-                      totalExpenses: totalExpensesFormatted,
-                      balance: balanceFormatted,
-                      isBalancePositive: isBalancePositive,
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      l10n.homeRecentTransactions,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 12),
-                    if (transactions.isEmpty)
-                      EmptyState(
-                        key: const ValueKey('homeEmptyTransactions'),
-                        icon: Icons.receipt_long_outlined,
-                        title: l10n.homeNoTransactions,
-                      )
-                    else
-                      ...transactions.map(
-                        (t) => TransactionListItem(
-                          key: ValueKey(t.id),
-                          description: t.description,
-                          amount: t.amount,
-                          type: t.type == TransactionType.income
-                              ? TransactionItemType.income
-                              : TransactionItemType.expense,
-                          category: t.category,
-                          occurredAt: t.occurredAt,
-                        ),
+      body: BlocListener<LimitBloc, LimitState>(
+        listenWhen: (p, c) => p is! LimitLoaded && c is LimitLoaded,
+        listener: (context, state) {
+          if (state is LimitLoaded && !_hasShownAlert) {
+            final overspent = state.limits.where((l) => l.isOverLimit).toList();
+            if (overspent.isNotEmpty) {
+              _hasShownAlert = true;
+              final limitNames = overspent
+                  .map((e) => e.categoryName)
+                  .join(', ');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.white,
                       ),
-                  ],
+                      const SizedBox(width: 8),
+                      Expanded(child: Text('Limite excedido: $limitNames')),
+                    ],
+                  ),
+                  backgroundColor: AppColors.error,
+                  behavior: SnackBarBehavior.floating,
                 ),
-              ),
-            _ => const SizedBox.shrink(),
-          };
+              );
+            }
+          }
         },
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<HomeBloc>().add(const HomeDashboardLoaded());
+            context.read<LimitBloc>().add(const LimitProgressLoaded());
+          },
+          child: BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              return switch (state) {
+                HomeLoading() || HomeInitial() => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                HomeError() => ErrorView(
+                  key: const ValueKey('homeError'),
+                  message: l10n.homeErrorLoading,
+                  onRetry: () =>
+                      context.read<HomeBloc>().add(const HomeDashboardLoaded()),
+                ),
+                HomeLoaded(
+                  :final transactions,
+                  :final totalIncomeFormatted,
+                  :final totalExpensesFormatted,
+                  :final savingsRate,
+                ) =>
+                  ListView(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    children: [
+                      Text(
+                        l10n.homeSummaryTitle,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      _SummaryCard(
+                        key: const ValueKey('summaryCard'),
+                        totalIncome: totalIncomeFormatted,
+                        totalExpenses: totalExpensesFormatted,
+                        savingsRate: savingsRate,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        l10n.homeRecentTransactions,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      if (transactions.isEmpty)
+                        EmptyState(
+                          key: const ValueKey('homeEmptyTransactions'),
+                          icon: Icons.receipt_long_outlined,
+                          title: l10n.homeNoTransactions,
+                        )
+                      else
+                        ...transactions.map(
+                          (t) => TransactionListItem(
+                            key: ValueKey(t.id),
+                            description: t.description,
+                            amount: t.amount,
+                            type: t.type == TransactionType.income
+                                ? TransactionItemType.income
+                                : TransactionItemType.expense,
+                            category: t.category,
+                            occurredAt: t.occurredAt,
+                          ),
+                        ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        'Limites',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      BlocBuilder<LimitBloc, LimitState>(
+                        builder: (context, limitState) {
+                          return switch (limitState) {
+                            LimitLoading() || LimitInitial() => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            LimitError() => ErrorView(
+                              message: l10n.limitErrorLoading,
+                              onRetry: () => context.read<LimitBloc>().add(
+                                const LimitProgressLoaded(),
+                              ),
+                            ),
+                            LimitLoaded(:final limits) =>
+                              limits.isEmpty
+                                  ? EmptyState(
+                                      icon: Icons.price_change_outlined,
+                                      title: l10n.limitNoLimits,
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: limits
+                                          .map(
+                                            (limit) => MonthLimitView(
+                                              key: ValueKey(limit.id),
+                                              limit: limit,
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                            _ => const SizedBox.shrink(),
+                          };
+                        },
+                      ),
+                      const SizedBox(height: 80), // Padding for FAB
+                    ],
+                  ),
+                _ => const SizedBox.shrink(),
+              };
+            },
+          ),
+        ),
       ),
     );
   }
@@ -123,76 +212,83 @@ class _SummaryCard extends StatelessWidget {
     super.key,
     required this.totalIncome,
     required this.totalExpenses,
-    required this.balance,
-    required this.isBalancePositive,
+    required this.savingsRate,
   });
 
   final String totalIncome;
   final String totalExpenses;
-  final String balance;
-  final bool isBalancePositive;
+  final int savingsRate;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      elevation: 0,
+      color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _SummaryItem(
-              key: const ValueKey('totalIncome'),
-              label: l10n.homeTotalIncome,
-              amount: totalIncome,
-              color: AppColors.success,
+            Column(
+              children: [
+                Text(
+                  '$savingsRate%',
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  'Taxa de\npoupança',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+              ],
             ),
-            _SummaryItem(
-              key: const ValueKey('totalExpenses'),
-              label: l10n.homeTotalExpenses,
-              amount: totalExpenses,
-              color: AppColors.error,
+            Container(height: 40, width: 1, color: Colors.grey.shade300),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  totalIncome,
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  'Receita do mês',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+              ],
             ),
-            _SummaryItem(
-              key: const ValueKey('balance'),
-              label: l10n.homeBalance,
-              amount: balance,
-              color: isBalancePositive ? AppColors.success : AppColors.error,
+            Container(height: 40, width: 1, color: Colors.grey.shade300),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  totalExpenses,
+                  style: const TextStyle(
+                    color: AppColors.error,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  'Gastos do mês',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+              ],
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _SummaryItem extends StatelessWidget {
-  const _SummaryItem({
-    super.key,
-    required this.label,
-    required this.amount,
-    required this.color,
-  });
-
-  final String label;
-  final String amount;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          amount,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: color,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
     );
   }
 }

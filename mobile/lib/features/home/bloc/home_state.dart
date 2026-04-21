@@ -22,6 +22,14 @@ class HomeLoaded extends HomeState {
       CurrencyFormatter.format(summary.totalExpenses);
   String get balanceFormatted => CurrencyFormatter.format(summary.balance);
 
+  int get savingsRate {
+    if (summary.totalIncome <= 0) return 0;
+    final rate =
+        ((summary.totalIncome - summary.totalExpenses) / summary.totalIncome) *
+        100;
+    return rate.clamp(0, 100).toInt();
+  }
+
   bool get isBalancePositive => summary.balance >= 0;
 
   @override
