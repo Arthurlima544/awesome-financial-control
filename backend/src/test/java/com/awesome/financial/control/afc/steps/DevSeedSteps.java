@@ -29,7 +29,6 @@ public class DevSeedSteps {
     }
 
     @Given("I seed the dev data")
-    @When("I seed the dev data")
     public void iSeedTheDevData() {
         ctx.response = restTemplate.postForEntity("/api/v1/dev/seed", null, String.class);
     }

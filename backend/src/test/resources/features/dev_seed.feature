@@ -7,10 +7,10 @@ Feature: Dev data seeder (local only)
     And the database has 3 limits
     And the database has 10 transactions
 
-  Scenario: Seed is idempotent and accumulates on repeated calls
+  Scenario: Seed accumulates on repeated calls
     When I seed the dev data
     And I seed the dev data
-    Then the database has 12 transactions
+    Then the database has 20 transactions
 
   Scenario: Reset clears all data
     Given I seed the dev data
