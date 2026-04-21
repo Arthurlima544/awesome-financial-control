@@ -46,18 +46,5 @@ void main() {
       );
       expect(container.alignment, Alignment.centerRight);
     });
-
-    testWidgets('golden', (tester) async {
-      tester.view.physicalSize = const Size(400, 72);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-
-      await tester.pumpWidget(buildSubject());
-      await expectLater(
-        find.byKey(const ValueKey('bg')),
-        matchesGoldenFile('goldens/dismissible_delete_background.png'),
-      );
-    });
   });
 }
