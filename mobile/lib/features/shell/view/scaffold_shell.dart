@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../home/bloc/home_bloc.dart';
+import '../../transaction_list/view/quick_add_transaction_sheet.dart';
 
 class ScaffoldShell extends StatefulWidget {
   const ScaffoldShell({
@@ -36,7 +40,21 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
     return Scaffold(
       body: widget.navigationShell,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final result = await showModalBottomSheet<bool>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            builder: (_) => const QuickAddTransactionSheet(),
+          );
+          if (result == true) {
+            HapticFeedback.lightImpact();
+            // We use the same read<HomeBloc>() as in onHomeTabReactivated
+            if (context.mounted) {
+              context.read<HomeBloc>().add(const HomeDashboardLoaded());
+            }
+          }
+        },
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.onPrimary,
         tooltip: l10n.fabAddTransaction,

@@ -26,4 +26,18 @@ class TransactionListRepository {
     category: category,
     occurredAt: occurredAt,
   );
+
+  Future<TransactionModel> create({
+    required String description,
+    required double amount,
+    required String type,
+    String? category,
+    required DateTime occurredAt,
+  }) => _service.create(
+    description: description,
+    amount: amount,
+    type: type,
+    category: category,
+    occurredAt: occurredAt,
+  );
 }

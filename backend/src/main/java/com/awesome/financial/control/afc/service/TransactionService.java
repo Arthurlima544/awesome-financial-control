@@ -56,6 +56,19 @@ public class TransactionService {
         return transactionMapper.toResponse(saved);
     }
 
+    @Transactional
+    public TransactionResponse createTransaction(
+            com.awesome.financial.control.afc.dto.CreateTransactionRequest request) {
+        Transaction transaction = new Transaction();
+        transaction.setDescription(request.description());
+        transaction.setAmount(request.amount());
+        transaction.setType(request.type());
+        transaction.setCategory(request.category());
+        transaction.setOccurredAt(request.occurredAt());
+        Transaction saved = transactionRepository.save(transaction);
+        return transactionMapper.toResponse(saved);
+    }
+
     @Transactional(readOnly = true)
     public List<TransactionResponse> getLastTransactions(int limit) {
         return transactionRepository

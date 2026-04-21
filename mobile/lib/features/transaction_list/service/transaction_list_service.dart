@@ -53,4 +53,24 @@ class TransactionListService {
     );
     return TransactionModel.fromJson(response.data!);
   }
+
+  Future<TransactionModel> create({
+    required String description,
+    required double amount,
+    required String type,
+    String? category,
+    required DateTime occurredAt,
+  }) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/api/v1/transactions',
+      data: {
+        'description': description,
+        'amount': amount,
+        'type': type.toUpperCase(),
+        'category': category,
+        'occurredAt': occurredAt.toUtc().toIso8601String(),
+      },
+    );
+    return TransactionModel.fromJson(response.data!);
+  }
 }
