@@ -22,6 +22,9 @@ import '../features/transaction_list/bloc/transaction_list_bloc.dart';
 import '../features/transaction_list/view/transaction_edit_screen.dart';
 import '../features/transaction_list/view/transaction_list_screen.dart';
 
+import '../shared/services/navigation_service.dart';
+import 'injection.dart';
+
 class _RouterRefreshStream extends ChangeNotifier {
   _RouterRefreshStream(Stream<dynamic> stream) {
     _subscription = stream.listen((_) => notifyListeners());
@@ -38,6 +41,7 @@ class _RouterRefreshStream extends ChangeNotifier {
 
 GoRouter createRouter(AuthBloc authBloc) {
   return GoRouter(
+    navigatorKey: sl<NavigationService>().navigatorKey,
     initialLocation: '/',
     refreshListenable: _RouterRefreshStream(authBloc.stream),
     redirect: (context, state) {

@@ -6,7 +6,12 @@ import 'config/router.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'l10n/generated/app_localizations.dart';
 
-void main() {
+import 'config/injection.dart' as di;
+import 'config/injection.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(const AfcApp());
 }
 
@@ -24,13 +29,13 @@ class _AfcAppState extends State<AfcApp> {
   @override
   void initState() {
     super.initState();
-    _authBloc = AuthBloc();
+    _authBloc = sl<AuthBloc>();
     _router = createRouter(_authBloc);
+    _authBloc.add(const AppLaunched());
   }
 
   @override
   void dispose() {
-    _authBloc.close();
     _router.dispose();
     super.dispose();
   }

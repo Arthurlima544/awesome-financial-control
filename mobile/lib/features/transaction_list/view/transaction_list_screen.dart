@@ -9,8 +9,9 @@ import '../../../shared/components/dismissible_delete_background/dismissible_del
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../config/injection.dart';
+import '../../../shared/services/navigation_service.dart';
 import '../bloc/transaction_list_bloc.dart';
 import '../model/transaction_model.dart';
 
@@ -21,7 +22,7 @@ class TransactionListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          TransactionListBloc()..add(const TransactionListFetchRequested()),
+          sl<TransactionListBloc>()..add(const TransactionListFetchRequested()),
       child: const _TransactionListView(),
     );
   }
@@ -115,7 +116,7 @@ class _DismissibleItem extends StatelessWidget {
       ),
       background: const DismissibleDeleteBackground(),
       child: InkWell(
-        onTap: () => context.push(
+        onTap: () => sl<NavigationService>().push(
           '/transactions/${transaction.id}/edit',
           extra: context.read<TransactionListBloc>(),
         ),

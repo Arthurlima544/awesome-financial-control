@@ -1,93 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../config/injection.dart';
 import '../model/transaction_model.dart';
 import '../repository/transaction_list_repository.dart';
 
-// Events
-
-abstract class TransactionListEvent extends Equatable {
-  const TransactionListEvent();
-  @override
-  List<Object?> get props => [];
-}
-
-class TransactionListFetchRequested extends TransactionListEvent {
-  const TransactionListFetchRequested();
-}
-
-class TransactionDeleteRequested extends TransactionListEvent {
-  const TransactionDeleteRequested(this.id);
-
-  final String id;
-
-  @override
-  List<Object?> get props => [id];
-}
-
-class TransactionUpdateRequested extends TransactionListEvent {
-  const TransactionUpdateRequested({
-    required this.id,
-    required this.description,
-    required this.amount,
-    required this.type,
-    this.category,
-    required this.occurredAt,
-  });
-
-  final String id;
-  final String description;
-  final double amount;
-  final String type;
-  final String? category;
-  final DateTime occurredAt;
-
-  @override
-  List<Object?> get props => [
-    id,
-    description,
-    amount,
-    type,
-    category,
-    occurredAt,
-  ];
-}
-
-// States
-
-abstract class TransactionListState extends Equatable {
-  const TransactionListState();
-  @override
-  List<Object?> get props => [];
-}
-
-class TransactionListInitial extends TransactionListState {}
-
-class TransactionListLoading extends TransactionListState {}
-
-class TransactionListData extends TransactionListState {
-  const TransactionListData(this.transactions);
-
-  final List<TransactionModel> transactions;
-
-  @override
-  List<Object?> get props => [transactions];
-}
-
-class TransactionListError extends TransactionListState {
-  const TransactionListError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// Bloc
+part 'transaction_list_event.dart';
+part 'transaction_list_state.dart';
 
 class TransactionListBloc
     extends Bloc<TransactionListEvent, TransactionListState> {
   TransactionListBloc({TransactionListRepository? repository})
-    : _repository = repository ?? TransactionListRepository(),
+    : _repository = repository ?? sl<TransactionListRepository>(),
       super(TransactionListInitial()) {
     on<TransactionListFetchRequested>(_onFetchRequested);
     on<TransactionDeleteRequested>(_onDeleteRequested);
