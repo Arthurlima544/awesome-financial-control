@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/bloc/auth_bloc.dart';
 import '../features/auth/view/login_screen.dart';
+import '../features/home/bloc/home_bloc.dart';
 import '../features/auth/view/splash_screen.dart';
 import '../features/category/bloc/category_bloc.dart';
 import '../features/category/view/category_edit_screen.dart';
@@ -93,8 +94,17 @@ GoRouter createRouter(AuthBloc authBloc) {
         ),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            ScaffoldShell(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
+          create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),
+          child: Builder(
+            builder: (innerContext) => ScaffoldShell(
+              navigationShell: navigationShell,
+              onHomeTabReactivated: () => innerContext.read<HomeBloc>().add(
+                const HomeDashboardLoaded(),
+              ),
+            ),
+          ),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [

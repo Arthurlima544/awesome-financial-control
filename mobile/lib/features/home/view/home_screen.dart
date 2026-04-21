@@ -17,10 +17,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),
-      child: const _HomeView(),
-    );
+    return const _HomeView();
   }
 }
 
@@ -39,7 +36,13 @@ class _HomeView extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.developer_mode),
               tooltip: l10n.devToolsTitle,
-              onPressed: () => showDevToolsSheet(context),
+              onPressed: () {
+                final homeBloc = context.read<HomeBloc>();
+                showDevToolsSheet(
+                  context,
+                  onSuccess: () => homeBloc.add(const HomeDashboardLoaded()),
+                );
+              },
             ),
         ],
       ),

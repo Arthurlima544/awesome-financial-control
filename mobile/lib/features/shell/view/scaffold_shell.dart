@@ -4,23 +4,37 @@ import 'package:go_router/go_router.dart';
 import '../../../config/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
-class ScaffoldShell extends StatelessWidget {
-  const ScaffoldShell({super.key, required this.navigationShell});
+class ScaffoldShell extends StatefulWidget {
+  const ScaffoldShell({
+    super.key,
+    required this.navigationShell,
+    this.onHomeTabReactivated,
+  });
 
   final StatefulNavigationShell navigationShell;
+  final VoidCallback? onHomeTabReactivated;
 
+  @override
+  State<ScaffoldShell> createState() => _ScaffoldShellState();
+}
+
+class _ScaffoldShellState extends State<ScaffoldShell> {
   void _onDestinationSelected(int index) {
-    navigationShell.goBranch(
+    final wasOnOtherTab = widget.navigationShell.currentIndex != 0;
+    widget.navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
+    if (index == 0 && wasOnOtherTab) {
+      widget.onHomeTabReactivated?.call();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      body: navigationShell,
+      body: widget.navigationShell,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: AppColors.primary,
@@ -29,7 +43,7 @@ class ScaffoldShell extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
+        selectedIndex: widget.navigationShell.currentIndex,
         onDestinationSelected: _onDestinationSelected,
         destinations: [
           NavigationDestination(

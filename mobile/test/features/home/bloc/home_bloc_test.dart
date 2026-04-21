@@ -110,6 +110,20 @@ void main() {
     );
 
     blocTest<HomeBloc, HomeState>(
+      'emits [HomeLoading, HomeLoaded] when HomeDashboardLoaded is dispatched again from loaded state',
+      build: () => HomeBloc(
+        repository: _FakeRepository(
+          summary: fakeSummary,
+          transactions: fakeTransactions,
+        ),
+      ),
+      seed: () =>
+          HomeLoaded(summary: fakeSummary, transactions: fakeTransactions),
+      act: (bloc) => bloc.add(const HomeDashboardLoaded()),
+      expect: () => [isA<HomeLoading>(), isA<HomeLoaded>()],
+    );
+
+    blocTest<HomeBloc, HomeState>(
       'emits [HomeLoading, HomeLoaded] with empty transactions list',
       build: () => HomeBloc(
         repository: _FakeRepository(

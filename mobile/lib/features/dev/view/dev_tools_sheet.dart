@@ -6,18 +6,20 @@ import '../../../config/app_spacing.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../cubit/dev_tools_cubit.dart';
 
-void showDevToolsSheet(BuildContext context) {
+void showDevToolsSheet(BuildContext context, {VoidCallback? onSuccess}) {
   showModalBottomSheet<void>(
     context: context,
     builder: (_) => BlocProvider(
       create: (_) => DevToolsCubit(),
-      child: const _DevToolsSheetContent(),
+      child: _DevToolsSheetContent(onSuccess: onSuccess),
     ),
   );
 }
 
 class _DevToolsSheetContent extends StatelessWidget {
-  const _DevToolsSheetContent();
+  const _DevToolsSheetContent({this.onSuccess});
+
+  final VoidCallback? onSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class _DevToolsSheetContent extends StatelessWidget {
       listener: (context, state) {
         if (state is DevToolsSuccess) {
           Navigator.of(context).pop();
+          onSuccess?.call();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
