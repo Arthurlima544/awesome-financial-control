@@ -11,6 +11,9 @@ import '../../limit/bloc/limit_bloc.dart';
 import '../../limit/view/month_limit_view.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
+import '../../../shared/components/skeleton/card_skeleton.dart';
+import '../../../shared/components/skeleton/list_item_skeleton.dart';
+import '../../../shared/components/skeleton/skeleton_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
 import '../bloc/home_bloc.dart';
 import '../model/transaction_model.dart';
@@ -100,8 +103,17 @@ class _HomeViewState extends State<_HomeView> {
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
               return switch (state) {
-                HomeLoading() || HomeInitial() => const Center(
-                  child: CircularProgressIndicator(),
+                HomeLoading() || HomeInitial() => ListView(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  children: const [
+                    SkeletonView(width: double.infinity, height: 180),
+                    SizedBox(height: AppSpacing.lg),
+                    SkeletonView(width: 150, height: 24),
+                    SizedBox(height: 12),
+                    ListItemSkeleton(),
+                    ListItemSkeleton(),
+                    ListItemSkeleton(),
+                  ],
                 ),
                 HomeError() => ErrorView(
                   key: const ValueKey('homeError'),
@@ -163,8 +175,12 @@ class _HomeViewState extends State<_HomeView> {
                       BlocBuilder<LimitBloc, LimitState>(
                         builder: (context, limitState) {
                           return switch (limitState) {
-                            LimitLoading() || LimitInitial() => const Center(
-                              child: CircularProgressIndicator(),
+                            LimitLoading() || LimitInitial() => const Column(
+                              children: [
+                                CardSkeleton(),
+                                SizedBox(height: AppSpacing.sm),
+                                CardSkeleton(),
+                              ],
                             ),
                             LimitError() => ErrorView(
                               message: l10n.limitErrorLoading,
@@ -237,7 +253,7 @@ class _SummaryCard extends StatelessWidget {
               children: [
                 Text(
                   '$savingsRate%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -256,7 +272,7 @@ class _SummaryCard extends StatelessWidget {
               children: [
                 Text(
                   totalIncome,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.success,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -274,7 +290,7 @@ class _SummaryCard extends StatelessWidget {
               children: [
                 Text(
                   totalExpenses,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.error,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

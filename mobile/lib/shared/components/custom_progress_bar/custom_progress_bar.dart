@@ -129,7 +129,7 @@ class _CustomProgressBarView extends StatelessWidget {
                     padding: EdgeInsets.only(top: barHeight * 0.5),
                     child: Text(
                       state.errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 12.0),
+                      style: TextStyle(color: Colors.red, fontSize: 12.0),
                     ),
                   ),
               ],

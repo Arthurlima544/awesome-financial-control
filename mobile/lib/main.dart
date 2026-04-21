@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import 'config/app_theme.dart';
 import 'config/router.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'l10n/generated/app_localizations.dart';
@@ -47,6 +48,7 @@ class _AfcAppState extends State<AfcApp> {
       child: MaterialApp.router(
         title: 'AFC',
         debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
         routerConfig: _router,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

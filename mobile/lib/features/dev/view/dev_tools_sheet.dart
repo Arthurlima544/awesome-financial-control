@@ -109,7 +109,7 @@ class _DevToolsSheetContent extends StatelessWidget {
                             ),
                       label: Text(
                         l10n.devResetButton,
-                        style: const TextStyle(color: AppColors.error),
+                        style: TextStyle(color: AppColors.error),
                       ),
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: AppColors.error),

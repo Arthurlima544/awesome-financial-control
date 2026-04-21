@@ -10,6 +10,7 @@ import '../../../shared/components/custom_list_tile/custom_list_tile.dart';
 import '../../../shared/components/dismissible_delete_background/dismissible_delete_background.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
+import '../../../shared/components/skeleton/list_item_skeleton.dart';
 import '../../../shared/services/navigation_service.dart';
 import '../bloc/category_bloc.dart';
 import '../model/category_model.dart';
@@ -37,7 +38,10 @@ class _CategoryView extends StatelessWidget {
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
           if (state is CategoryLoading || state is CategoryInitial) {
-            return const Center(child: CircularProgressIndicator());
+            return ListView.builder(
+              itemCount: 6,
+              itemBuilder: (context, index) => const ListItemSkeleton(),
+            );
           }
           if (state is CategoryError) {
             return Center(

@@ -201,10 +201,7 @@ class _CustomStepperView extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 16.0),
                       child: Text(
                         state.errorMessage!,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 14.0,
-                        ),
+                        style: TextStyle(color: Colors.red, fontSize: 14.0),
                       ),
                     ),
                 ],

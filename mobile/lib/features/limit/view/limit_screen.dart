@@ -8,6 +8,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../shared/components/custom_progress_bar/custom_progress_bar.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
+import '../../../shared/components/skeleton/card_skeleton.dart';
 import '../bloc/limit_bloc.dart';
 import '../model/limit_progress_model.dart';
 
@@ -35,8 +36,10 @@ class _LimitView extends StatelessWidget {
       body: BlocBuilder<LimitBloc, LimitState>(
         builder: (context, state) {
           return switch (state) {
-            LimitLoading() ||
-            LimitInitial() => const Center(child: CircularProgressIndicator()),
+            LimitLoading() || LimitInitial() => ListView.builder(
+              itemCount: 4,
+              itemBuilder: (context, index) => const CardSkeleton(),
+            ),
             LimitError() => ErrorView(
               key: const ValueKey('limitError'),
               message: l10n.limitErrorLoading,

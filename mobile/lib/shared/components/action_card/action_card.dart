@@ -218,7 +218,7 @@ class _ActionCardView extends StatelessWidget {
               ),
               child: Text(
                 tagText!,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 12.0,
                   fontWeight: FontWeight.bold,
@@ -260,7 +260,7 @@ class _ActionCardView extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
                   state.errorMessage!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                  style: TextStyle(color: Colors.red, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
               ),

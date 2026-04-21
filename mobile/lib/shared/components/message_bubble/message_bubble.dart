@@ -178,7 +178,7 @@ class _MessageBubbleView extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 4.0),
                             child: Text(
                               state.errorMessage!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 12.0,
                               ),

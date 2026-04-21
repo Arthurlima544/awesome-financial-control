@@ -8,6 +8,7 @@ import '../../../config/app_spacing.dart';
 import '../../../config/injection.dart';
 import '../../../shared/components/empty_state/empty_state.dart';
 import '../../../shared/components/error_view/error_view.dart';
+import '../../../shared/components/skeleton/skeleton_view.dart';
 import '../bloc/stats_bloc.dart';
 import '../model/monthly_stat_model.dart';
 
@@ -34,7 +35,10 @@ class _StatsView extends StatelessWidget {
       body: BlocBuilder<StatsBloc, StatsState>(
         builder: (context, state) {
           if (state is StatsLoading || state is StatsInitial) {
-            return const Center(child: CircularProgressIndicator());
+            return const Padding(
+              padding: EdgeInsets.all(AppSpacing.lg),
+              child: SkeletonView(width: double.infinity, height: 300),
+            );
           }
           if (state is StatsError) {
             return Center(

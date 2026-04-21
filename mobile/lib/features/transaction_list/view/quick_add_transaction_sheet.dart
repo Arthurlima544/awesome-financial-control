@@ -433,7 +433,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                 ? Icon(icon, color: AppColors.primary)
                 : Text(
                     value,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,

@@ -11,6 +11,7 @@ import '../../../shared/components/error_view/error_view.dart';
 import '../../../shared/components/transaction_list_item/transaction_list_item.dart';
 
 import '../../../config/injection.dart';
+import '../../../shared/components/skeleton/list_item_skeleton.dart';
 import '../../../shared/services/navigation_service.dart';
 import '../bloc/transaction_list_bloc.dart';
 import '../model/transaction_model.dart';
@@ -40,7 +41,10 @@ class _TransactionListView extends StatelessWidget {
         builder: (context, state) {
           if (state is TransactionListLoading ||
               state is TransactionListInitial) {
-            return const Center(child: CircularProgressIndicator());
+            return ListView.builder(
+              itemCount: 8,
+              itemBuilder: (context, index) => const ListItemSkeleton(),
+            );
           }
           if (state is TransactionListError) {
             return Center(

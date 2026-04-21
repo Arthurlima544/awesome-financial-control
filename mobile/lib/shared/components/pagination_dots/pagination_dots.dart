@@ -116,10 +116,7 @@ class _PaginationDotsView extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         state.errorMessage!,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12.0,
-                        ),
+                        style: TextStyle(color: Colors.red, fontSize: 12.0),
                       ),
                     ),
                 ],

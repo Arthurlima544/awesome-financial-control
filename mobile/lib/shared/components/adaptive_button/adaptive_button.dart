@@ -145,9 +145,8 @@ class AdaptiveButton extends StatelessWidget {
                   text,
                   style:
                       customTextStyle ??
-                      TextStyle(
+                      Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontSize: clampedFontSize,
-                        fontWeight: FontWeight.w600,
                         color: foregroundColor,
                       ),
                 ),
