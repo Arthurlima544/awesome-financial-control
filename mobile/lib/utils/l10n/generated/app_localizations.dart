@@ -777,6 +777,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao exportar relatório'**
   String get reportExportError;
+
+  /// Legend label in report chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Legenda'**
+  String get reportLegend;
 }
 
 class _AppLocalizationsDelegate

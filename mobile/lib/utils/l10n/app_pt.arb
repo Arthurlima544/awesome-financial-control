@@ -366,5 +366,8 @@
   "@reportExportSuccess": { "description": "Success message for report export" },
 
   "reportExportError": "Erro ao exportar relatório",
-  "@reportExportError": { "description": "Error message for report export" }
+  "@reportExportError": { "description": "Error message for report export" },
+
+  "reportLegend": "Legenda",
+  "@reportLegend": { "description": "Legend label in report chart" }
 }

@@ -222,32 +222,70 @@ class _CategoryPieChart extends StatelessWidget {
       );
     }
 
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: PieChart(
-        PieChartData(
-          sections: categories.map((c) {
+    return Column(
+      children: [
+        AspectRatio(
+          aspectRatio: 1.3,
+          child: PieChart(
+            PieChartData(
+              sectionsSpace: 2,
+              centerSpaceRadius: 40,
+              sections: categories.map((c) {
+                final index = categories.indexOf(c);
+                final isSmall = c.percentage < 5;
+                return PieChartSectionData(
+                  color: Colors.primaries[index % Colors.primaries.length],
+                  value: c.amount,
+                  title: isSmall ? '' : '${c.percentage.toStringAsFixed(0)}%',
+                  radius: 60,
+                  titleStyle: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [Shadow(color: Colors.black26, blurRadius: 2)],
+                  ),
+                  badgeWidget: isSmall
+                      ? null
+                      : _Badge(
+                          c.category ?? 'Outros',
+                          color:
+                              Colors.primaries[index % Colors.primaries.length],
+                        ),
+                  badgePositionPercentageOffset: 1.5,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          AppLocalizations.of(context)!.reportLegend,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: categories.map((c) {
             final index = categories.indexOf(c);
-            return PieChartSectionData(
-              color: Colors.primaries[index % Colors.primaries.length],
-              value: c.amount,
-              title: '${c.percentage.toStringAsFixed(0)}%',
-              radius: 50,
-              titleStyle: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              badgeWidget: _Badge(
-                c.category ?? 'Outros',
-                color: Colors.primaries[index % Colors.primaries.length],
-              ),
-
-              badgePositionPercentageOffset: 1.3,
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 12,
+                  height: 12,
+                  color: Colors.primaries[index % Colors.primaries.length],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${c.category ?? 'Outros'}: ${c.percentage.toStringAsFixed(1)}%',
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ],
             );
           }).toList(),
         ),
-      ),
+      ],
     );
   }
 }
@@ -302,6 +340,13 @@ class _ComparisonBarChart extends StatelessWidget {
       aspectRatio: 1.5,
       child: BarChart(
         BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY:
+              (displayList.fold<double>(
+                0,
+                (max, c) => c.currentAmount > max ? c.currentAmount : max,
+              ) *
+              1.2),
           barGroups: displayList.map((c) {
             final index = displayList.indexOf(c);
             return BarChartGroupData(
@@ -311,11 +356,17 @@ class _ComparisonBarChart extends StatelessWidget {
                   toY: c.previousAmount,
                   color: Colors.grey[300],
                   width: 12,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(4),
+                  ),
                 ),
                 BarChartRodData(
                   toY: c.currentAmount,
                   color: Colors.blue,
                   width: 12,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(4),
+                  ),
                 ),
               ],
             );
@@ -325,21 +376,60 @@ class _ComparisonBarChart extends StatelessWidget {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
+                reservedSize: 45,
                 getTitlesWidget: (value, meta) {
                   if (value.toInt() >= 0 &&
                       value.toInt() < displayList.length) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        (displayList[value.toInt()].category ?? 'Outros')
-                            .substring(0, 3),
-                        style: const TextStyle(fontSize: 10),
+                    return SideTitleWidget(
+                      meta: meta,
+                      space: 10,
+                      child: Transform.rotate(
+                        angle: -0.5,
+                        child: Text(
+                          displayList[value.toInt()].category ?? 'Outros',
+                          style: const TextStyle(fontSize: 10),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     );
                   }
-                  return const Text('');
+                  return const SizedBox();
                 },
               ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 40,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    value.toInt().toString(),
+                    style: const TextStyle(fontSize: 10),
+                  );
+                },
+              ),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+          gridData: const FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          barTouchData: BarTouchData(
+            enabled: true,
+            touchTooltipData: BarTouchTooltipData(
+              getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
+              tooltipBorderRadius: BorderRadius.circular(8),
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                return BarTooltipItem(
+                  rod.toY.toStringAsFixed(2),
+                  const TextStyle(color: Colors.white, fontSize: 10),
+                );
+              },
             ),
           ),
         ),

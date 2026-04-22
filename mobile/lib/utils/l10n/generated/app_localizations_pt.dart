@@ -363,4 +363,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get reportExportError => 'Erro ao exportar relatório';
+
+  @override
+  String get reportLegend => 'Legenda';
 }
