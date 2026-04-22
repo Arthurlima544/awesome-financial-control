@@ -1,19 +1,66 @@
-import 'package:csv/csv.dart';
+import 'package:afc/view_models/import/import_state.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/models/import_candidate_model.dart';
 
-enum ImportProfile { ofxDefault, nubankExtrato, nubankFatura }
-
 class ImportParserService {
-  List<ImportCandidateModel> parse(String content, ImportProfile profile) {
-    switch (profile) {
-      case ImportProfile.ofxDefault:
-        return _parseOfx(content);
-      case ImportProfile.nubankExtrato:
+  List<ImportCandidateModel> parse(
+    String content,
+    ImportBank bank,
+    ImportType type,
+  ) {
+    if (bank == ImportBank.nubank) {
+      if (type == ImportType.extrato) {
         return _parseNubankExtrato(content);
-      case ImportProfile.nubankFatura:
+      } else if (type == ImportType.fatura) {
         return _parseNubankFatura(content);
+      }
     }
+
+    // Default to OFX for anything else if it's OFX type
+    if (type == ImportType.ofx) {
+      return _parseOfx(content);
+    }
+
+    return [];
+  }
+
+  List<List<dynamic>> _parseCsv(String content) {
+    final result = <List<dynamic>>[];
+    final lines = content.split('\n');
+    for (var line in lines) {
+      final trimmedLine = line.trim();
+      if (trimmedLine.isEmpty) continue;
+      final row = <dynamic>[];
+      var current = StringBuffer();
+      var inQuotes = false;
+      for (var i = 0; i < line.length; i++) {
+        var char = line[i];
+        if (char == '"') {
+          if (inQuotes && i + 1 < line.length && line[i + 1] == '"') {
+            current.write('"');
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char == ',' && !inQuotes) {
+          row.add(_parseValue(current.toString()));
+          current.clear();
+        } else {
+          current.write(char);
+        }
+      }
+      row.add(_parseValue(current.toString()));
+      result.add(row);
+    }
+    return result;
+  }
+
+  dynamic _parseValue(String s) {
+    final trimmed = s.trim();
+    if (trimmed.isEmpty) return null;
+    final numValue = double.tryParse(trimmed.replaceAll(',', '.'));
+    if (numValue != null) return numValue;
+    return trimmed;
   }
 
   List<ImportCandidateModel> _parseOfx(String content) {
@@ -73,7 +120,7 @@ class ImportParserService {
     // Date format: DD/MM/YYYY
     // Amount format: standard (positive = income, negative = expense)
     final candidates = <ImportCandidateModel>[];
-    final rows = Csv(lineDelimiter: '\n').decode(content.replaceAll('\r', ''));
+    final rows = _parseCsv(content.replaceAll('\r', ''));
 
     if (rows.isEmpty) return candidates;
 
@@ -137,7 +184,7 @@ class ImportParserService {
     // Date format: YYYY-MM-DD
     // Amount format: inverted (positive = expense, negative = income/payment)
     final candidates = <ImportCandidateModel>[];
-    final rows = Csv(lineDelimiter: '\n').decode(content.replaceAll('\r', ''));
+    final rows = _parseCsv(content.replaceAll('\r', ''));
 
     if (rows.isEmpty) return candidates;
 

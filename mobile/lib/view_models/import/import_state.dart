@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:afc/models/import_candidate_model.dart';
-import 'package:afc/services/import_parser_service.dart';
 
 enum ImportStatus {
   initial,
@@ -12,28 +11,36 @@ enum ImportStatus {
   failure,
 }
 
+enum ImportBank { generic, nubank }
+
+enum ImportType { ofx, extrato, fatura }
+
 class ImportState extends Equatable {
   final ImportStatus status;
-  final ImportProfile profile;
+  final ImportBank bank;
+  final ImportType type;
   final List<ImportCandidateModel> candidates;
   final String? errorMessage;
 
   const ImportState({
     this.status = ImportStatus.initial,
-    this.profile = ImportProfile.ofxDefault,
+    this.bank = ImportBank.generic,
+    this.type = ImportType.ofx,
     this.candidates = const [],
     this.errorMessage,
   });
 
   ImportState copyWith({
     ImportStatus? status,
-    ImportProfile? profile,
+    ImportBank? bank,
+    ImportType? type,
     List<ImportCandidateModel>? candidates,
     Object? errorMessage = const Object(),
   }) {
     return ImportState(
       status: status ?? this.status,
-      profile: profile ?? this.profile,
+      bank: bank ?? this.bank,
+      type: type ?? this.type,
       candidates: candidates ?? this.candidates,
       errorMessage: errorMessage == const Object()
           ? this.errorMessage
@@ -44,5 +51,5 @@ class ImportState extends Equatable {
   int get selectedCount => candidates.where((c) => c.isSelected).length;
 
   @override
-  List<Object?> get props => [status, profile, candidates, errorMessage];
+  List<Object?> get props => [status, bank, type, candidates, errorMessage];
 }

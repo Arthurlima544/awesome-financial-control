@@ -303,17 +303,26 @@
   "importTitle": "Importar Extrato",
   "@importTitle": { "description": "Import screen title" },
 
-  "importProfileLabel": "Formato do arquivo",
-  "@importProfileLabel": { "description": "Label for import profile selection" },
+  "importBankLabel": "Banco",
+  "@importBankLabel": { "description": "Label for bank selection in import" },
 
-  "importProfileOfx": "Padrão (OFX)",
-  "@importProfileOfx": { "description": "OFX profile option" },
+  "importBankGeneric": "Genérico / Outros",
+  "@importBankGeneric": { "description": "Generic bank option" },
 
-  "importProfileNubankExtrato": "Nubank - Extrato (CSV)",
-  "@importProfileNubankExtrato": { "description": "Nubank Extrato profile option" },
+  "importBankNubank": "Nubank",
+  "@importBankNubank": { "description": "Nubank option" },
 
-  "importProfileNubankFatura": "Nubank - Fatura (CSV)",
-  "@importProfileNubankFatura": { "description": "Nubank Fatura profile option" },
+  "importTypeLabel": "Tipo de extrato",
+  "@importTypeLabel": { "description": "Label for statement type selection" },
+
+  "importTypeOfx": "OFX (Padrão)",
+  "@importTypeOfx": { "description": "OFX type option" },
+
+  "importTypeExtrato": "Extrato Conta Corrente (CSV)",
+  "@importTypeExtrato": { "description": "Extrato type option" },
+
+  "importTypeFatura": "Fatura Cartão de Crédito (CSV)",
+  "@importTypeFatura": { "description": "Fatura type option" },
 
   "importPickFile": "Selecionar Arquivo",
   "@importPickFile": { "description": "Button to pick file" },

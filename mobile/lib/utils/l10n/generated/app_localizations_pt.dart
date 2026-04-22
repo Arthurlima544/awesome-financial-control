@@ -303,16 +303,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get importTitle => 'Importar Extrato';
 
   @override
-  String get importProfileLabel => 'Formato do arquivo';
+  String get importBankLabel => 'Banco';
 
   @override
-  String get importProfileOfx => 'Padrão (OFX)';
+  String get importBankGeneric => 'Genérico / Outros';
 
   @override
-  String get importProfileNubankExtrato => 'Nubank - Extrato (CSV)';
+  String get importBankNubank => 'Nubank';
 
   @override
-  String get importProfileNubankFatura => 'Nubank - Fatura (CSV)';
+  String get importTypeLabel => 'Tipo de extrato';
+
+  @override
+  String get importTypeOfx => 'OFX (Padrão)';
+
+  @override
+  String get importTypeExtrato => 'Extrato Conta Corrente (CSV)';
+
+  @override
+  String get importTypeFatura => 'Fatura Cartão de Crédito (CSV)';
 
   @override
   String get importPickFile => 'Selecionar Arquivo';

@@ -19,18 +19,20 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
        _repository = repository,
        _refreshBloc = refreshBloc,
        super(const ImportState()) {
-    on<ImportProfileSelected>(_onProfileSelected);
+    on<ImportBankSelected>(_onBankSelected);
+    on<ImportTypeSelected>(_onTypeSelected);
     on<ImportFileSelected>(_onFileSelected);
     on<ImportCandidateToggled>(_onCandidateToggled);
     on<ImportCandidateCategoryChanged>(_onCandidateCategoryChanged);
     on<ImportSubmitRequested>(_onSubmitRequested);
   }
 
-  void _onProfileSelected(
-    ImportProfileSelected event,
-    Emitter<ImportState> emit,
-  ) {
-    emit(state.copyWith(profile: event.profile));
+  void _onBankSelected(ImportBankSelected event, Emitter<ImportState> emit) {
+    emit(state.copyWith(bank: event.bank));
+  }
+
+  void _onTypeSelected(ImportTypeSelected event, Emitter<ImportState> emit) {
+    emit(state.copyWith(type: event.type));
   }
 
   Future<void> _onFileSelected(
@@ -39,7 +41,11 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
   ) async {
     emit(state.copyWith(status: ImportStatus.parsing, errorMessage: null));
     try {
-      final candidates = _parserService.parse(event.content, state.profile);
+      final candidates = _parserService.parse(
+        event.content,
+        state.bank,
+        state.type,
+      );
 
       // Basic Duplicate Check against current transactions (within last 90 days usually enough)
       final currentTransactions = await _repository.getAll();

@@ -658,29 +658,47 @@ abstract class AppLocalizations {
   /// **'Importar Extrato'**
   String get importTitle;
 
-  /// Label for import profile selection
+  /// Label for bank selection in import
   ///
   /// In pt, this message translates to:
-  /// **'Formato do arquivo'**
-  String get importProfileLabel;
+  /// **'Banco'**
+  String get importBankLabel;
 
-  /// OFX profile option
+  /// Generic bank option
   ///
   /// In pt, this message translates to:
-  /// **'Padrão (OFX)'**
-  String get importProfileOfx;
+  /// **'Genérico / Outros'**
+  String get importBankGeneric;
 
-  /// Nubank Extrato profile option
+  /// Nubank option
   ///
   /// In pt, this message translates to:
-  /// **'Nubank - Extrato (CSV)'**
-  String get importProfileNubankExtrato;
+  /// **'Nubank'**
+  String get importBankNubank;
 
-  /// Nubank Fatura profile option
+  /// Label for statement type selection
   ///
   /// In pt, this message translates to:
-  /// **'Nubank - Fatura (CSV)'**
-  String get importProfileNubankFatura;
+  /// **'Tipo de extrato'**
+  String get importTypeLabel;
+
+  /// OFX type option
+  ///
+  /// In pt, this message translates to:
+  /// **'OFX (Padrão)'**
+  String get importTypeOfx;
+
+  /// Extrato type option
+  ///
+  /// In pt, this message translates to:
+  /// **'Extrato Conta Corrente (CSV)'**
+  String get importTypeExtrato;
+
+  /// Fatura type option
+  ///
+  /// In pt, this message translates to:
+  /// **'Fatura Cartão de Crédito (CSV)'**
+  String get importTypeFatura;
 
   /// Button to pick file
   ///

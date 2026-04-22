@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:afc/services/import_parser_service.dart';
+import 'import_state.dart';
 
 abstract class ImportEvent extends Equatable {
   const ImportEvent();
@@ -8,12 +8,20 @@ abstract class ImportEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class ImportProfileSelected extends ImportEvent {
-  final ImportProfile profile;
-  const ImportProfileSelected(this.profile);
+class ImportBankSelected extends ImportEvent {
+  final ImportBank bank;
+  const ImportBankSelected(this.bank);
 
   @override
-  List<Object?> get props => [profile];
+  List<Object?> get props => [bank];
+}
+
+class ImportTypeSelected extends ImportEvent {
+  final ImportType type;
+  const ImportTypeSelected(this.type);
+
+  @override
+  List<Object?> get props => [type];
 }
 
 class ImportFileSelected extends ImportEvent {

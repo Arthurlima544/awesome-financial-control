@@ -11,7 +11,6 @@ import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/import/import_bloc.dart';
 import 'package:afc/view_models/import/import_event.dart';
 import 'package:afc/view_models/import/import_state.dart';
-import 'package:afc/services/import_parser_service.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
@@ -102,33 +101,61 @@ class _ImportView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            l10n.importProfileLabel,
+            l10n.importBankLabel,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          DropdownButtonFormField<ImportProfile>(
-            initialValue: state.profile,
+          DropdownButtonFormField<ImportBank>(
+            initialValue: state.bank,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),
             items: [
               DropdownMenuItem(
-                value: ImportProfile.ofxDefault,
-                child: Text(l10n.importProfileOfx),
+                value: ImportBank.generic,
+                child: Text(l10n.importBankGeneric),
               ),
               DropdownMenuItem(
-                value: ImportProfile.nubankExtrato,
-                child: Text(l10n.importProfileNubankExtrato),
-              ),
-              DropdownMenuItem(
-                value: ImportProfile.nubankFatura,
-                child: Text(l10n.importProfileNubankFatura),
+                value: ImportBank.nubank,
+                child: Text(l10n.importBankNubank),
               ),
             ],
             onChanged: (value) {
               if (value != null) {
-                context.read<ImportBloc>().add(ImportProfileSelected(value));
+                context.read<ImportBloc>().add(ImportBankSelected(value));
+              }
+            },
+          ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.importTypeLabel,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<ImportType>(
+            initialValue: state.type,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+            items: [
+              DropdownMenuItem(
+                value: ImportType.ofx,
+                child: Text(l10n.importTypeOfx),
+              ),
+              DropdownMenuItem(
+                value: ImportType.extrato,
+                child: Text(l10n.importTypeExtrato),
+              ),
+              DropdownMenuItem(
+                value: ImportType.fatura,
+                child: Text(l10n.importTypeFatura),
+              ),
+            ],
+            onChanged: (value) {
+              if (value != null) {
+                context.read<ImportBloc>().add(ImportTypeSelected(value));
               }
             },
           ),

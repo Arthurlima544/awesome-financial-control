@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:afc/services/import_parser_service.dart';
+import 'package:afc/view_models/import/import_state.dart';
 import 'package:afc/models/transaction_model.dart';
 
 void main() {
@@ -17,7 +18,8 @@ void main() {
 
       final candidates = parserService.parse(
         extratoCsv,
-        ImportProfile.nubankExtrato,
+        ImportBank.nubank,
+        ImportType.extrato,
       );
 
       expect(candidates.length, 2);
@@ -45,7 +47,8 @@ void main() {
 
       final candidates = parserService.parse(
         faturaCsv,
-        ImportProfile.nubankFatura,
+        ImportBank.nubank,
+        ImportType.fatura,
       );
 
       expect(candidates.length, 2);
@@ -79,7 +82,11 @@ void main() {
 </STMTTRN>
 ''';
 
-      final candidates = parserService.parse(ofxData, ImportProfile.ofxDefault);
+      final candidates = parserService.parse(
+        ofxData,
+        ImportBank.generic,
+        ImportType.ofx,
+      );
 
       expect(candidates.length, 2);
 
