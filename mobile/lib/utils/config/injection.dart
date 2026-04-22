@@ -21,6 +21,8 @@ import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/services/import_parser_service.dart';
 import 'package:afc/services/receipt_service.dart';
 import 'package:afc/view_models/import/import_bloc.dart';
+import 'package:afc/repositories/report_repository.dart';
+import 'package:afc/view_models/report/report_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -41,6 +43,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => TransactionListRepository());
   sl.registerLazySingleton(() => RecurringRepository());
   sl.registerLazySingleton(() => TemplateRepository());
+  sl.registerLazySingleton<ReportRepository>(() => ReportRepositoryImpl());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -54,4 +57,5 @@ Future<void> init() async {
   sl.registerFactory(
     () => ImportBloc(parserService: sl(), repository: sl(), refreshBloc: sl()),
   );
+  sl.registerFactory(() => ReportBloc(repository: sl()));
 }

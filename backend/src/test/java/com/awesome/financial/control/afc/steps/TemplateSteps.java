@@ -42,7 +42,7 @@ public class TemplateSteps {
                         "/api/v1/templates", new HttpEntity<>(body, headers), String.class);
 
         if (ctx.response.getStatusCode().is2xxSuccessful() && ctx.response.getBody() != null) {
-            String bodyStr = ctx.response.getBody();
+            String bodyStr = (String) ctx.response.getBody();
             if (bodyStr.contains("\"id\":\"")) {
                 int start = bodyStr.indexOf("\"id\":\"") + 6;
                 int end = bodyStr.indexOf("\"", start);
@@ -79,18 +79,18 @@ public class TemplateSteps {
     @And("there are {int} templates")
     public void thereAreTemplates(int count) {
         ctx.response = restTemplate.getForEntity("/api/v1/templates", String.class);
-        long objCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        long objCount = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
         assertThat(objCount).isEqualTo(count);
     }
 
     @And("the response contains a list of {int} templates")
     public void theResponseContainsAListOfTemplates(int count) {
-        long objCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        long objCount = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
         assertThat(objCount).isEqualTo(count);
     }
 
     @And("the response error code is {string}")
     public void theResponseErrorCodeIs(String code) {
-        assertThat(ctx.response.getBody()).contains("\"code\":\"" + code + "\"");
+        assertThat((String) ctx.response.getBody()).contains("\"code\":\"" + code + "\"");
     }
 }

@@ -10,6 +10,15 @@ public class CommonSteps {
 
     @Autowired private ScenarioContext ctx;
 
+    @Autowired
+    private com.awesome.financial.control.afc.repository.TransactionRepository
+            transactionRepository;
+
+    @io.cucumber.java.en.Given("the database is clean")
+    public void theDatabaseIsClean() {
+        transactionRepository.deleteAll();
+    }
+
     @Then("the response status is {int}")
     public void theResponseStatusIs(int status) {
         assertThat(ctx.response.getStatusCode().value()).isEqualTo(status);
@@ -17,6 +26,6 @@ public class CommonSteps {
 
     @And("the response contains {string}")
     public void theResponseContains(String content) {
-        assertThat(ctx.response.getBody()).contains(content);
+        assertThat((String) ctx.response.getBody()).contains(content);
     }
 }

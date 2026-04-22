@@ -42,7 +42,7 @@ public class StatsSteps {
 
     @And("the stats response contains 6 months")
     public void theStatsResponseContains6Months() {
-        long count = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        long count = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
         assertThat(count).isEqualTo(6);
     }
 
@@ -65,7 +65,7 @@ public class StatsSteps {
     }
 
     private String monthJson(YearMonth month) {
-        String body = ctx.response.getBody();
+        String body = (String) ctx.response.getBody();
         String monthKey = "\"month\":\"" + month + "\"";
         int keyIdx = body.indexOf(monthKey);
         assertThat(keyIdx)

@@ -342,5 +342,29 @@
   "@importDuplicate": { "description": "Duplicate badge" },
 
   "importSuccess": "Transações importadas com sucesso!",
-  "@importSuccess": { "description": "Success message for import" }
+  "@importSuccess": { "description": "Success message for import" },
+
+  "reportTitle": "Relatório Mensal",
+  "@reportTitle": { "description": "Report screen title" },
+
+  "reportCategorySpending": "Gastos por Categoria",
+  "@reportCategorySpending": { "description": "Category spending section title" },
+
+  "reportMoMComparison": "Comparação com Mês Anterior",
+  "@reportMoMComparison": { "description": "MoM comparison section title" },
+
+  "reportSavingsRate": "Economia",
+  "@reportSavingsRate": { "description": "Savings rate label" },
+
+  "reportFullReport": "Relatório Completo",
+  "@reportFullReport": { "description": "Tooltip for full report button" },
+
+  "reportNoData": "Nenhum dado para este mês",
+  "@reportNoData": { "description": "Empty state for report" },
+
+  "reportExportSuccess": "Relatório exportado com sucesso",
+  "@reportExportSuccess": { "description": "Success message for report export" },
+
+  "reportExportError": "Erro ao exportar relatório",
+  "@reportExportError": { "description": "Error message for report export" }
 }

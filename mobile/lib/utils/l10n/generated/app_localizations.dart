@@ -729,6 +729,54 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Transações importadas com sucesso!'**
   String get importSuccess;
+
+  /// Report screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório Mensal'**
+  String get reportTitle;
+
+  /// Category spending section title
+  ///
+  /// In pt, this message translates to:
+  /// **'Gastos por Categoria'**
+  String get reportCategorySpending;
+
+  /// MoM comparison section title
+  ///
+  /// In pt, this message translates to:
+  /// **'Comparação com Mês Anterior'**
+  String get reportMoMComparison;
+
+  /// Savings rate label
+  ///
+  /// In pt, this message translates to:
+  /// **'Economia'**
+  String get reportSavingsRate;
+
+  /// Tooltip for full report button
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório Completo'**
+  String get reportFullReport;
+
+  /// Empty state for report
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum dado para este mês'**
+  String get reportNoData;
+
+  /// Success message for report export
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório exportado com sucesso'**
+  String get reportExportSuccess;
+
+  /// Error message for report export
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao exportar relatório'**
+  String get reportExportError;
 }
 
 class _AppLocalizationsDelegate

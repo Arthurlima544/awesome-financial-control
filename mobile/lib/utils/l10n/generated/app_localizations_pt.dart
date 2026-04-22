@@ -339,4 +339,28 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get importSuccess => 'Transações importadas com sucesso!';
+
+  @override
+  String get reportTitle => 'Relatório Mensal';
+
+  @override
+  String get reportCategorySpending => 'Gastos por Categoria';
+
+  @override
+  String get reportMoMComparison => 'Comparação com Mês Anterior';
+
+  @override
+  String get reportSavingsRate => 'Economia';
+
+  @override
+  String get reportFullReport => 'Relatório Completo';
+
+  @override
+  String get reportNoData => 'Nenhum dado para este mês';
+
+  @override
+  String get reportExportSuccess => 'Relatório exportado com sucesso';
+
+  @override
+  String get reportExportError => 'Erro ao exportar relatório';
 }

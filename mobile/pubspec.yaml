@@ -24,6 +24,8 @@ dependencies:
   csv: ^8.0.0
   image_picker: ^1.2.1
   google_generative_ai: ^0.4.7
+  pdf: ^3.11.1
+  printing: ^5.13.2
 
 dev_dependencies:
   bloc_test: ^10.0.0

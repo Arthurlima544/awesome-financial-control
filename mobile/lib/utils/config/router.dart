@@ -23,6 +23,7 @@ import 'package:afc/views/transaction_edit_screen.dart';
 import 'package:afc/views/transaction_list_screen.dart';
 import 'package:afc/views/recurring_list_screen.dart';
 import 'package:afc/views/import_screen.dart';
+import 'package:afc/views/report_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -138,7 +139,16 @@ GoRouter createRouter(AuthBloc authBloc) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
+              GoRoute(
+                path: '/stats',
+                builder: (_, _) => const StatsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'report',
+                    builder: (_, _) => const ReportScreen(),
+                  ),
+                ],
+              ),
             ],
           ),
           StatefulShellBranch(
