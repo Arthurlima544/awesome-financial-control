@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
                         .collect(Collectors.joining(", "));
         return new ErrorResponse(
                 "VALIDATION_ERROR", message, HttpStatus.UNPROCESSABLE_ENTITY.value());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        log.warn("Malformed JSON request: {}", ex.getMessage());
+        return new ErrorResponse(
+                "BAD_REQUEST", "Malformed JSON request", HttpStatus.BAD_REQUEST.value());
     }
 
     @ExceptionHandler(Exception.class)

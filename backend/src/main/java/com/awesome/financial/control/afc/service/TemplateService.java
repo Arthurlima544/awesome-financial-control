@@ -2,13 +2,13 @@ package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.CreateTemplateRequest;
 import com.awesome.financial.control.afc.dto.TemplateDTO;
+import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.TemplateMapper;
 import com.awesome.financial.control.afc.model.Template;
 import com.awesome.financial.control.afc.repository.TemplateRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class TemplateService {
     public List<TemplateDTO> findAll() {
         return templateRepository.findAllByOrderByCreatedAtDesc().stream()
                 .map(templateMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -43,7 +43,7 @@ public class TemplateService {
     @Transactional
     public void delete(UUID id) {
         if (!templateRepository.existsById(id)) {
-            throw new RuntimeException("Template not found");
+            throw new ResourceNotFoundException("Template not found with id: " + id);
         }
         templateRepository.deleteById(id);
     }
