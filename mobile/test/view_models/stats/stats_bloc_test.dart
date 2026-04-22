@@ -3,6 +3,11 @@ import 'package:afc/models/monthly_stat_model.dart';
 import 'package:afc/repositories/stats_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
+    implements AppRefreshBloc {}
 
 class _FakeRepository extends StatsRepository {
   _FakeRepository(this._stats);
@@ -25,17 +30,28 @@ void main() {
     const MonthlyStatModel(month: '2025-02', income: 4500.0, expenses: 4800.0),
     const MonthlyStatModel(month: '2025-03', income: 6000.0, expenses: 2500.0),
   ];
+  late AppRefreshBloc refreshBloc;
+
+  setUp(() {
+    refreshBloc = MockAppRefreshBloc();
+    when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
+  });
 
   group('StatsBloc', () {
     test('initial state is StatsInitial', () {
-      final bloc = StatsBloc(repository: _FakeRepository([]));
+      final bloc = StatsBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      );
       expect(bloc.state, isA<StatsInitial>());
       addTearDown(bloc.close);
     });
 
     blocTest<StatsBloc, StatsState>(
       'emits [StatsLoading, StatsData([])] when repository returns empty list',
-      build: () => StatsBloc(repository: _FakeRepository([])),
+      build: () =>
+          StatsBloc(repository: _FakeRepository([]), refreshBloc: refreshBloc),
       act: (bloc) => bloc.add(const StatsLoaded()),
       expect: () => [isA<StatsLoading>(), isA<StatsData>()],
       verify: (bloc) {
@@ -46,7 +62,10 @@ void main() {
 
     blocTest<StatsBloc, StatsState>(
       'emits [StatsLoading, StatsData] with correct stats on success',
-      build: () => StatsBloc(repository: _FakeRepository(sampleStats)),
+      build: () => StatsBloc(
+        repository: _FakeRepository(sampleStats),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const StatsLoaded()),
       expect: () => [isA<StatsLoading>(), isA<StatsData>()],
       verify: (bloc) {
@@ -58,7 +77,8 @@ void main() {
 
     blocTest<StatsBloc, StatsState>(
       'emits [StatsLoading, StatsError] when repository throws',
-      build: () => StatsBloc(repository: _FailingRepository()),
+      build: () =>
+          StatsBloc(repository: _FailingRepository(), refreshBloc: refreshBloc),
       act: (bloc) => bloc.add(const StatsLoaded()),
       expect: () => [isA<StatsLoading>(), isA<StatsError>()],
     );

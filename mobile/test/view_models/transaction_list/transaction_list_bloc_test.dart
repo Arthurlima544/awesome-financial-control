@@ -3,6 +3,11 @@ import 'package:afc/models/transaction_model.dart';
 import 'package:afc/repositories/transaction_list_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
+    implements AppRefreshBloc {}
 
 class _FakeRepository extends TransactionListRepository {
   _FakeRepository(this._transactions);
@@ -139,16 +144,30 @@ void main() {
     occurredAt: DateTime(2026, 4, 2),
   );
 
+  late AppRefreshBloc refreshBloc;
+
+  setUp(() {
+    refreshBloc = MockAppRefreshBloc();
+    when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
+  });
+
   group('TransactionListBloc', () {
     test('initial state is TransactionListInitial', () {
-      final bloc = TransactionListBloc(repository: _FakeRepository([]));
+      final bloc = TransactionListBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      );
       expect(bloc.state, isA<TransactionListInitial>());
       addTearDown(bloc.close);
     });
 
     blocTest<TransactionListBloc, TransactionListState>(
       'emits [Loading, Loaded([])] when repository returns empty list',
-      build: () => TransactionListBloc(repository: _FakeRepository([])),
+      build: () => TransactionListBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const TransactionListFetchRequested()),
       expect: () => [isA<TransactionListLoading>(), isA<TransactionListData>()],
       verify: (bloc) {
@@ -158,7 +177,10 @@ void main() {
 
     blocTest<TransactionListBloc, TransactionListState>(
       'emits [Loading, Loaded] with correct transactions on success',
-      build: () => TransactionListBloc(repository: _FakeRepository([t1, t2])),
+      build: () => TransactionListBloc(
+        repository: _FakeRepository([t1, t2]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const TransactionListFetchRequested()),
       expect: () => [isA<TransactionListLoading>(), isA<TransactionListData>()],
       verify: (bloc) {
@@ -170,7 +192,10 @@ void main() {
 
     blocTest<TransactionListBloc, TransactionListState>(
       'emits [Loading, Error] when repository throws on load',
-      build: () => TransactionListBloc(repository: _FailingRepository()),
+      build: () => TransactionListBloc(
+        repository: _FailingRepository(),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const TransactionListFetchRequested()),
       expect: () => [
         isA<TransactionListLoading>(),
@@ -180,7 +205,10 @@ void main() {
 
     blocTest<TransactionListBloc, TransactionListState>(
       'TransactionDeleteRequested removes the item from the loaded list',
-      build: () => TransactionListBloc(repository: _FakeRepository([t1, t2])),
+      build: () => TransactionListBloc(
+        repository: _FakeRepository([t1, t2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => TransactionListData([t1, t2]),
       act: (bloc) => bloc.add(const TransactionDeleteRequested('id-1')),
       expect: () => [isA<TransactionListData>()],
@@ -193,8 +221,10 @@ void main() {
 
     blocTest<TransactionListBloc, TransactionListState>(
       'TransactionDeleteRequested emits Error when delete fails',
-      build: () =>
-          TransactionListBloc(repository: _FailingDeleteRepository([t1, t2])),
+      build: () => TransactionListBloc(
+        repository: _FailingDeleteRepository([t1, t2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => TransactionListData([t1, t2]),
       act: (bloc) => bloc.add(const TransactionDeleteRequested('id-1')),
       expect: () => [isA<TransactionListError>()],
@@ -212,6 +242,7 @@ void main() {
         );
         return TransactionListBloc(
           repository: _UpdateRepository([t1, t2], updated),
+          refreshBloc: refreshBloc,
         );
       },
       seed: () => TransactionListData([t1, t2]),
@@ -236,8 +267,10 @@ void main() {
 
     blocTest<TransactionListBloc, TransactionListState>(
       'TransactionUpdateRequested emits Error when update fails',
-      build: () =>
-          TransactionListBloc(repository: _FailingUpdateRepository([t1, t2])),
+      build: () => TransactionListBloc(
+        repository: _FailingUpdateRepository([t1, t2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => TransactionListData([t1, t2]),
       act: (bloc) => bloc.add(
         TransactionUpdateRequested(
@@ -253,7 +286,10 @@ void main() {
 
     blocTest<TransactionListBloc, TransactionListState>(
       'TransactionUpdateRequested does nothing when state is not TransactionListData',
-      build: () => TransactionListBloc(repository: _FakeRepository([t1])),
+      build: () => TransactionListBloc(
+        repository: _FakeRepository([t1]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(
         TransactionUpdateRequested(
           id: 'id-1',

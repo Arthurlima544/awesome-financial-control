@@ -31,7 +31,9 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
   Future<void> loadTemplates() async {
     try {
       final templates = await _templateRepository.getAll();
-      emit(state.copyWith(templates: templates));
+      if (templates.isNotEmpty || state.templates.isNotEmpty) {
+        emit(state.copyWith(templates: templates));
+      }
     } catch (e) {
       // Fail silently for templates or log error
     }
