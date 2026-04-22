@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
@@ -47,6 +49,19 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
   void initState() {
     super.initState();
     _descriptionController = TextEditingController();
+  }
+
+  Future<void> _onPickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: source,
+      maxWidth: 1600,
+      maxHeight: 1600,
+      imageQuality: 85,
+    );
+    if (image != null && mounted) {
+      context.read<QuickAddTransactionCubit>().processReceipt(File(image.path));
+    }
   }
 
   @override
@@ -122,6 +137,24 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                BlocBuilder<QuickAddTransactionCubit, QuickAddTransactionState>(
+                  builder: (context, state) {
+                    if (state.status ==
+                        QuickAddTransactionStatus.processingImage) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24.0),
+                        child: Column(
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 12),
+                            Text('Analisando recibo...'),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 Flexible(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
@@ -416,7 +449,8 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                     leadingIcon: Icons.camera_alt_outlined,
                                     variant: AdaptiveButtonVariant.outlined,
                                     primaryColor: AppColors.primary,
-                                    onPressed: () {},
+                                    onPressed: () =>
+                                        _onPickImage(ImageSource.camera),
                                   ),
                                 ),
                               ),
@@ -429,7 +463,8 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                     leadingIcon: Icons.image_outlined,
                                     variant: AdaptiveButtonVariant.outlined,
                                     primaryColor: AppColors.primary,
-                                    onPressed: () {},
+                                    onPressed: () =>
+                                        _onPickImage(ImageSource.gallery),
                                   ),
                                 ),
                               ),

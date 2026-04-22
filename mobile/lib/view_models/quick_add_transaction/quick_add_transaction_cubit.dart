@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/models/transaction_model.dart';
@@ -6,6 +8,7 @@ import 'package:afc/repositories/transaction_list_repository.dart';
 import 'package:afc/repositories/recurring_repository.dart';
 import 'package:afc/repositories/template_repository.dart';
 import 'package:afc/models/template_model.dart';
+import 'package:afc/services/receipt_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'quick_add_transaction_state.dart';
 
@@ -13,19 +16,54 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
   final TransactionListRepository _repository;
   final RecurringRepository _recurringRepository;
   final TemplateRepository _templateRepository;
+  final ReceiptService _receiptService;
   final AppRefreshBloc _refreshBloc;
 
   QuickAddTransactionCubit({
     TransactionListRepository? repository,
     RecurringRepository? recurringRepository,
     TemplateRepository? templateRepository,
+    ReceiptService? receiptService,
     AppRefreshBloc? refreshBloc,
   }) : _repository = repository ?? sl<TransactionListRepository>(),
        _recurringRepository = recurringRepository ?? sl<RecurringRepository>(),
        _templateRepository = templateRepository ?? sl<TemplateRepository>(),
+       _receiptService = receiptService ?? sl<ReceiptService>(),
        _refreshBloc = refreshBloc ?? sl<AppRefreshBloc>(),
        super(const QuickAddTransactionState()) {
     loadTemplates();
+  }
+
+  Future<void> processReceipt(File imageFile) async {
+    developer.log('QuickAddTransactionCubit: Processing receipt image');
+    emit(state.copyWith(status: QuickAddTransactionStatus.processingImage));
+    try {
+      final result = await _receiptService.extractFromImage(imageFile);
+      developer.log(
+        'QuickAddTransactionCubit: Extraction result received: $result',
+      );
+
+      emit(
+        state.copyWith(
+          status: QuickAddTransactionStatus.initial,
+          amount: result.amount?.toStringAsFixed(2) ?? state.amount,
+          description: result.merchant ?? state.description,
+        ),
+      );
+    } catch (e, stack) {
+      developer.log(
+        'QuickAddTransactionCubit: Error processing receipt',
+        error: e,
+        stackTrace: stack,
+        level: 1000,
+      );
+      emit(
+        state.copyWith(
+          status: QuickAddTransactionStatus.failure,
+          errorMessage: 'Erro ao processar recibo: ${e.toString()}',
+        ),
+      );
+    }
   }
 
   Future<void> loadTemplates() async {

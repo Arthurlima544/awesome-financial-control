@@ -19,6 +19,7 @@ import 'package:afc/repositories/template_repository.dart';
 import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/services/import_parser_service.dart';
+import 'package:afc/services/receipt_service.dart';
 import 'package:afc/view_models/import/import_bloc.dart';
 
 final sl = GetIt.instance;
@@ -27,6 +28,7 @@ Future<void> init() async {
   // Services
   sl.registerLazySingleton(() => NavigationService());
   sl.registerLazySingleton(() => ImportParserService());
+  sl.registerLazySingleton(() => ReceiptService());
   sl.registerLazySingleton(() => AppRefreshBloc());
 
   // Repositories

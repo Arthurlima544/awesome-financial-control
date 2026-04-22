@@ -8,7 +8,7 @@
       "cwd": "${workspaceFolder}/mobile",
       "program": "lib/main.dart",
       "args": [
-        "--dart-define=FLAVOR=local"
+        "--dart-define-from-file=.env.local.json"
       ]
     },
     {
@@ -18,8 +18,17 @@
       "cwd": "${workspaceFolder}/mobile",
       "program": "lib/main.dart",
       "args": [
-        "--dart-define=FLAVOR=staging",
-        "--dart-define=API_BASE_URL=https://api-staging.afc.app"
+        "--dart-define-from-file=.env.staging.json"
+      ]
+    },
+    {
+      "name": "AFC — prod",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "${workspaceFolder}/mobile",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define-from-file=.env.prod.json"
       ]
     }
   ]

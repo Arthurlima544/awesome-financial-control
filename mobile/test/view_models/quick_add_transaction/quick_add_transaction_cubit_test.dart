@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:afc/view_models/quick_add_transaction/quick_add_transaction_cubit.dart';
 import 'package:afc/view_models/quick_add_transaction/quick_add_transaction_state.dart';
 import 'package:afc/models/transaction_model.dart';
@@ -6,6 +7,7 @@ import 'package:afc/repositories/recurring_repository.dart';
 import 'package:afc/repositories/template_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/services/receipt_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -49,15 +51,25 @@ class MockRecurringRepository extends Mock implements RecurringRepository {}
 
 class MockTemplateRepository extends Mock implements TemplateRepository {}
 
+class MockReceiptService extends Mock implements ReceiptService {}
+
+class FakeFile extends Fake implements File {}
+
 void main() {
   late AppRefreshBloc refreshBloc;
   late RecurringRepository recurringRepository;
   late TemplateRepository templateRepository;
+  late ReceiptService receiptService;
+
+  setUpAll(() {
+    registerFallbackValue(FakeFile());
+  });
 
   setUp(() {
     refreshBloc = MockAppRefreshBloc();
     recurringRepository = MockRecurringRepository();
     templateRepository = MockTemplateRepository();
+    receiptService = MockReceiptService();
 
     when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
     when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
@@ -70,6 +82,7 @@ void main() {
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       );
       expect(cubit.state.status, QuickAddTransactionStatus.initial);
@@ -82,11 +95,80 @@ void main() {
     });
 
     blocTest<QuickAddTransactionCubit, QuickAddTransactionState>(
+      'processReceipt emits [processingImage, initial] with extracted data',
+      build: () {
+        when(() => receiptService.extractFromImage(any())).thenAnswer(
+          (_) async =>
+              ReceiptExtractionResult(amount: 42.5, merchant: 'Gemini'),
+        );
+        return QuickAddTransactionCubit(
+          repository: _FakeRepository(),
+          recurringRepository: recurringRepository,
+          templateRepository: templateRepository,
+          receiptService: receiptService,
+          refreshBloc: refreshBloc,
+        );
+      },
+      act: (cubit) => cubit.processReceipt(File('path/to/image.jpg')),
+      expect: () => [
+        isA<QuickAddTransactionState>().having(
+          (s) => s.status,
+          'status',
+          QuickAddTransactionStatus.processingImage,
+        ),
+        isA<QuickAddTransactionState>()
+            .having(
+              (s) => s.status,
+              'status',
+              QuickAddTransactionStatus.initial,
+            )
+            .having((s) => s.amount, 'amount', '42.50')
+            .having((s) => s.description, 'description', 'Gemini'),
+      ],
+    );
+
+    blocTest<QuickAddTransactionCubit, QuickAddTransactionState>(
+      'processReceipt emits [processingImage, failure] on error',
+      build: () {
+        when(
+          () => receiptService.extractFromImage(any()),
+        ).thenThrow(Exception('Extraction failed'));
+        return QuickAddTransactionCubit(
+          repository: _FakeRepository(),
+          recurringRepository: recurringRepository,
+          templateRepository: templateRepository,
+          receiptService: receiptService,
+          refreshBloc: refreshBloc,
+        );
+      },
+      act: (cubit) => cubit.processReceipt(File('path/to/image.jpg')),
+      expect: () => [
+        isA<QuickAddTransactionState>().having(
+          (s) => s.status,
+          'status',
+          QuickAddTransactionStatus.processingImage,
+        ),
+        isA<QuickAddTransactionState>()
+            .having(
+              (s) => s.status,
+              'status',
+              QuickAddTransactionStatus.failure,
+            )
+            .having(
+              (s) => s.errorMessage,
+              'errorMessage',
+              contains('Extraction failed'),
+            ),
+      ],
+    );
+
+    blocTest<QuickAddTransactionCubit, QuickAddTransactionState>(
       'descriptionChanged updates description',
       build: () => QuickAddTransactionCubit(
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       act: (cubit) => cubit.descriptionChanged('Test desc'),
@@ -105,6 +187,7 @@ void main() {
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       seed: () => const QuickAddTransactionState(description: 'Test'),
@@ -122,6 +205,7 @@ void main() {
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       act: (cubit) => cubit.typeChanged(TransactionType.income),
@@ -140,6 +224,7 @@ void main() {
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       act: (cubit) => cubit.categoryChanged('Food'),
@@ -158,6 +243,7 @@ void main() {
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       act: (cubit) => cubit.submit(),
@@ -170,6 +256,7 @@ void main() {
         repository: _FakeRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       seed: () =>
@@ -195,6 +282,7 @@ void main() {
         repository: _FailingRepository(),
         recurringRepository: recurringRepository,
         templateRepository: templateRepository,
+        receiptService: receiptService,
         refreshBloc: refreshBloc,
       ),
       seed: () =>

@@ -3,7 +3,13 @@ import 'package:afc/models/transaction_model.dart';
 import 'package:afc/models/recurring_transaction_model.dart';
 import 'package:afc/models/template_model.dart';
 
-enum QuickAddTransactionStatus { initial, loading, success, failure }
+enum QuickAddTransactionStatus {
+  initial,
+  loading,
+  processingImage,
+  success,
+  failure,
+}
 
 class QuickAddTransactionState extends Equatable {
   const QuickAddTransactionState({

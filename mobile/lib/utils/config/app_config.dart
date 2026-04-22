@@ -11,12 +11,22 @@ class AppConfig {
   );
 
   static const String _apiBaseUrlEnv = String.fromEnvironment('API_BASE_URL');
+  static const String _geminiApiKeyEnv = String.fromEnvironment(
+    'GEMINI_API_KEY',
+  );
+  static const String _geminiModelEnv = String.fromEnvironment(
+    'GEMINI_MODEL',
+    defaultValue: 'gemini-2.5-flash',
+  );
 
   static String get apiBaseUrl {
     if (_apiBaseUrlEnv.isNotEmpty) return _apiBaseUrlEnv;
     if (!kIsWeb && Platform.isAndroid) return 'http://10.0.2.2:8080';
     return 'http://localhost:8080';
   }
+
+  static String get geminiApiKey => _geminiApiKeyEnv;
+  static String get geminiModel => _geminiModelEnv;
 
   static AppFlavor get flavor => switch (_flavor) {
     'staging' => AppFlavor.staging,
