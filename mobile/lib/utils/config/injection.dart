@@ -15,6 +15,7 @@ import 'package:afc/repositories/stats_repository.dart';
 import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/repositories/transaction_list_repository.dart';
 import 'package:afc/repositories/recurring_repository.dart';
+import 'package:afc/repositories/template_repository.dart';
 import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/view_models/auth/auth_bloc.dart';
 
@@ -34,6 +35,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => StatsRepository());
   sl.registerLazySingleton(() => TransactionListRepository());
   sl.registerLazySingleton(() => RecurringRepository());
+  sl.registerLazySingleton(() => TemplateRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());

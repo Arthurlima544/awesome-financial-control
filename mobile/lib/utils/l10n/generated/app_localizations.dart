@@ -580,6 +580,12 @@ abstract class AppLocalizations {
   /// **'Galeria'**
   String get quickAddGallery;
 
+  /// Save as template checkbox label
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar como modelo'**
+  String get quickAddSaveTemplate;
+
   /// Recurring transactions screen title
   ///
   /// In pt, this message translates to:

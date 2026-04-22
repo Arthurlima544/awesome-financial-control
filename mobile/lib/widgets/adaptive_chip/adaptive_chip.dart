@@ -21,6 +21,7 @@ class AdaptiveChip extends StatelessWidget {
   final EdgeInsetsGeometry? customPadding;
   final FocusNode? focusNode;
   final String? semanticLabel;
+  final bool? isSelected;
 
   const AdaptiveChip({
     super.key,
@@ -36,6 +37,7 @@ class AdaptiveChip extends StatelessWidget {
     this.customPadding,
     this.focusNode,
     this.semanticLabel,
+    this.isSelected,
   });
 
   @override
@@ -45,6 +47,7 @@ class AdaptiveChip extends StatelessWidget {
 
     return BlocBuilder<AdaptiveChipCubit, AdaptiveChipState>(
       builder: (context, state) {
+        final bool effectivelySelected = isSelected ?? state.isSelected;
         final bool isEffectivelyDisabled =
             state.isDisabled || (onPressed == null && onIconPressed == null);
 
@@ -82,7 +85,7 @@ class AdaptiveChip extends StatelessWidget {
                 backgroundColor = Colors.red.withValues(alpha: 0.1);
               }
             } else {
-              if (state.isSelected) {
+              if (effectivelySelected) {
                 switch (variant) {
                   case AdaptiveChipVariant.filled:
                     backgroundColor = baseColor;
@@ -180,7 +183,7 @@ class AdaptiveChip extends StatelessWidget {
 
             return Semantics(
               button: true,
-              selected: state.isSelected,
+              selected: effectivelySelected,
               enabled: !isEffectivelyDisabled,
               label: semanticLabel ?? 'Chip: $label',
               child: Focus(

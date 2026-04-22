@@ -261,6 +261,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get quickAddGallery => 'Galeria';
 
   @override
+  String get quickAddSaveTemplate => 'Salvar como modelo';
+
+  @override
   String get recurringTitle => 'Recorrentes';
 
   @override

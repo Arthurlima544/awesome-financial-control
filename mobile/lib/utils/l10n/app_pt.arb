@@ -259,6 +259,9 @@
   "quickAddGallery": "Galeria",
   "@quickAddGallery": { "description": "Gallery button in quick add" },
 
+  "quickAddSaveTemplate": "Salvar como modelo",
+  "@quickAddSaveTemplate": { "description": "Save as template checkbox label" },
+
   "recurringTitle": "Recorrentes",
   "@recurringTitle": { "description": "Recurring transactions screen title" },
 
