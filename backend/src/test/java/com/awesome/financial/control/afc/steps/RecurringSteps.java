@@ -8,7 +8,6 @@ import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -45,16 +44,19 @@ public class RecurringSteps {
         ResponseEntity<String> response =
                 restTemplate.postForEntity("/api/v1/recurring", request, String.class);
         ctx.response = response;
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            String body = response.getBody();
+            if (body.contains("\"id\":\"")) {
+                int start = body.indexOf("\"id\":\"") + 6;
+                int end = body.indexOf("\"", start);
+                ctx.lastRecurringId = java.util.UUID.fromString(body.substring(start, end));
+            }
+        }
     }
 
     @And("there are {int} recurring rules")
     public void thereAreRecurringRules(int count) {
         assertThat(recurringRepository.count()).isEqualTo(count);
-    }
-
-    @Then("the response contains {string}")
-    public void theResponseContains(String content) {
-        assertThat(ctx.response.getBody()).contains(content);
     }
 
     @When("I process pending recurring transactions")
@@ -91,5 +93,42 @@ public class RecurringSteps {
                         entity.getNextDueAt(),
                         false);
         restTemplate.put("/api/v1/recurring/" + entity.getId(), request);
+    }
+
+    @When("I delete the last created recurring rule")
+    public void iDeleteTheLastCreatedRecurringRule() {
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/recurring/" + ctx.lastRecurringId,
+                        org.springframework.http.HttpMethod.DELETE,
+                        null,
+                        String.class);
+    }
+
+    @When("I list all recurring rules")
+    public void iListAllRecurringRules() {
+        ctx.response = restTemplate.getForEntity("/api/v1/recurring", String.class);
+    }
+
+    @When("I update the last created recurring rule with amount {double}")
+    public void iUpdateTheLastCreatedRecurringRuleWithAmount(double amount) {
+        com.awesome.financial.control.afc.model.RecurringTransaction entity =
+                recurringRepository.findById(ctx.lastRecurringId).orElseThrow();
+
+        RecurringTransactionRequest request =
+                new RecurringTransactionRequest(
+                        entity.getDescription(),
+                        BigDecimal.valueOf(amount),
+                        entity.getType(),
+                        entity.getCategory(),
+                        entity.getFrequency(),
+                        entity.getNextDueAt(),
+                        entity.isActive());
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/recurring/" + ctx.lastRecurringId,
+                        org.springframework.http.HttpMethod.PUT,
+                        new org.springframework.http.HttpEntity<>(request),
+                        String.class);
     }
 }

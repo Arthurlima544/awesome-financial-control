@@ -8,7 +8,6 @@ import com.awesome.financial.control.afc.repository.TransactionRepository;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -68,11 +67,6 @@ public class TransactionSteps {
     public void iRequestLastTransactions(int limit) {
         ctx.response =
                 restTemplate.getForEntity("/api/v1/transactions?limit=" + limit, String.class);
-    }
-
-    @Then("the response status is {int}")
-    public void theResponseStatusIs(int status) {
-        assertThat(ctx.response.getStatusCode().value()).isEqualTo(status);
     }
 
     @And("the total income is {bigdecimal}")
