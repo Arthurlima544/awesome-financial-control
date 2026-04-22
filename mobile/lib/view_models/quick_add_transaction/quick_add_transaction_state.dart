@@ -1,7 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/models/recurring_transaction_model.dart';
+import 'package:afc/models/template_model.dart';
 
-enum QuickAddTransactionStatus { initial, loading, success, failure }
+enum QuickAddTransactionStatus {
+  initial,
+  loading,
+  processingImage,
+  success,
+  failure,
+}
 
 class QuickAddTransactionState extends Equatable {
   const QuickAddTransactionState({
@@ -11,6 +19,11 @@ class QuickAddTransactionState extends Equatable {
     this.amount = '',
     this.type = TransactionType.expense,
     this.category = '',
+    this.isRecurring = false,
+    this.frequency = RecurrenceFrequency.monthly,
+    this.selectedTemplate,
+    this.saveAsTemplate = false,
+    this.templates = const [],
   });
 
   final QuickAddTransactionStatus status;
@@ -19,10 +32,16 @@ class QuickAddTransactionState extends Equatable {
   final String amount;
   final TransactionType type;
   final String category;
+  final bool isRecurring;
+  final RecurrenceFrequency frequency;
+  final String? selectedTemplate;
+  final bool saveAsTemplate;
+  final List<TemplateModel> templates;
 
   double? get parsedAmount => double.tryParse(amount.replaceAll(',', '.'));
   bool get isAmountValid => parsedAmount != null && parsedAmount! > 0;
-  bool get isValid => isAmountValid;
+  bool get isDescriptionValid => description.trim().isNotEmpty;
+  bool get isValid => isAmountValid && isDescriptionValid;
   String? get parsedCategory =>
       category.trim().isEmpty ? null : category.trim();
 
@@ -33,6 +52,11 @@ class QuickAddTransactionState extends Equatable {
     String? amount,
     TransactionType? type,
     String? category,
+    bool? isRecurring,
+    RecurrenceFrequency? frequency,
+    Object? selectedTemplate = const Object(),
+    bool? saveAsTemplate,
+    List<TemplateModel>? templates,
   }) {
     return QuickAddTransactionState(
       status: status ?? this.status,
@@ -43,6 +67,13 @@ class QuickAddTransactionState extends Equatable {
       amount: amount ?? this.amount,
       type: type ?? this.type,
       category: category ?? this.category,
+      isRecurring: isRecurring ?? this.isRecurring,
+      frequency: frequency ?? this.frequency,
+      selectedTemplate: identical(selectedTemplate, const Object())
+          ? this.selectedTemplate
+          : selectedTemplate as String?,
+      saveAsTemplate: saveAsTemplate ?? this.saveAsTemplate,
+      templates: templates ?? this.templates,
     );
   }
 
@@ -54,5 +85,10 @@ class QuickAddTransactionState extends Equatable {
     amount,
     type,
     category,
+    isRecurring,
+    frequency,
+    selectedTemplate,
+    saveAsTemplate,
+    templates,
   ];
 }

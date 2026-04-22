@@ -8,12 +8,14 @@ import com.awesome.financial.control.afc.repository.TransactionRepository;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -65,11 +67,6 @@ public class TransactionSteps {
     public void iRequestLastTransactions(int limit) {
         ctx.response =
                 restTemplate.getForEntity("/api/v1/transactions?limit=" + limit, String.class);
-    }
-
-    @Then("the response status is {int}")
-    public void theResponseStatusIs(int status) {
-        assertThat(ctx.response.getStatusCode().value()).isEqualTo(status);
     }
 
     @And("the total income is {bigdecimal}")
@@ -181,5 +178,58 @@ public class TransactionSteps {
     public void theTransactionAmountIs(BigDecimal amount) {
         assertThat(ctx.response.getBody())
                 .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
+    }
+
+    @When("I import the following transactions:")
+    public void iImportTheFollowingTransactions(io.cucumber.datatable.DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        String body =
+                "["
+                        + rows.stream()
+                                .map(
+                                        row ->
+                                                String.format(
+                                                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"category\":\"%s\",\"occurredAt\":\"%s\"}",
+                                                        row.get("description"),
+                                                        row.get("amount"),
+                                                        row.get("type"),
+                                                        row.get("category"),
+                                                        row.get("occurredAt")))
+                                .collect(Collectors.joining(","))
+                        + "]";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions/bulk", new HttpEntity<>(body, headers), String.class);
+    }
+
+    @And("the transaction list contains description {string} with amount {bigdecimal}")
+    public void theTransactionListContainsDescriptionWithAmount(
+            String description, BigDecimal amount) {
+        assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
+        assertThat(ctx.response.getBody())
+                .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
+    }
+
+    @When("I import an invalid bulk request")
+    public void iImportAnInvalidBulkRequest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body = "invalid-json";
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions/bulk", new HttpEntity<>(body, headers), String.class);
+    }
+
+    @When("I import an empty list of transactions")
+    public void iImportAnEmptyList() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body = "[]";
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions/bulk", new HttpEntity<>(body, headers), String.class);
     }
 }

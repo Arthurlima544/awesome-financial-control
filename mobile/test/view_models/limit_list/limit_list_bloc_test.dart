@@ -3,6 +3,11 @@ import 'package:afc/models/limit_model.dart';
 import 'package:afc/repositories/limit_list_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
+    implements AppRefreshBloc {}
 
 class _FakeRepository extends LimitListRepository {
   _FakeRepository(this._limits);
@@ -101,16 +106,30 @@ void main() {
     createdAt: DateTime(2026, 4, 2),
   );
 
+  late AppRefreshBloc refreshBloc;
+
+  setUp(() {
+    refreshBloc = MockAppRefreshBloc();
+    when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
+  });
+
   group('LimitListBloc', () {
     test('initial state is LimitListInitial', () {
-      final bloc = LimitListBloc(repository: _FakeRepository([]));
+      final bloc = LimitListBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      );
       expect(bloc.state, isA<LimitListInitial>());
       addTearDown(bloc.close);
     });
 
     blocTest<LimitListBloc, LimitListState>(
       'emits [Loading, Data([])] when repository returns empty list',
-      build: () => LimitListBloc(repository: _FakeRepository([])),
+      build: () => LimitListBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const LimitListFetchRequested()),
       expect: () => [isA<LimitListLoading>(), isA<LimitListData>()],
       verify: (bloc) {
@@ -120,7 +139,10 @@ void main() {
 
     blocTest<LimitListBloc, LimitListState>(
       'emits [Loading, Data] with correct limits on success',
-      build: () => LimitListBloc(repository: _FakeRepository([l1, l2])),
+      build: () => LimitListBloc(
+        repository: _FakeRepository([l1, l2]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const LimitListFetchRequested()),
       expect: () => [isA<LimitListLoading>(), isA<LimitListData>()],
       verify: (bloc) {
@@ -132,14 +154,20 @@ void main() {
 
     blocTest<LimitListBloc, LimitListState>(
       'emits [Loading, Error] when repository throws on fetch',
-      build: () => LimitListBloc(repository: _FailingRepository()),
+      build: () => LimitListBloc(
+        repository: _FailingRepository(),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const LimitListFetchRequested()),
       expect: () => [isA<LimitListLoading>(), isA<LimitListError>()],
     );
 
     blocTest<LimitListBloc, LimitListState>(
       'LimitListDeleteRequested removes the item from the loaded list',
-      build: () => LimitListBloc(repository: _FakeRepository([l1, l2])),
+      build: () => LimitListBloc(
+        repository: _FakeRepository([l1, l2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => LimitListData([l1, l2]),
       act: (bloc) => bloc.add(const LimitListDeleteRequested('id-1')),
       expect: () => [isA<LimitListData>()],
@@ -152,8 +180,10 @@ void main() {
 
     blocTest<LimitListBloc, LimitListState>(
       'LimitListDeleteRequested emits Error when delete fails',
-      build: () =>
-          LimitListBloc(repository: _FailingDeleteRepository([l1, l2])),
+      build: () => LimitListBloc(
+        repository: _FailingDeleteRepository([l1, l2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => LimitListData([l1, l2]),
       act: (bloc) => bloc.add(const LimitListDeleteRequested('id-1')),
       expect: () => [isA<LimitListError>()],
@@ -168,7 +198,10 @@ void main() {
           amount: 800.0,
           createdAt: l1.createdAt,
         );
-        return LimitListBloc(repository: _UpdateRepository([l1, l2], updated));
+        return LimitListBloc(
+          repository: _UpdateRepository([l1, l2], updated),
+          refreshBloc: refreshBloc,
+        );
       },
       seed: () => LimitListData([l1, l2]),
       act: (bloc) =>
@@ -184,8 +217,10 @@ void main() {
 
     blocTest<LimitListBloc, LimitListState>(
       'LimitListUpdateRequested emits Error when update fails',
-      build: () =>
-          LimitListBloc(repository: _FailingUpdateRepository([l1, l2])),
+      build: () => LimitListBloc(
+        repository: _FailingUpdateRepository([l1, l2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => LimitListData([l1, l2]),
       act: (bloc) =>
           bloc.add(const LimitListUpdateRequested(id: 'id-1', amount: 800.0)),
@@ -194,7 +229,10 @@ void main() {
 
     blocTest<LimitListBloc, LimitListState>(
       'LimitListDeleteRequested does nothing when state is not LimitListData',
-      build: () => LimitListBloc(repository: _FakeRepository([l1])),
+      build: () => LimitListBloc(
+        repository: _FakeRepository([l1]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const LimitListDeleteRequested('id-1')),
       expect: () => [],
     );

@@ -69,6 +69,27 @@ public class TransactionService {
         return transactionMapper.toResponse(saved);
     }
 
+    @Transactional
+    public List<TransactionResponse> createTransactionsBulk(
+            List<com.awesome.financial.control.afc.dto.CreateTransactionRequest> requests) {
+        List<Transaction> transactions =
+                requests.stream()
+                        .map(
+                                request -> {
+                                    Transaction transaction = new Transaction();
+                                    transaction.setDescription(request.description());
+                                    transaction.setAmount(request.amount());
+                                    transaction.setType(request.type());
+                                    transaction.setCategory(request.category());
+                                    transaction.setOccurredAt(request.occurredAt());
+                                    return transaction;
+                                })
+                        .toList();
+
+        List<Transaction> saved = transactionRepository.saveAll(transactions);
+        return saved.stream().map(transactionMapper::toResponse).toList();
+    }
+
     @Transactional(readOnly = true)
     public List<TransactionResponse> getLastTransactions(int limit) {
         return transactionRepository

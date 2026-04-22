@@ -7,8 +7,8 @@ import 'package:afc/widgets/scaffold_shell/scaffold_shell.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 GoRouter _buildRouter({int initialIndex = 0}) {
-  final paths = ['/home', '/transactions', '/limits', '/stats'];
-  final labels = ['Home', 'Transactions', 'Limits', 'Stats'];
+  final paths = ['/home', '/transactions', '/limits', '/stats', '/recurring'];
+  final labels = ['Home', 'Transactions', 'Limits', 'Stats', 'Recurring'];
 
   return GoRouter(
     initialLocation: paths[initialIndex],
@@ -57,7 +57,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(NavigationBar), findsOneWidget);
-      expect(find.byType(NavigationDestination), findsNWidgets(4));
+      expect(find.byType(NavigationDestination), findsNWidgets(5));
     });
 
     testWidgets('shows all tab labels', (tester) async {
@@ -68,6 +68,7 @@ void main() {
       expect(find.text('Transações'), findsOneWidget);
       expect(find.text('Limites'), findsOneWidget);
       expect(find.text('Gráficos'), findsOneWidget);
+      expect(find.text('Recorrentes'), findsOneWidget);
     });
 
     testWidgets('shows FloatingActionButton', (tester) async {

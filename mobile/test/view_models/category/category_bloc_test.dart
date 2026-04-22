@@ -3,6 +3,11 @@ import 'package:afc/models/category_model.dart';
 import 'package:afc/repositories/category_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
+    implements AppRefreshBloc {}
 
 class _FakeRepository extends CategoryRepository {
   _FakeRepository(this._categories);
@@ -95,16 +100,30 @@ void main() {
     createdAt: DateTime(2026, 4, 2),
   );
 
+  late AppRefreshBloc refreshBloc;
+
+  setUp(() {
+    refreshBloc = MockAppRefreshBloc();
+    when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
+  });
+
   group('CategoryBloc', () {
     test('initial state is CategoryInitial', () {
-      final bloc = CategoryBloc(repository: _FakeRepository([]));
+      final bloc = CategoryBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      );
       expect(bloc.state, isA<CategoryInitial>());
       addTearDown(bloc.close);
     });
 
     blocTest<CategoryBloc, CategoryState>(
       'emits [Loading, Data([])] when repository returns empty list',
-      build: () => CategoryBloc(repository: _FakeRepository([])),
+      build: () => CategoryBloc(
+        repository: _FakeRepository([]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const CategoryFetchRequested()),
       expect: () => [isA<CategoryLoading>(), isA<CategoryData>()],
       verify: (bloc) {
@@ -114,7 +133,10 @@ void main() {
 
     blocTest<CategoryBloc, CategoryState>(
       'emits [Loading, Data] with correct categories on success',
-      build: () => CategoryBloc(repository: _FakeRepository([c1, c2])),
+      build: () => CategoryBloc(
+        repository: _FakeRepository([c1, c2]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const CategoryFetchRequested()),
       expect: () => [isA<CategoryLoading>(), isA<CategoryData>()],
       verify: (bloc) {
@@ -126,14 +148,20 @@ void main() {
 
     blocTest<CategoryBloc, CategoryState>(
       'emits [Loading, Error] when repository throws on fetch',
-      build: () => CategoryBloc(repository: _FailingRepository()),
+      build: () => CategoryBloc(
+        repository: _FailingRepository(),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const CategoryFetchRequested()),
       expect: () => [isA<CategoryLoading>(), isA<CategoryError>()],
     );
 
     blocTest<CategoryBloc, CategoryState>(
       'CategoryDeleteRequested removes the item from the loaded list',
-      build: () => CategoryBloc(repository: _FakeRepository([c1, c2])),
+      build: () => CategoryBloc(
+        repository: _FakeRepository([c1, c2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => CategoryData([c1, c2]),
       act: (bloc) => bloc.add(const CategoryDeleteRequested('id-1')),
       expect: () => [isA<CategoryData>()],
@@ -146,7 +174,10 @@ void main() {
 
     blocTest<CategoryBloc, CategoryState>(
       'CategoryDeleteRequested emits Error when delete fails',
-      build: () => CategoryBloc(repository: _FailingDeleteRepository([c1, c2])),
+      build: () => CategoryBloc(
+        repository: _FailingDeleteRepository([c1, c2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => CategoryData([c1, c2]),
       act: (bloc) => bloc.add(const CategoryDeleteRequested('id-1')),
       expect: () => [isA<CategoryError>()],
@@ -160,7 +191,10 @@ void main() {
           name: 'Groceries',
           createdAt: c1.createdAt,
         );
-        return CategoryBloc(repository: _UpdateRepository([c1, c2], updated));
+        return CategoryBloc(
+          repository: _UpdateRepository([c1, c2], updated),
+          refreshBloc: refreshBloc,
+        );
       },
       seed: () => CategoryData([c1, c2]),
       act: (bloc) => bloc.add(
@@ -177,7 +211,10 @@ void main() {
 
     blocTest<CategoryBloc, CategoryState>(
       'CategoryUpdateRequested emits Error when update fails',
-      build: () => CategoryBloc(repository: _FailingUpdateRepository([c1, c2])),
+      build: () => CategoryBloc(
+        repository: _FailingUpdateRepository([c1, c2]),
+        refreshBloc: refreshBloc,
+      ),
       seed: () => CategoryData([c1, c2]),
       act: (bloc) => bloc.add(
         const CategoryUpdateRequested(id: 'id-1', name: 'Groceries'),
@@ -187,7 +224,10 @@ void main() {
 
     blocTest<CategoryBloc, CategoryState>(
       'CategoryDeleteRequested does nothing when state is not CategoryData',
-      build: () => CategoryBloc(repository: _FakeRepository([c1])),
+      build: () => CategoryBloc(
+        repository: _FakeRepository([c1]),
+        refreshBloc: refreshBloc,
+      ),
       act: (bloc) => bloc.add(const CategoryDeleteRequested('id-1')),
       expect: () => [],
     );

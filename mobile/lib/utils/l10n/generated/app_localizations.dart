@@ -579,6 +579,156 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Galeria'**
   String get quickAddGallery;
+
+  /// Save as template checkbox label
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar como modelo'**
+  String get quickAddSaveTemplate;
+
+  /// Recurring transactions screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Recorrentes'**
+  String get recurringTitle;
+
+  /// Empty state for recurring list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma regra recorrente cadastrada'**
+  String get recurringEmpty;
+
+  /// Daily frequency label
+  ///
+  /// In pt, this message translates to:
+  /// **'Diário'**
+  String get recurringFrequencyDaily;
+
+  /// Weekly frequency label
+  ///
+  /// In pt, this message translates to:
+  /// **'Semanal'**
+  String get recurringFrequencyWeekly;
+
+  /// Monthly frequency label
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensal'**
+  String get recurringFrequencyMonthly;
+
+  /// Next due date label
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo vencimento: {date}'**
+  String recurringNextDue(String date);
+
+  /// Recurring form title
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova regra recorrente'**
+  String get recurringFormTitle;
+
+  /// Frequency field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Frequência'**
+  String get recurringFormFrequencyLabel;
+
+  /// Next due field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Primeiro vencimento'**
+  String get recurringFormNextDueLabel;
+
+  /// Title of delete recurring confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir regra'**
+  String get recurringDeleteConfirmTitle;
+
+  /// Body of delete recurring confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.'**
+  String get recurringDeleteConfirmMessage;
+
+  /// Import screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar Extrato'**
+  String get importTitle;
+
+  /// Label for bank selection in import
+  ///
+  /// In pt, this message translates to:
+  /// **'Banco'**
+  String get importBankLabel;
+
+  /// Generic bank option
+  ///
+  /// In pt, this message translates to:
+  /// **'Genérico / Outros'**
+  String get importBankGeneric;
+
+  /// Nubank option
+  ///
+  /// In pt, this message translates to:
+  /// **'Nubank'**
+  String get importBankNubank;
+
+  /// Label for statement type selection
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de extrato'**
+  String get importTypeLabel;
+
+  /// OFX type option
+  ///
+  /// In pt, this message translates to:
+  /// **'OFX (Padrão)'**
+  String get importTypeOfx;
+
+  /// Extrato type option
+  ///
+  /// In pt, this message translates to:
+  /// **'Extrato Conta Corrente (CSV)'**
+  String get importTypeExtrato;
+
+  /// Fatura type option
+  ///
+  /// In pt, this message translates to:
+  /// **'Fatura Cartão de Crédito (CSV)'**
+  String get importTypeFatura;
+
+  /// Button to pick file
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar Arquivo'**
+  String get importPickFile;
+
+  /// Title for review step
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar transações'**
+  String get importReviewTitle;
+
+  /// Submit import button
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar {count} transações'**
+  String importSubmit(String count);
+
+  /// Duplicate badge
+  ///
+  /// In pt, this message translates to:
+  /// **'Duplicada'**
+  String get importDuplicate;
+
+  /// Success message for import
+  ///
+  /// In pt, this message translates to:
+  /// **'Transações importadas com sucesso!'**
+  String get importSuccess;
 }
 
 class _AppLocalizationsDelegate

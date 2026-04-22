@@ -4,6 +4,11 @@ import 'package:afc/models/transaction_model.dart';
 import 'package:afc/repositories/home_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
+    implements AppRefreshBloc {}
 
 class _FakeRepository extends HomeRepository {
   _FakeRepository({required this.summary, required this.transactions});
@@ -45,6 +50,14 @@ void main() {
     ),
   ];
 
+  late AppRefreshBloc refreshBloc;
+
+  setUp(() {
+    refreshBloc = MockAppRefreshBloc();
+    when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
+  });
+
   group('HomeBloc', () {
     test('initial state is HomeInitial', () {
       final bloc = HomeBloc(
@@ -52,6 +65,7 @@ void main() {
           summary: fakeSummary,
           transactions: fakeTransactions,
         ),
+        refreshBloc: refreshBloc,
       );
       expect(bloc.state, isA<HomeInitial>());
       addTearDown(bloc.close);
@@ -64,6 +78,7 @@ void main() {
           summary: fakeSummary,
           transactions: fakeTransactions,
         ),
+        refreshBloc: refreshBloc,
       ),
       act: (bloc) => bloc.add(const HomeDashboardLoaded()),
       expect: () => [isA<HomeLoading>(), isA<HomeLoaded>()],
@@ -76,6 +91,7 @@ void main() {
           summary: fakeSummary,
           transactions: fakeTransactions,
         ),
+        refreshBloc: refreshBloc,
       ),
       act: (bloc) => bloc.add(const HomeDashboardLoaded()),
       verify: (bloc) {
@@ -93,6 +109,7 @@ void main() {
           summary: fakeSummary,
           transactions: fakeTransactions,
         ),
+        refreshBloc: refreshBloc,
       ),
       act: (bloc) => bloc.add(const HomeDashboardLoaded()),
       verify: (bloc) {
@@ -104,7 +121,8 @@ void main() {
 
     blocTest<HomeBloc, HomeState>(
       'emits [HomeLoading, HomeError] when repository throws',
-      build: () => HomeBloc(repository: _FailingRepository()),
+      build: () =>
+          HomeBloc(repository: _FailingRepository(), refreshBloc: refreshBloc),
       act: (bloc) => bloc.add(const HomeDashboardLoaded()),
       expect: () => [isA<HomeLoading>(), isA<HomeError>()],
     );
@@ -116,6 +134,7 @@ void main() {
           summary: fakeSummary,
           transactions: fakeTransactions,
         ),
+        refreshBloc: refreshBloc,
       ),
       seed: () =>
           HomeLoaded(summary: fakeSummary, transactions: fakeTransactions),
@@ -130,6 +149,7 @@ void main() {
           summary: SummaryModel(totalIncome: 0, totalExpenses: 0, balance: 0),
           transactions: [],
         ),
+        refreshBloc: refreshBloc,
       ),
       act: (bloc) => bloc.add(const HomeDashboardLoaded()),
       verify: (bloc) {

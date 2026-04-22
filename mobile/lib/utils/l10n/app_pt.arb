@@ -257,5 +257,90 @@
   "@quickAddCamera": { "description": "Camera button in quick add" },
 
   "quickAddGallery": "Galeria",
-  "@quickAddGallery": { "description": "Gallery button in quick add" }
+  "@quickAddGallery": { "description": "Gallery button in quick add" },
+
+  "quickAddSaveTemplate": "Salvar como modelo",
+  "@quickAddSaveTemplate": { "description": "Save as template checkbox label" },
+
+  "recurringTitle": "Recorrentes",
+  "@recurringTitle": { "description": "Recurring transactions screen title" },
+
+  "recurringEmpty": "Nenhuma regra recorrente cadastrada",
+  "@recurringEmpty": { "description": "Empty state for recurring list" },
+
+  "recurringFrequencyDaily": "Diário",
+  "@recurringFrequencyDaily": { "description": "Daily frequency label" },
+
+  "recurringFrequencyWeekly": "Semanal",
+  "@recurringFrequencyWeekly": { "description": "Weekly frequency label" },
+
+  "recurringFrequencyMonthly": "Mensal",
+  "@recurringFrequencyMonthly": { "description": "Monthly frequency label" },
+
+  "recurringNextDue": "Próximo vencimento: {date}",
+  "@recurringNextDue": {
+    "description": "Next due date label",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "recurringFormTitle": "Nova regra recorrente",
+  "@recurringFormTitle": { "description": "Recurring form title" },
+
+  "recurringFormFrequencyLabel": "Frequência",
+  "@recurringFormFrequencyLabel": { "description": "Frequency field label" },
+
+  "recurringFormNextDueLabel": "Primeiro vencimento",
+  "@recurringFormNextDueLabel": { "description": "Next due field label" },
+
+  "recurringDeleteConfirmTitle": "Excluir regra",
+  "@recurringDeleteConfirmTitle": { "description": "Title of delete recurring confirmation dialog" },
+
+  "recurringDeleteConfirmMessage": "Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.",
+  "@recurringDeleteConfirmMessage": { "description": "Body of delete recurring confirmation dialog" },
+
+  "importTitle": "Importar Extrato",
+  "@importTitle": { "description": "Import screen title" },
+
+  "importBankLabel": "Banco",
+  "@importBankLabel": { "description": "Label for bank selection in import" },
+
+  "importBankGeneric": "Genérico / Outros",
+  "@importBankGeneric": { "description": "Generic bank option" },
+
+  "importBankNubank": "Nubank",
+  "@importBankNubank": { "description": "Nubank option" },
+
+  "importTypeLabel": "Tipo de extrato",
+  "@importTypeLabel": { "description": "Label for statement type selection" },
+
+  "importTypeOfx": "OFX (Padrão)",
+  "@importTypeOfx": { "description": "OFX type option" },
+
+  "importTypeExtrato": "Extrato Conta Corrente (CSV)",
+  "@importTypeExtrato": { "description": "Extrato type option" },
+
+  "importTypeFatura": "Fatura Cartão de Crédito (CSV)",
+  "@importTypeFatura": { "description": "Fatura type option" },
+
+  "importPickFile": "Selecionar Arquivo",
+  "@importPickFile": { "description": "Button to pick file" },
+
+  "importReviewTitle": "Revisar transações",
+  "@importReviewTitle": { "description": "Title for review step" },
+
+  "importSubmit": "Importar {count} transações",
+  "@importSubmit": {
+    "description": "Submit import button",
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+
+  "importDuplicate": "Duplicada",
+  "@importDuplicate": { "description": "Duplicate badge" },
+
+  "importSuccess": "Transações importadas com sucesso!",
+  "@importSuccess": { "description": "Success message for import" }
 }

@@ -3,21 +3,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/repositories/transaction_list_repository.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
+import 'dart:async';
 
 part 'transaction_list_event.dart';
 part 'transaction_list_state.dart';
 
 class TransactionListBloc
     extends Bloc<TransactionListEvent, TransactionListState> {
-  TransactionListBloc({TransactionListRepository? repository})
-    : _repository = repository ?? sl<TransactionListRepository>(),
-      super(TransactionListInitial()) {
+  final TransactionListRepository _repository;
+  final AppRefreshBloc _refreshBloc;
+  late final StreamSubscription _refreshSubscription;
+
+  TransactionListBloc({
+    TransactionListRepository? repository,
+    AppRefreshBloc? refreshBloc,
+  }) : _repository = repository ?? sl<TransactionListRepository>(),
+       _refreshBloc = refreshBloc ?? sl<AppRefreshBloc>(),
+       super(TransactionListInitial()) {
     on<TransactionListFetchRequested>(_onFetchRequested);
     on<TransactionDeleteRequested>(_onDeleteRequested);
     on<TransactionUpdateRequested>(_onUpdateRequested);
+
+    _refreshSubscription = _refreshBloc.stream.listen(
+      (_) => add(const TransactionListFetchRequested()),
+    );
   }
 
-  final TransactionListRepository _repository;
+  @override
+  Future<void> close() {
+    _refreshSubscription.cancel();
+    return super.close();
+  }
 
   Future<void> _onFetchRequested(
     TransactionListFetchRequested event,
@@ -44,6 +61,7 @@ class TransactionListBloc
           .where((t) => t.id != event.id)
           .toList();
       emit(TransactionListData(updated));
+      _refreshBloc.add(DataChanged());
     } catch (e) {
       emit(TransactionListError(e.toString()));
     }
@@ -68,6 +86,7 @@ class TransactionListBloc
         return t.id == event.id ? updated : t;
       }).toList();
       emit(TransactionListData(updatedList));
+      _refreshBloc.add(DataChanged());
     } catch (e) {
       emit(TransactionListError(e.toString()));
     }

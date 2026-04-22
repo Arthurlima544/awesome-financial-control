@@ -1,18 +1,84 @@
+import 'dart:developer' as developer;
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/models/recurring_transaction_model.dart';
 import 'package:afc/repositories/transaction_list_repository.dart';
+import 'package:afc/repositories/recurring_repository.dart';
+import 'package:afc/repositories/template_repository.dart';
+import 'package:afc/models/template_model.dart';
+import 'package:afc/services/receipt_service.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'quick_add_transaction_state.dart';
 
 class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
-  QuickAddTransactionCubit({TransactionListRepository? repository})
-    : _repository = repository ?? sl<TransactionListRepository>(),
-      super(const QuickAddTransactionState());
-
   final TransactionListRepository _repository;
+  final RecurringRepository _recurringRepository;
+  final TemplateRepository _templateRepository;
+  final ReceiptService _receiptService;
+  final AppRefreshBloc _refreshBloc;
+
+  QuickAddTransactionCubit({
+    TransactionListRepository? repository,
+    RecurringRepository? recurringRepository,
+    TemplateRepository? templateRepository,
+    ReceiptService? receiptService,
+    AppRefreshBloc? refreshBloc,
+  }) : _repository = repository ?? sl<TransactionListRepository>(),
+       _recurringRepository = recurringRepository ?? sl<RecurringRepository>(),
+       _templateRepository = templateRepository ?? sl<TemplateRepository>(),
+       _receiptService = receiptService ?? sl<ReceiptService>(),
+       _refreshBloc = refreshBloc ?? sl<AppRefreshBloc>(),
+       super(const QuickAddTransactionState()) {
+    loadTemplates();
+  }
+
+  Future<void> processReceipt(File imageFile) async {
+    developer.log('QuickAddTransactionCubit: Processing receipt image');
+    emit(state.copyWith(status: QuickAddTransactionStatus.processingImage));
+    try {
+      final result = await _receiptService.extractFromImage(imageFile);
+      developer.log(
+        'QuickAddTransactionCubit: Extraction result received: $result',
+      );
+
+      emit(
+        state.copyWith(
+          status: QuickAddTransactionStatus.initial,
+          amount: result.amount?.toStringAsFixed(2) ?? state.amount,
+          description: result.merchant ?? state.description,
+        ),
+      );
+    } catch (e, stack) {
+      developer.log(
+        'QuickAddTransactionCubit: Error processing receipt',
+        error: e,
+        stackTrace: stack,
+        level: 1000,
+      );
+      emit(
+        state.copyWith(
+          status: QuickAddTransactionStatus.failure,
+          errorMessage: 'Erro ao processar recibo: ${e.toString()}',
+        ),
+      );
+    }
+  }
+
+  Future<void> loadTemplates() async {
+    try {
+      final templates = await _templateRepository.getAll();
+      if (templates.isNotEmpty || state.templates.isNotEmpty) {
+        emit(state.copyWith(templates: templates));
+      }
+    } catch (e) {
+      // Fail silently for templates or log error
+    }
+  }
 
   void descriptionChanged(String value) {
-    emit(state.copyWith(description: value));
+    emit(state.copyWith(description: value, selectedTemplate: null));
   }
 
   void amountChanged(String value) {
@@ -24,7 +90,30 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
   }
 
   void categoryChanged(String value) {
-    emit(state.copyWith(category: value));
+    emit(state.copyWith(category: value, selectedTemplate: null));
+  }
+
+  void setRecurring(bool value) {
+    emit(state.copyWith(isRecurring: value));
+  }
+
+  void frequencyChanged(RecurrenceFrequency frequency) {
+    emit(state.copyWith(frequency: frequency));
+  }
+
+  void setSaveAsTemplate(bool value) {
+    emit(state.copyWith(saveAsTemplate: value));
+  }
+
+  void applyTemplate(TemplateModel template) {
+    emit(
+      state.copyWith(
+        description: template.description,
+        category: template.category ?? '',
+        type: template.type,
+        selectedTemplate: template.description,
+      ),
+    );
   }
 
   Future<void> submit() async {
@@ -39,6 +128,48 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
         category: state.parsedCategory,
         occurredAt: DateTime.now(),
       );
+
+      if (state.isRecurring) {
+        final DateTime nextDueAt = switch (state.frequency) {
+          RecurrenceFrequency.daily => DateTime.now().add(
+            const Duration(days: 1),
+          ),
+          RecurrenceFrequency.weekly => DateTime.now().add(
+            const Duration(days: 7),
+          ),
+          RecurrenceFrequency.monthly => DateTime(
+            DateTime.now().year,
+            DateTime.now().month + 1,
+            DateTime.now().day,
+          ),
+        };
+
+        await _recurringRepository.create(
+          RecurringTransactionModel(
+            id: '',
+            description: state.description.trim(),
+            amount: state.parsedAmount!,
+            type: state.type,
+            category: state.parsedCategory,
+            frequency: state.frequency,
+            nextDueAt: nextDueAt,
+            active: true,
+          ),
+        );
+      }
+
+      if (state.saveAsTemplate) {
+        await _templateRepository.create(
+          TemplateModel(
+            id: '',
+            description: state.description.trim(),
+            category: state.parsedCategory,
+            type: state.type,
+          ),
+        );
+      }
+
+      _refreshBloc.add(DataChanged());
       emit(state.copyWith(status: QuickAddTransactionStatus.success));
     } catch (e) {
       emit(

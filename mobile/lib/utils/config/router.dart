@@ -21,8 +21,11 @@ import 'package:afc/views/stats_screen.dart';
 import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/views/transaction_edit_screen.dart';
 import 'package:afc/views/transaction_list_screen.dart';
+import 'package:afc/views/recurring_list_screen.dart';
+import 'package:afc/views/import_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 
 class _RouterRefreshStream extends ChangeNotifier {
@@ -40,10 +43,14 @@ class _RouterRefreshStream extends ChangeNotifier {
 }
 
 GoRouter createRouter(AuthBloc authBloc) {
+  final refreshBloc = sl<AppRefreshBloc>();
   return GoRouter(
     navigatorKey: sl<NavigationService>().navigatorKey,
     initialLocation: '/',
-    refreshListenable: _RouterRefreshStream(authBloc.stream),
+    refreshListenable: Listenable.merge([
+      _RouterRefreshStream(authBloc.stream),
+      _RouterRefreshStream(refreshBloc.stream),
+    ]),
     redirect: (context, state) {
       final authState = authBloc.state;
       final location = state.matchedLocation;
@@ -97,6 +104,7 @@ GoRouter createRouter(AuthBloc authBloc) {
           ),
         ),
       ),
+      GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
           create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),
@@ -131,6 +139,14 @@ GoRouter createRouter(AuthBloc authBloc) {
           StatefulShellBranch(
             routes: [
               GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/recurring',
+                builder: (_, _) => const RecurringListScreen(),
+              ),
             ],
           ),
         ],

@@ -259,4 +259,84 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get quickAddGallery => 'Galeria';
+
+  @override
+  String get quickAddSaveTemplate => 'Salvar como modelo';
+
+  @override
+  String get recurringTitle => 'Recorrentes';
+
+  @override
+  String get recurringEmpty => 'Nenhuma regra recorrente cadastrada';
+
+  @override
+  String get recurringFrequencyDaily => 'Diário';
+
+  @override
+  String get recurringFrequencyWeekly => 'Semanal';
+
+  @override
+  String get recurringFrequencyMonthly => 'Mensal';
+
+  @override
+  String recurringNextDue(String date) {
+    return 'Próximo vencimento: $date';
+  }
+
+  @override
+  String get recurringFormTitle => 'Nova regra recorrente';
+
+  @override
+  String get recurringFormFrequencyLabel => 'Frequência';
+
+  @override
+  String get recurringFormNextDueLabel => 'Primeiro vencimento';
+
+  @override
+  String get recurringDeleteConfirmTitle => 'Excluir regra';
+
+  @override
+  String get recurringDeleteConfirmMessage =>
+      'Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.';
+
+  @override
+  String get importTitle => 'Importar Extrato';
+
+  @override
+  String get importBankLabel => 'Banco';
+
+  @override
+  String get importBankGeneric => 'Genérico / Outros';
+
+  @override
+  String get importBankNubank => 'Nubank';
+
+  @override
+  String get importTypeLabel => 'Tipo de extrato';
+
+  @override
+  String get importTypeOfx => 'OFX (Padrão)';
+
+  @override
+  String get importTypeExtrato => 'Extrato Conta Corrente (CSV)';
+
+  @override
+  String get importTypeFatura => 'Fatura Cartão de Crédito (CSV)';
+
+  @override
+  String get importPickFile => 'Selecionar Arquivo';
+
+  @override
+  String get importReviewTitle => 'Revisar transações';
+
+  @override
+  String importSubmit(String count) {
+    return 'Importar $count transações';
+  }
+
+  @override
+  String get importDuplicate => 'Duplicada';
+
+  @override
+  String get importSuccess => 'Transações importadas com sucesso!';
 }

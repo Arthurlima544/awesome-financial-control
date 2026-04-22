@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Esta permissão é necessária para que você possa fotografar seus recibos e preencher gastos automaticamente.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Esta permissão é necessária para que você possa selecionar fotos de recibos da sua galeria.</string>
 </dict>
 </plist>

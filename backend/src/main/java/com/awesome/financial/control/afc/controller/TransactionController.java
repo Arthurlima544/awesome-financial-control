@@ -66,6 +66,14 @@ public class TransactionController {
         return transactionService.createTransaction(request);
     }
 
+    @PostMapping("/transactions/bulk")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create multiple transactions")
+    public List<TransactionResponse> createTransactionsBulk(
+            @Valid @RequestBody List<CreateTransactionRequest> requests) {
+        return transactionService.createTransactionsBulk(requests);
+    }
+
     @GetMapping("/summary")
     @Operation(summary = "Current month financial summary: income, expenses, balance")
     public SummaryResponse getSummary() {
