@@ -298,5 +298,40 @@
   "@recurringDeleteConfirmTitle": { "description": "Title of delete recurring confirmation dialog" },
 
   "recurringDeleteConfirmMessage": "Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.",
-  "@recurringDeleteConfirmMessage": { "description": "Body of delete recurring confirmation dialog" }
+  "@recurringDeleteConfirmMessage": { "description": "Body of delete recurring confirmation dialog" },
+
+  "importTitle": "Importar Extrato",
+  "@importTitle": { "description": "Import screen title" },
+
+  "importProfileLabel": "Formato do arquivo",
+  "@importProfileLabel": { "description": "Label for import profile selection" },
+
+  "importProfileOfx": "Padrão (OFX)",
+  "@importProfileOfx": { "description": "OFX profile option" },
+
+  "importProfileNubankExtrato": "Nubank - Extrato (CSV)",
+  "@importProfileNubankExtrato": { "description": "Nubank Extrato profile option" },
+
+  "importProfileNubankFatura": "Nubank - Fatura (CSV)",
+  "@importProfileNubankFatura": { "description": "Nubank Fatura profile option" },
+
+  "importPickFile": "Selecionar Arquivo",
+  "@importPickFile": { "description": "Button to pick file" },
+
+  "importReviewTitle": "Revisar transações",
+  "@importReviewTitle": { "description": "Title for review step" },
+
+  "importSubmit": "Importar {count} transações",
+  "@importSubmit": {
+    "description": "Submit import button",
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+
+  "importDuplicate": "Duplicada",
+  "@importDuplicate": { "description": "Duplicate badge" },
+
+  "importSuccess": "Transações importadas com sucesso!",
+  "@importSuccess": { "description": "Success message for import" }
 }

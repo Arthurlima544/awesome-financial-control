@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
@@ -36,7 +37,18 @@ class _TransactionListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.transactionListTitle)),
+      appBar: AppBar(
+        title: Text(l10n.transactionListTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.upload_file),
+            tooltip: l10n.importTitle,
+            onPressed: () {
+              context.push('/import');
+            },
+          ),
+        ],
+      ),
       body: BlocBuilder<TransactionListBloc, TransactionListState>(
         builder: (context, state) {
           if (state is TransactionListLoading ||

@@ -22,6 +22,7 @@ import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/views/transaction_edit_screen.dart';
 import 'package:afc/views/transaction_list_screen.dart';
 import 'package:afc/views/recurring_list_screen.dart';
+import 'package:afc/views/import_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -103,6 +104,7 @@ GoRouter createRouter(AuthBloc authBloc) {
           ),
         ),
       ),
+      GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
           create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),

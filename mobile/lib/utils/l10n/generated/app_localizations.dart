@@ -651,6 +651,66 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.'**
   String get recurringDeleteConfirmMessage;
+
+  /// Import screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar Extrato'**
+  String get importTitle;
+
+  /// Label for import profile selection
+  ///
+  /// In pt, this message translates to:
+  /// **'Formato do arquivo'**
+  String get importProfileLabel;
+
+  /// OFX profile option
+  ///
+  /// In pt, this message translates to:
+  /// **'Padrão (OFX)'**
+  String get importProfileOfx;
+
+  /// Nubank Extrato profile option
+  ///
+  /// In pt, this message translates to:
+  /// **'Nubank - Extrato (CSV)'**
+  String get importProfileNubankExtrato;
+
+  /// Nubank Fatura profile option
+  ///
+  /// In pt, this message translates to:
+  /// **'Nubank - Fatura (CSV)'**
+  String get importProfileNubankFatura;
+
+  /// Button to pick file
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar Arquivo'**
+  String get importPickFile;
+
+  /// Title for review step
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar transações'**
+  String get importReviewTitle;
+
+  /// Submit import button
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar {count} transações'**
+  String importSubmit(String count);
+
+  /// Duplicate badge
+  ///
+  /// In pt, this message translates to:
+  /// **'Duplicada'**
+  String get importDuplicate;
+
+  /// Success message for import
+  ///
+  /// In pt, this message translates to:
+  /// **'Transações importadas com sucesso!'**
+  String get importSuccess;
 }
 
 class _AppLocalizationsDelegate

@@ -298,4 +298,36 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get recurringDeleteConfirmMessage =>
       'Deseja excluir esta regra recorrente? Ela deixará de criar novas transações automaticamente.';
+
+  @override
+  String get importTitle => 'Importar Extrato';
+
+  @override
+  String get importProfileLabel => 'Formato do arquivo';
+
+  @override
+  String get importProfileOfx => 'Padrão (OFX)';
+
+  @override
+  String get importProfileNubankExtrato => 'Nubank - Extrato (CSV)';
+
+  @override
+  String get importProfileNubankFatura => 'Nubank - Fatura (CSV)';
+
+  @override
+  String get importPickFile => 'Selecionar Arquivo';
+
+  @override
+  String get importReviewTitle => 'Revisar transações';
+
+  @override
+  String importSubmit(String count) {
+    return 'Importar $count transações';
+  }
+
+  @override
+  String get importDuplicate => 'Duplicada';
+
+  @override
+  String get importSuccess => 'Transações importadas com sucesso!';
 }

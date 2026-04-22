@@ -73,4 +73,16 @@ class TransactionListService {
     );
     return TransactionModel.fromJson(response.data!);
   }
+
+  Future<List<TransactionModel>> createBulk(
+    List<Map<String, dynamic>> data,
+  ) async {
+    final response = await _dio.post<List<dynamic>>(
+      '/api/v1/transactions/bulk',
+      data: data,
+    );
+    return response.data!
+        .map((e) => TransactionModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }

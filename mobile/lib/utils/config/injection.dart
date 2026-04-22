@@ -18,12 +18,15 @@ import 'package:afc/repositories/recurring_repository.dart';
 import 'package:afc/repositories/template_repository.dart';
 import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/view_models/auth/auth_bloc.dart';
+import 'package:afc/services/import_parser_service.dart';
+import 'package:afc/view_models/import/import_bloc.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Services
   sl.registerLazySingleton(() => NavigationService());
+  sl.registerLazySingleton(() => ImportParserService());
   sl.registerLazySingleton(() => AppRefreshBloc());
 
   // Repositories
@@ -46,4 +49,7 @@ Future<void> init() async {
   sl.registerFactory(() => StatsBloc());
   sl.registerFactory(() => TransactionListBloc());
   sl.registerFactory(() => RecurringBloc(sl(), sl()));
+  sl.registerFactory(
+    () => ImportBloc(parserService: sl(), repository: sl(), refreshBloc: sl()),
+  );
 }

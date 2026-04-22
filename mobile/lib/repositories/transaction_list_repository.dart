@@ -40,4 +40,7 @@ class TransactionListRepository {
     category: category,
     occurredAt: occurredAt,
   );
+
+  Future<List<TransactionModel>> createBulk(List<Map<String, dynamic>> data) =>
+      _service.createBulk(data);
 }
