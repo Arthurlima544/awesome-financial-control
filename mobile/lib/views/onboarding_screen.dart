@@ -2,7 +2,6 @@ import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/pagination_dots/pagination_dots_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';

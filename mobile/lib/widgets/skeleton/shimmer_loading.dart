@@ -28,7 +28,9 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
       vsync: this,
     );
 
-    if (!MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+    final disableAnimations =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (!disableAnimations) {
       _controller.repeat();
     }
   }

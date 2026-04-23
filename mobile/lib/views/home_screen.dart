@@ -13,7 +13,6 @@ import 'package:afc/views/month_limit_view.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/widgets/error_view/error_view.dart';
 import 'package:afc/widgets/skeleton/card_skeleton.dart';
-import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
