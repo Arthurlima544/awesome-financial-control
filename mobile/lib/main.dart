@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:afc/utils/config/app_theme.dart';
 import 'package:afc/utils/config/router.dart';
 import 'package:afc/view_models/auth/auth_bloc.dart';
+import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 import 'package:afc/utils/config/injection.dart' as di;
@@ -43,16 +44,25 @@ class _AfcAppState extends State<AfcApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _authBloc,
-      child: MaterialApp.router(
-        title: 'AFC',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        routerConfig: _router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('pt'),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _authBloc),
+        BlocProvider.value(value: sl<ThemeCubit>()),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp.router(
+            title: 'AFC',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeMode,
+            routerConfig: _router,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('pt'),
+          );
+        },
       ),
     );
   }
