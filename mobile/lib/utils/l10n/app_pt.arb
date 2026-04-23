@@ -200,11 +200,16 @@
   "devResetButton": "Limpar todos os dados",
   "@devResetButton": { "description": "Dev reset button label" },
 
+  "devResetOnboardingButton": "Resetar Onboarding",
+  "@devResetOnboardingButton": { "description": "Dev reset onboarding button label" },
+
   "devSeedSuccess": "Dados populados com sucesso",
   "@devSeedSuccess": { "description": "Dev seed success snackbar message" },
 
   "devResetSuccess": "Dados removidos com sucesso",
   "@devResetSuccess": { "description": "Dev reset success snackbar message" },
+
+  "devResetOnboardingSuccess": "Onboarding resetado com sucesso",
 
   "homeLimitExceeded": "Limite excedido: {limitNames}",
   "@homeLimitExceeded": {

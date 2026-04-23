@@ -5,6 +5,7 @@ import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/dev_tools/dev_tools_cubit.dart';
+import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
 
 void showDevToolsSheet(BuildContext context, {VoidCallback? onSuccess}) {
   showModalBottomSheet<void>(
@@ -30,13 +31,21 @@ class _DevToolsSheetContent extends StatelessWidget {
         if (state is DevToolsSuccess) {
           Navigator.of(context).pop();
           onSuccess?.call();
+          String message;
+          switch (state.action) {
+            case DevToolsAction.seed:
+              message = l10n.devSeedSuccess;
+              break;
+            case DevToolsAction.reset:
+              message = l10n.devResetSuccess;
+              break;
+            case DevToolsAction.resetOnboarding:
+              message = l10n.devResetOnboardingSuccess;
+              break;
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                state.action == DevToolsAction.seed
-                    ? l10n.devSeedSuccess
-                    : l10n.devResetSuccess,
-              ),
+              content: Text(message),
               backgroundColor: AppColors.success,
             ),
           );
@@ -109,11 +118,22 @@ class _DevToolsSheetContent extends StatelessWidget {
                             ),
                       label: Text(
                         l10n.devResetButton,
-                        style: TextStyle(color: AppColors.error),
+                        style: const TextStyle(color: AppColors.error),
                       ),
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: AppColors.error),
                       ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    OutlinedButton.icon(
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              context.read<DevToolsCubit>().resetOnboarding();
+                              context.read<OnboardingCubit>().resetOnboarding();
+                            },
+                      icon: const Icon(Icons.refresh),
+                      label: Text(l10n.devResetOnboardingButton),
                     ),
                   ],
                 );

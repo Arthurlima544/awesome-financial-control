@@ -66,5 +66,12 @@ void main() {
         isA<DevToolsError>(),
       ],
     );
+
+    blocTest<DevToolsCubit, DevToolsState>(
+      'resetOnboarding emits [Success(resetOnboarding)]',
+      build: () => DevToolsCubit(repository: _FakeRepository()),
+      act: (cubit) => cubit.resetOnboarding(),
+      expect: () => [const DevToolsSuccess(DevToolsAction.resetOnboarding)],
+    );
   });
 }

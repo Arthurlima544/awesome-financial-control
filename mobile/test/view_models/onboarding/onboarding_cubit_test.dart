@@ -46,6 +46,24 @@ void main() {
       },
     );
 
+    blocTest<OnboardingCubit, OnboardingState>(
+      'resetOnboarding updates isCompleted to false and persists to SharedPreferences',
+      build: () => OnboardingCubit(),
+      seed: () => const OnboardingState(isCompleted: true, isLoading: false),
+      act: (cubit) => cubit.resetOnboarding(),
+      expect: () => [
+        const OnboardingState(
+          isCompleted: false,
+          isLoading: false,
+          currentPage: 0,
+        ),
+      ],
+      verify: (_) async {
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool('onboarding_done'), false);
+      },
+    );
+
     test('shouldShowOnboarding returns true if not done', () async {
       SharedPreferences.setMockInitialValues({});
       expect(await OnboardingCubit.shouldShowOnboarding(), true);

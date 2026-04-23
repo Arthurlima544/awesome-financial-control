@@ -62,31 +62,36 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
     ]),
     redirect: (context, state) {
       final authState = authBloc.state;
+      final onboardingState = onboardingCubit.state;
       final location = state.matchedLocation;
 
-      if (authState is AuthInitial) {
+      // 1. Loading / Initializing
+      if (authState is AuthInitial || onboardingState.isLoading) {
         return location == '/' ? null : '/';
       }
 
-      final onboardingState = onboardingCubit.state;
-      if (onboardingState.isLoading) {
-        return location == '/' ? null : '/';
+      // 2. Onboarding Guard
+      final isOnboarding = location == '/onboarding';
+      if (!onboardingState.isCompleted) {
+        return isOnboarding ? null : '/onboarding';
       }
 
-      if (!onboardingState.isCompleted && location != '/onboarding') {
-        return '/onboarding';
+      // 3. Authenticated state
+      if (authState is AuthSignedIn) {
+        // If on guest routes, send to home
+        if (location == '/' || location == '/login' || isOnboarding) {
+          return '/home';
+        }
+        return null;
       }
 
+      // 4. Unauthenticated state
       if (authState is AuthSignedOut) {
-        if (location == '/onboarding') return null;
+        // Allow onboarding even if signed out (though guard above handles it)
+        if (isOnboarding) return null;
         return location == '/login' ? null : '/login';
       }
 
-      if (location == '/' ||
-          location == '/login' ||
-          location == '/onboarding') {
-        return '/home';
-      }
       return null;
     },
     routes: [

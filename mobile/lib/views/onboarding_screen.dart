@@ -38,9 +38,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColors.surface,
       body: BlocConsumer<OnboardingCubit, OnboardingState>(
         listener: (context, state) {
-          if (state.isCompleted) {
-            context.go('/login');
-          }
           _dotsCubit.setPage(state.currentPage, 4);
         },
         builder: (context, state) {

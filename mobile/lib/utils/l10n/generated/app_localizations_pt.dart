@@ -205,10 +205,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get devResetButton => 'Limpar todos os dados';
 
   @override
+  String get devResetOnboardingButton => 'Resetar Onboarding';
+
+  @override
   String get devSeedSuccess => 'Dados populados com sucesso';
 
   @override
   String get devResetSuccess => 'Dados removidos com sucesso';
+
+  @override
+  String get devResetOnboardingSuccess => 'Onboarding resetado com sucesso';
 
   @override
   String homeLimitExceeded(String limitNames) {

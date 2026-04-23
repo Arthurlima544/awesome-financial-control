@@ -472,6 +472,12 @@ abstract class AppLocalizations {
   /// **'Limpar todos os dados'**
   String get devResetButton;
 
+  /// Dev reset onboarding button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Resetar Onboarding'**
+  String get devResetOnboardingButton;
+
   /// Dev seed success snackbar message
   ///
   /// In pt, this message translates to:
@@ -483,6 +489,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Dados removidos com sucesso'**
   String get devResetSuccess;
+
+  /// No description provided for @devResetOnboardingSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Onboarding resetado com sucesso'**
+  String get devResetOnboardingSuccess;
 
   /// Message shown when limits are exceeded on the home dashboard
   ///

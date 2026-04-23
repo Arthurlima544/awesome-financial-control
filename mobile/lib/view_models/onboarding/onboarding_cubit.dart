@@ -50,6 +50,12 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     emit(state.copyWith(isCompleted: true));
   }
 
+  Future<void> resetOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_onboardingKey, false);
+    emit(state.copyWith(isCompleted: false, currentPage: 0));
+  }
+
   static Future<bool> shouldShowOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     return !(prefs.getBool(_onboardingKey) ?? false);
