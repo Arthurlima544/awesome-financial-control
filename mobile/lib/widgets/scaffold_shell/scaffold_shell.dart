@@ -90,6 +90,11 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
             label: l10n.navGoals,
           ),
           NavigationDestination(
+            icon: const Icon(Icons.payments_outlined),
+            selectedIcon: const Icon(Icons.payments),
+            label: l10n.navBills,
+          ),
+          NavigationDestination(
             icon: const Icon(Icons.replay_outlined),
             selectedIcon: const Icon(Icons.replay),
             label: l10n.recurringTitle,

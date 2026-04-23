@@ -27,6 +27,8 @@ import 'package:afc/views/report_screen.dart';
 import 'package:afc/views/goals_screen.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/views/investments_screen.dart';
+import 'package:afc/view_models/bills/bill_bloc.dart';
+import 'package:afc/views/bills_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -172,6 +174,17 @@ GoRouter createRouter(AuthBloc authBloc) {
           StatefulShellBranch(
             routes: [
               GoRoute(path: '/goals', builder: (_, _) => const GoalsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/bills',
+                builder: (_, _) => BlocProvider(
+                  create: (_) => sl<BillBloc>()..add(const LoadBills()),
+                  child: const BillsScreen(),
+                ),
+              ),
             ],
           ),
         ],

@@ -1,5 +1,6 @@
 package com.awesome.financial.control.afc.service;
 
+import com.awesome.financial.control.afc.model.Bill;
 import com.awesome.financial.control.afc.model.Category;
 import com.awesome.financial.control.afc.model.Goal;
 import com.awesome.financial.control.afc.model.Investment;
@@ -9,6 +10,7 @@ import com.awesome.financial.control.afc.model.RecurrenceFrequency;
 import com.awesome.financial.control.afc.model.RecurringTransaction;
 import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
+import com.awesome.financial.control.afc.repository.BillRepository;
 import com.awesome.financial.control.afc.repository.CategoryRepository;
 import com.awesome.financial.control.afc.repository.GoalRepository;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
@@ -35,6 +37,7 @@ public class DevSeedService {
     private final GoalRepository goalRepository;
     private final RecurringTransactionRepository recurringTransactionRepository;
     private final InvestmentRepository investmentRepository;
+    private final BillRepository billRepository;
 
     @Transactional
     public void seed() {
@@ -92,10 +95,16 @@ public class DevSeedService {
         saveInvestment(
                 "Tesouro Selic", "", InvestmentType.FIXED_INCOME, "1", "10000.00", "10250.00");
         saveInvestment("S&P 500 ETF", "IVVB11", InvestmentType.OTHER, "20", "240.00", "275.00");
+
+        saveBill("Aluguel", "1800.00", 10);
+        saveBill("Condomínio", "550.00", 5);
+        saveBill("Internet", "120.00", 15);
+        saveBill("Energia", "250.00", 22);
     }
 
     @Transactional
     public void reset() {
+        billRepository.deleteAll();
         investmentRepository.deleteAll();
         recurringTransactionRepository.deleteAll();
         goalRepository.deleteAll();
@@ -173,6 +182,11 @@ public class DevSeedService {
         i.setAvgCost(new BigDecimal(avgCost));
         i.setCurrentPrice(new BigDecimal(currentPrice));
         investmentRepository.save(i);
+    }
+
+    private void saveBill(String name, String amount, int dueDay) {
+        Bill b = Bill.builder().name(name).amount(new BigDecimal(amount)).dueDay(dueDay).build();
+        billRepository.save(b);
     }
 
     public List<String> seededCategories() {

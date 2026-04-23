@@ -423,4 +423,31 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get investmentTypeOther => 'Outro';
+
+  @override
+  String get billsTitle => 'Contas';
+
+  @override
+  String get billsNoBills => 'Nenhuma conta cadastrada';
+
+  @override
+  String get billName => 'Nome da Conta';
+
+  @override
+  String get billAmount => 'Valor';
+
+  @override
+  String get billDueDay => 'Dia do Vencimento';
+
+  @override
+  String get billStatusUpcoming => 'Próximas';
+
+  @override
+  String get billStatusOverdue => 'Vencidas';
+
+  @override
+  String get billStatusPaid => 'Pagas';
+
+  @override
+  String get navBills => 'Contas';
 }

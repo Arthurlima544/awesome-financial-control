@@ -4,6 +4,7 @@ import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/repositories/category_repository.dart';
 import 'package:afc/repositories/dev_tools_repository.dart';
+import 'package:afc/view_models/bills/bill_bloc.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/repositories/home_repository.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
@@ -23,6 +24,7 @@ import 'package:afc/services/receipt_service.dart';
 import 'package:afc/view_models/import/import_bloc.dart';
 import 'package:afc/repositories/report_repository.dart';
 import 'package:afc/view_models/report/report_bloc.dart';
+import 'package:afc/repositories/bill_repository.dart';
 import 'package:afc/repositories/goal_repository.dart';
 import 'package:afc/view_models/goals/goal_bloc.dart';
 import 'package:afc/repositories/investment_repository.dart';
@@ -50,6 +52,7 @@ Future<void> init() async {
   sl.registerLazySingleton<ReportRepository>(() => ReportRepositoryImpl());
   sl.registerLazySingleton(() => GoalRepository());
   sl.registerLazySingleton(() => InvestmentRepository());
+  sl.registerLazySingleton(() => BillRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -66,4 +69,5 @@ Future<void> init() async {
   sl.registerFactory(() => ReportBloc(repository: sl()));
   sl.registerFactory(() => GoalBloc(repository: sl()));
   sl.registerFactory(() => InvestmentBloc(repository: sl()));
+  sl.registerFactory(() => BillBloc(repository: sl()));
 }

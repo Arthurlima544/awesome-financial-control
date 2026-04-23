@@ -426,5 +426,32 @@
   "@investmentTypeCrypto": { "description": "Crypto investment type" },
 
   "investmentTypeOther": "Outro",
-  "@investmentTypeOther": { "description": "Other investment type" }
+  "@investmentTypeOther": { "description": "Other investment type" },
+
+  "billsTitle": "Contas",
+  "@billsTitle": { "description": "Bills screen title" },
+
+  "billsNoBills": "Nenhuma conta cadastrada",
+  "@billsNoBills": { "description": "Empty state for bills list" },
+
+  "billName": "Nome da Conta",
+  "@billName": { "description": "Label for bill name field" },
+
+  "billAmount": "Valor",
+  "@billAmount": { "description": "Label for bill amount field" },
+
+  "billDueDay": "Dia do Vencimento",
+  "@billDueDay": { "description": "Label for bill due day field" },
+
+  "billStatusUpcoming": "Próximas",
+  "@billStatusUpcoming": { "description": "Upcoming bills status label" },
+
+  "billStatusOverdue": "Vencidas",
+  "@billStatusOverdue": { "description": "Overdue bills status label" },
+
+  "billStatusPaid": "Pagas",
+  "@billStatusPaid": { "description": "Paid bills status label" },
+
+  "navBills": "Contas",
+  "@navBills": { "description": "Bottom nav bar bills tab label" }
 }

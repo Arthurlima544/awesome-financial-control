@@ -897,6 +897,60 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Outro'**
   String get investmentTypeOther;
+
+  /// Bills screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas'**
+  String get billsTitle;
+
+  /// Empty state for bills list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma conta cadastrada'**
+  String get billsNoBills;
+
+  /// Label for bill name field
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da Conta'**
+  String get billName;
+
+  /// Label for bill amount field
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get billAmount;
+
+  /// Label for bill due day field
+  ///
+  /// In pt, this message translates to:
+  /// **'Dia do Vencimento'**
+  String get billDueDay;
+
+  /// Upcoming bills status label
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximas'**
+  String get billStatusUpcoming;
+
+  /// Overdue bills status label
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencidas'**
+  String get billStatusOverdue;
+
+  /// Paid bills status label
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagas'**
+  String get billStatusPaid;
+
+  /// Bottom nav bar bills tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas'**
+  String get navBills;
 }
 
 class _AppLocalizationsDelegate
