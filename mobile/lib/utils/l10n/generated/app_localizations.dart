@@ -922,6 +922,30 @@ abstract class AppLocalizations {
   /// **'Outro'**
   String get investmentTypeOther;
 
+  /// Semantics label for stats chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Gráfico de estatísticas mensais'**
+  String get statsChartLabel;
+
+  /// Semantics label for reports chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Gráfico de relatórios'**
+  String get reportsChartLabel;
+
+  /// Semantics label for progress bar
+  ///
+  /// In pt, this message translates to:
+  /// **'Barra de progresso'**
+  String get progressBarLabel;
+
+  /// Semantics label for stepped progress bar
+  ///
+  /// In pt, this message translates to:
+  /// **'Barra de progresso em etapas'**
+  String get progressBarSteppedLabel;
+
   /// Bills screen title
   ///
   /// In pt, this message translates to:

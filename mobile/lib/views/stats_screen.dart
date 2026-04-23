@@ -157,55 +157,59 @@ class _BarChart extends StatelessWidget {
       duration: const Duration(milliseconds: 1500),
       curve: Curves.elasticOut,
       builder: (context, value, child) {
-        return BarChart(
-          BarChartData(
-            maxY: state.maxValue * 1.2,
-            barGroups: _buildGroups(value),
-            titlesData: FlTitlesData(
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 56,
-                  interval: state.yInterval,
-                  getTitlesWidget: (value, meta) => Text(
-                    state.formatYLabel(value),
-                    style: Theme.of(context).textTheme.labelSmall,
-                    textAlign: TextAlign.right,
+        final l10n = AppLocalizations.of(context)!;
+        return Semantics(
+          label: l10n.statsChartLabel,
+          child: BarChart(
+            BarChartData(
+              maxY: state.maxValue * 1.2,
+              barGroups: _buildGroups(value),
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 56,
+                    interval: state.yInterval,
+                    getTitlesWidget: (value, meta) => Text(
+                      state.formatYLabel(value),
+                      style: Theme.of(context).textTheme.labelSmall,
+                      textAlign: TextAlign.right,
+                    ),
                   ),
                 ),
-              ),
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 28,
-                  getTitlesWidget: (value, meta) {
-                    final index = value.toInt();
-                    if (index < 0 || index >= stats.length) {
-                      return const SizedBox.shrink();
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.xs),
-                      child: Text(
-                        stats[index].monthAbbreviation,
-                        style: Theme.of(context).textTheme.labelSmall,
-                      ),
-                    );
-                  },
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 28,
+                    getTitlesWidget: (value, meta) {
+                      final index = value.toInt();
+                      if (index < 0 || index >= stats.length) {
+                        return const SizedBox.shrink();
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.xs),
+                        child: Text(
+                          stats[index].monthAbbreviation,
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
                 ),
               ),
-              rightTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
+              gridData: FlGridData(
+                horizontalInterval: state.yInterval,
+                drawVerticalLine: false,
               ),
-              topTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
+              borderData: FlBorderData(show: false),
+              barTouchData: BarTouchData(enabled: true),
             ),
-            gridData: FlGridData(
-              horizontalInterval: state.yInterval,
-              drawVerticalLine: false,
-            ),
-            borderData: FlBorderData(show: false),
-            barTouchData: BarTouchData(enabled: true),
           ),
         );
       },

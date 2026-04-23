@@ -435,6 +435,15 @@
   "investmentTypeOther": "Outro",
   "@investmentTypeOther": { "description": "Other investment type" },
 
+  "statsChartLabel": "Gráfico de estatísticas mensais",
+  "@statsChartLabel": { "description": "Semantics label for stats chart" },
+  "reportsChartLabel": "Gráfico de relatórios",
+  "@reportsChartLabel": { "description": "Semantics label for reports chart" },
+  "progressBarLabel": "Barra de progresso",
+  "@progressBarLabel": { "description": "Semantics label for progress bar" },
+  "progressBarSteppedLabel": "Barra de progresso em etapas",
+  "@progressBarSteppedLabel": { "description": "Semantics label for stepped progress bar" },
+
   "billsTitle": "Contas",
   "@billsTitle": { "description": "Bills screen title" },
 

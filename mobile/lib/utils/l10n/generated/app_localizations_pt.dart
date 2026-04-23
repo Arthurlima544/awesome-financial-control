@@ -437,6 +437,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get investmentTypeOther => 'Outro';
 
   @override
+  String get statsChartLabel => 'Gráfico de estatísticas mensais';
+
+  @override
+  String get reportsChartLabel => 'Gráfico de relatórios';
+
+  @override
+  String get progressBarLabel => 'Barra de progresso';
+
+  @override
+  String get progressBarSteppedLabel => 'Barra de progresso em etapas';
+
+  @override
   String get billsTitle => 'Contas';
 
   @override

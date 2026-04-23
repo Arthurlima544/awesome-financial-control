@@ -102,10 +102,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           primaryColor: AppColors.primary,
                           onPressed: () {
                             if (state.currentPage < 3) {
-                              _pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
+                              final disableAnimations =
+                                  MediaQuery.maybeOf(
+                                    context,
+                                  )?.disableAnimations ??
+                                  false;
+                              if (disableAnimations) {
+                                _pageController.jumpToPage(
+                                  state.currentPage + 1,
+                                );
+                              } else {
+                                _pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
                             } else {
                               cubit.completeOnboarding();
                             }

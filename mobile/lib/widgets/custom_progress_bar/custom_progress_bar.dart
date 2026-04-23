@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 import 'custom_progress_bar_cubit.dart';
 
@@ -77,6 +78,9 @@ class _CustomProgressBarView extends StatelessWidget {
         final double barHeight = (maxWidth * 0.025).clamp(6.0, 16.0);
         final double borderRadius = barHeight / 2;
 
+        final l10n = AppLocalizations.of(context)!;
+        final isPassive = onChanged == null;
+
         return BlocBuilder<CustomProgressBarCubit, CustomProgressBarState>(
           builder: (context, state) {
             return Column(
@@ -84,11 +88,12 @@ class _CustomProgressBarView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Semantics(
-                  slider: true,
+                  slider: !isPassive,
+                  readOnly: isPassive,
                   value: '${(state.progress * 100).round()}%',
                   label: steps != null
-                      ? 'Stepped progress bar'
-                      : 'Continuous progress bar',
+                      ? l10n.progressBarSteppedLabel
+                      : l10n.progressBarLabel,
                   child: Focus(
                     focusNode: focusNode,
                     child: GestureDetector(
