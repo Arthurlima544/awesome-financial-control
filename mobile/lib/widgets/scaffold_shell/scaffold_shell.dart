@@ -77,29 +77,14 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
             label: l10n.navTransactions,
           ),
           NavigationDestination(
-            icon: const Icon(AppIcons.limitsOutlined),
-            selectedIcon: const Icon(AppIcons.limits),
-            label: l10n.navLimits,
+            icon: const Icon(Icons.assignment_outlined),
+            selectedIcon: const Icon(Icons.assignment),
+            label: l10n.navPlanning,
           ),
           NavigationDestination(
             icon: const Icon(AppIcons.statsOutlined),
             selectedIcon: const Icon(AppIcons.stats),
             label: l10n.navStats,
-          ),
-          NavigationDestination(
-            icon: const Icon(AppIcons.goalsOutlined),
-            selectedIcon: const Icon(AppIcons.goals),
-            label: l10n.navGoals,
-          ),
-          NavigationDestination(
-            icon: const Icon(AppIcons.billsOutlined),
-            selectedIcon: const Icon(AppIcons.bills),
-            label: l10n.navBills,
-          ),
-          NavigationDestination(
-            icon: const Icon(AppIcons.recurringOutlined),
-            selectedIcon: const Icon(AppIcons.recurring),
-            label: l10n.recurringTitle,
           ),
         ],
       ),

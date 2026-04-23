@@ -140,6 +140,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get navStats => 'Gráficos';
 
   @override
+  String get navPlanning => 'Planejamento';
+
+  @override
   String get fabAddTransaction => 'Adicionar transação';
 
   @override

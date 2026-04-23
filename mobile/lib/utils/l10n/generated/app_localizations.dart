@@ -346,6 +346,12 @@ abstract class AppLocalizations {
   /// **'Gráficos'**
   String get navStats;
 
+  /// Bottom nav bar planning tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Planejamento'**
+  String get navPlanning;
+
   /// FAB tooltip for adding a new transaction
   ///
   /// In pt, this message translates to:

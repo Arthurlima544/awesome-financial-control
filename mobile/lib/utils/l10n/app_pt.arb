@@ -137,6 +137,9 @@
   "navStats": "Gráficos",
   "@navStats": { "description": "Bottom nav bar stats tab label" },
 
+  "navPlanning": "Planejamento",
+  "@navPlanning": { "description": "Bottom nav bar planning tab label" },
+
   "fabAddTransaction": "Adicionar transação",
   "@fabAddTransaction": { "description": "FAB tooltip for adding a new transaction" },
 
