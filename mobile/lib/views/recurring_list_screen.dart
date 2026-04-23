@@ -48,6 +48,7 @@ class RecurringListScreen extends StatelessWidget {
           },
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'recurring_fab',
           onPressed: () => RecurringFormSheet.show(context),
           child: const Icon(Icons.add),
         ),

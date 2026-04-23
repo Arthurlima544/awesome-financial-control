@@ -74,6 +74,7 @@ class _GoalsView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'goals_fab',
         onPressed: () => _showAddGoalDialog(context),
         child: const Icon(Icons.add),
       ),

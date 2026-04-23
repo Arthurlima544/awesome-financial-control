@@ -41,6 +41,7 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
     return Scaffold(
       body: widget.navigationShell,
       floatingActionButton: FloatingActionButton(
+        heroTag: 'shell_fab',
         onPressed: () async {
           final result = await showModalBottomSheet<bool>(
             context: context,
