@@ -1,66 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 abstract final class AppTextStyles {
-  static const String _fontFamily = 'Roboto';
+  static final TextStyle _base = GoogleFonts.inter();
 
   // Display
-  static const TextStyle displayLarge = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle displayLarge = _base.copyWith(
     fontSize: 57,
     fontWeight: FontWeight.w400,
     letterSpacing: -0.25,
     color: AppColors.onBackground,
   );
-  static const TextStyle displayMedium = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle displayMedium = _base.copyWith(
     fontSize: 45,
     fontWeight: FontWeight.w400,
     color: AppColors.onBackground,
   );
-  static const TextStyle displaySmall = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle displaySmall = _base.copyWith(
     fontSize: 36,
     fontWeight: FontWeight.w400,
     color: AppColors.onBackground,
   );
 
   // Headline
-  static const TextStyle headlineLarge = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle headlineLarge = _base.copyWith(
     fontSize: 32,
     fontWeight: FontWeight.w600,
     color: AppColors.onBackground,
   );
-  static const TextStyle headlineMedium = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle headlineMedium = _base.copyWith(
     fontSize: 28,
     fontWeight: FontWeight.w600,
     color: AppColors.onBackground,
   );
-  static const TextStyle headlineSmall = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle headlineSmall = _base.copyWith(
     fontSize: 24,
     fontWeight: FontWeight.w600,
     color: AppColors.onBackground,
   );
 
   // Title
-  static const TextStyle titleLarge = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle titleLarge = _base.copyWith(
     fontSize: 22,
     fontWeight: FontWeight.w500,
     color: AppColors.onBackground,
   );
-  static const TextStyle titleMedium = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle titleMedium = _base.copyWith(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.15,
     color: AppColors.onBackground,
   );
-  static const TextStyle titleSmall = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle titleSmall = _base.copyWith(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
@@ -68,22 +60,19 @@ abstract final class AppTextStyles {
   );
 
   // Body
-  static const TextStyle bodyLarge = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle bodyLarge = _base.copyWith(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.5,
     color: AppColors.onBackground,
   );
-  static const TextStyle bodyMedium = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle bodyMedium = _base.copyWith(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.25,
     color: AppColors.onBackground,
   );
-  static const TextStyle bodySmall = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle bodySmall = _base.copyWith(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.4,
@@ -91,22 +80,19 @@ abstract final class AppTextStyles {
   );
 
   // Label
-  static const TextStyle labelLarge = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle labelLarge = _base.copyWith(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
     color: AppColors.onBackground,
   );
-  static const TextStyle labelMedium = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle labelMedium = _base.copyWith(
     fontSize: 12,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
     color: AppColors.onBackground,
   );
-  static const TextStyle labelSmall = TextStyle(
-    fontFamily: _fontFamily,
+  static final TextStyle labelSmall = _base.copyWith(
     fontSize: 11,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.5,
