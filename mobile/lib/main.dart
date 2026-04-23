@@ -57,6 +57,7 @@ class _AfcAppState extends State<AfcApp> {
           create: (_) =>
               sl<CategoryBloc>()..add(const CategoryFetchRequested()),
         ),
+        BlocProvider(create: (_) => sl<RecurringBloc>()..add(LoadRecurring())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

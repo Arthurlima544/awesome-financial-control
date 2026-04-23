@@ -108,18 +108,22 @@ class _StatsDashboard extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
-                  _MetricCard(
-                    label: l10n.statsSummarySavings,
-                    value: '${state.averageSavingsRate.toStringAsFixed(0)}%',
-                    color: AppColors.primary,
-                    icon: Icons.savings_outlined,
+                  Expanded(
+                    child: _MetricCard(
+                      label: l10n.statsSummarySavings,
+                      value: '${state.averageSavingsRate.toStringAsFixed(0)}%',
+                      color: AppColors.primary,
+                      icon: Icons.savings_outlined,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.md),
-                  _MetricCard(
-                    label: l10n.statsSummaryBest,
-                    value: state.bestMonth?.monthAbbreviation ?? '-',
-                    color: AppColors.secondary,
-                    icon: Icons.star_outline,
+                  Expanded(
+                    child: _MetricCard(
+                      label: l10n.statsSummaryBest,
+                      value: state.bestMonth?.monthAbbreviation ?? '-',
+                      color: AppColors.secondary,
+                      icon: Icons.star_outline,
+                    ),
                   ),
                 ],
               ),
@@ -221,9 +225,7 @@ class _MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isPrimary
-        ? _buildPrimary(context)
-        : Expanded(child: _buildSecondary(context));
+    return isPrimary ? _buildPrimary(context) : _buildSecondary(context);
   }
 
   Widget _buildPrimary(BuildContext context) {

@@ -88,6 +88,10 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
       if (current.isNotEmpty) {
         cubit.amountChanged(current.substring(0, current.length - 1));
       }
+    } else if (value == '.') {
+      if (!current.contains('.') && current.isNotEmpty) {
+        cubit.amountChanged(current + value);
+      }
     } else {
       cubit.amountChanged(current + value);
     }
@@ -317,11 +321,22 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                               >(
                                 buildWhen: (p, c) => p.category != c.category,
                                 builder: (context, state) {
+                                  // Ensure the current category is always in the list even if not yet in CategoryBloc data
+                                  final displayCategories = List<String>.from(
+                                    categoryNames,
+                                  );
+                                  if (state.category.isNotEmpty &&
+                                      !displayCategories.contains(
+                                        state.category,
+                                      )) {
+                                    displayCategories.add(state.category);
+                                  }
+
                                   return Wrap(
                                     spacing: 8,
                                     runSpacing: 8,
                                     children: [
-                                      ...categoryNames.map(
+                                      ...displayCategories.map(
                                         (c) => _buildCategoryChip(
                                           c,
                                           state.category == c,

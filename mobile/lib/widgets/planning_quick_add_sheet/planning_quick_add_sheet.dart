@@ -61,6 +61,15 @@ class PlanningQuickAddSheet extends StatelessWidget {
               context.push('/bills');
             },
           ),
+          const SizedBox(height: AppSpacing.md),
+          _QuickAddOption(
+            icon: Icons.category_outlined,
+            title: l10n.categoryListTitle,
+            onTap: () {
+              Navigator.pop(context);
+              context.push('/categories');
+            },
+          ),
           const SizedBox(height: AppSpacing.xl),
         ],
       ),
