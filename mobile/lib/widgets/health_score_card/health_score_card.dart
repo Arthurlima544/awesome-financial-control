@@ -69,27 +69,34 @@ class HealthScoreCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Row(
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      value: score.score / 100,
-                      backgroundColor: scoreColor.withValues(alpha: 0.1),
-                      valueColor: AlwaysStoppedAnimation<Color>(scoreColor),
-                      strokeWidth: 8,
-                    ),
-                  ),
-                  Text(
-                    '${score.score}',
-                    style: AppTextStyles.titleLarge.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: scoreColor,
-                    ),
-                  ),
-                ],
+              TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0, end: score.score / 100),
+                duration: const Duration(seconds: 1),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(
+                          value: value,
+                          backgroundColor: scoreColor.withValues(alpha: 0.1),
+                          valueColor: AlwaysStoppedAnimation<Color>(scoreColor),
+                          strokeWidth: 8,
+                        ),
+                      ),
+                      Text(
+                        '${(value * 100).toInt()}',
+                        style: AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: scoreColor,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(width: AppSpacing.lg),
               Expanded(
@@ -104,15 +111,23 @@ class HealthScoreCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xs),
-                    SizedBox(
-                      height: 30,
-                      width: double.infinity,
-                      child: CustomPaint(
-                        painter: SparklinePainter(
-                          data: score.historicalScores,
-                          color: scoreColor,
-                        ),
-                      ),
+                    TweenAnimationBuilder<double>(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.easeInOut,
+                      builder: (context, value, child) {
+                        return SizedBox(
+                          height: 30,
+                          width: double.infinity,
+                          child: CustomPaint(
+                            painter: SparklinePainter(
+                              data: score.historicalScores,
+                              color: scoreColor,
+                              animationValue: value,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -190,8 +205,13 @@ class _ScoreFactor extends StatelessWidget {
 class SparklinePainter extends CustomPainter {
   final List<int> data;
   final Color color;
+  final double animationValue;
 
-  SparklinePainter({required this.data, required this.color});
+  SparklinePainter({
+    required this.data,
+    required this.color,
+    this.animationValue = 1.0,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -206,7 +226,6 @@ class SparklinePainter extends CustomPainter {
     final path = Path();
     final stepX = size.width / (data.length - 1);
 
-    // Find min and max for normalization
     final min = data.reduce((a, b) => a < b ? a : b);
     final max = data.reduce((a, b) => a > b ? a : b);
     final range = (max - min).toDouble();
@@ -223,11 +242,25 @@ class SparklinePainter extends CustomPainter {
       }
     }
 
-    canvas.drawPath(path, paint);
+    if (animationValue < 1.0) {
+      final metrics = path.computeMetrics();
+      final extractPath = Path();
+      for (final metric in metrics) {
+        extractPath.addPath(
+          metric.extractPath(0, metric.length * animationValue),
+          Offset.zero,
+        );
+      }
+      canvas.drawPath(extractPath, paint);
+    } else {
+      canvas.drawPath(path, paint);
+    }
   }
 
   @override
   bool shouldRepaint(covariant SparklinePainter oldDelegate) {
-    return oldDelegate.data != data || oldDelegate.color != color;
+    return oldDelegate.data != data ||
+        oldDelegate.color != color ||
+        oldDelegate.animationValue != animationValue;
   }
 }

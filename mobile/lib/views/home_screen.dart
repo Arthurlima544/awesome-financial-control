@@ -22,6 +22,7 @@ import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/view_models/health_score/health_score_bloc.dart';
 import 'package:afc/widgets/health_score_card/health_score_card.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -158,11 +159,13 @@ class _HomeViewState extends State<_HomeView> {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 12),
-                      _SummaryCard(
-                        key: const ValueKey('summaryCard'),
-                        totalIncome: totalIncomeFormatted,
-                        totalExpenses: totalExpensesFormatted,
-                        savingsRate: savingsRate,
+                      FadeInAnimation(
+                        child: _SummaryCard(
+                          key: const ValueKey('summaryCard'),
+                          totalIncome: totalIncomeFormatted,
+                          totalExpenses: totalExpensesFormatted,
+                          savingsRate: savingsRate,
+                        ),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       BlocBuilder<HealthScoreBloc, HealthScoreState>(
@@ -172,15 +175,21 @@ class _HomeViewState extends State<_HomeView> {
                             return const CardSkeleton();
                           }
                           if (healthState.healthScore != null) {
-                            return HealthScoreCard(
-                              score: healthState.healthScore!,
+                            return FadeInAnimation(
+                              delay: const Duration(milliseconds: 100),
+                              child: HealthScoreCard(
+                                score: healthState.healthScore!,
+                              ),
                             );
                           }
                           return const SizedBox.shrink();
                         },
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      const _NetWorthCard(),
+                      const FadeInAnimation(
+                        delay: Duration(milliseconds: 200),
+                        child: _NetWorthCard(),
+                      ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
                         l10n.homeRecentTransactions,
@@ -194,18 +203,22 @@ class _HomeViewState extends State<_HomeView> {
                           title: l10n.homeNoTransactions,
                         )
                       else
-                        ...transactions.map(
-                          (t) => TransactionListItem(
-                            key: ValueKey(t.id),
-                            description: t.description,
-                            amount: t.amount,
-                            type: t.type == TransactionType.income
-                                ? TransactionItemType.income
-                                : TransactionItemType.expense,
-                            category: t.category,
-                            occurredAt: t.occurredAt,
-                          ),
-                        ),
+                        ...List.generate(transactions.length, (index) {
+                          final t = transactions[index];
+                          return FadeInAnimation(
+                            delay: Duration(milliseconds: 300 + (index * 50)),
+                            child: TransactionListItem(
+                              key: ValueKey(t.id),
+                              description: t.description,
+                              amount: t.amount,
+                              type: t.type == TransactionType.income
+                                  ? TransactionItemType.income
+                                  : TransactionItemType.expense,
+                              category: t.category,
+                              occurredAt: t.occurredAt,
+                            ),
+                          );
+                        }),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
                         'Limites',

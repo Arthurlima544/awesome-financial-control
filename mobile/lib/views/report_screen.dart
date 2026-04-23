@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/report/report_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
@@ -56,10 +57,12 @@ class ReportView extends StatelessWidget {
                 _MonthPicker(selectedMonth: state.selectedMonth),
                 const SizedBox(height: 24),
                 if (state.report != null) ...[
-                  _SummaryRow(
-                    income: state.report!.totalIncome,
-                    expenses: state.report!.totalExpenses,
-                    savingsRate: state.report!.savingsRate,
+                  FadeInAnimation(
+                    child: _SummaryRow(
+                      income: state.report!.totalIncome,
+                      expenses: state.report!.totalExpenses,
+                      savingsRate: state.report!.savingsRate,
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Text(
@@ -70,7 +73,12 @@ class ReportView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _CategoryPieChart(categories: state.report!.categories),
+                  FadeInAnimation(
+                    delay: const Duration(milliseconds: 200),
+                    child: _CategoryPieChart(
+                      categories: state.report!.categories,
+                    ),
+                  ),
                   const SizedBox(height: 32),
                   Text(
                     l10n.reportMoMComparison,
@@ -80,7 +88,12 @@ class ReportView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _ComparisonBarChart(comparison: state.report!.comparison),
+                  FadeInAnimation(
+                    delay: const Duration(milliseconds: 400),
+                    child: _ComparisonBarChart(
+                      comparison: state.report!.comparison,
+                    ),
+                  ),
                   const SizedBox(height: 32),
                 ] else
                   Center(child: Text(l10n.reportNoData)),

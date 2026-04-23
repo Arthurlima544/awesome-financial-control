@@ -12,6 +12,7 @@ import 'package:afc/widgets/error_view/error_view.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/view_models/stats/stats_bloc.dart';
 import 'package:afc/models/monthly_stat_model.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -68,7 +69,7 @@ class _StatsView extends StatelessWidget {
                 ),
               );
             }
-            return _StatsChart(state: state);
+            return FadeInAnimation(child: _StatsChart(state: state));
           }
           return const SizedBox.shrink();
         },
