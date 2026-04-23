@@ -19,44 +19,46 @@ class RecurringListScreen extends StatelessWidget {
 
     return BlocProvider(
       create: (_) => sl<RecurringBloc>()..add(LoadRecurring()),
-      child: Scaffold(
-        appBar: AppBar(title: Text(l10n.recurringTitle)),
-        body: BlocBuilder<RecurringBloc, RecurringState>(
-          builder: (context, state) {
-            if (state is RecurringLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is RecurringError) {
-              return ErrorState(
-                message: l10n.recurringErrorLoading,
-                onRetry: () =>
-                    context.read<RecurringBloc>().add(LoadRecurring()),
-              );
-            }
-            if (state is RecurringLoaded) {
-              if (state.rules.isEmpty) {
-                return Center(
-                  child: EmptyState(
-                    icon: Icons.repeat,
-                    title: l10n.recurringEmpty,
-                  ),
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(title: Text(l10n.recurringTitle)),
+          body: BlocBuilder<RecurringBloc, RecurringState>(
+            builder: (context, state) {
+              if (state is RecurringLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is RecurringError) {
+                return ErrorState(
+                  message: l10n.recurringErrorLoading,
+                  onRetry: () =>
+                      context.read<RecurringBloc>().add(LoadRecurring()),
                 );
               }
-              return ListView.builder(
-                itemCount: state.rules.length,
-                itemBuilder: (context, index) {
-                  final rule = state.rules[index];
-                  return _RecurringItem(rule: rule);
-                },
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'recurring_fab',
-          onPressed: () => RecurringFormSheet.show(context),
-          child: const Icon(Icons.add),
+              if (state is RecurringLoaded) {
+                if (state.rules.isEmpty) {
+                  return Center(
+                    child: EmptyState(
+                      icon: Icons.repeat,
+                      title: l10n.recurringEmpty,
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: state.rules.length,
+                  itemBuilder: (context, index) {
+                    final rule = state.rules[index];
+                    return _RecurringItem(rule: rule);
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'recurring_fab',
+            onPressed: () => RecurringFormSheet.show(context),
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
     );

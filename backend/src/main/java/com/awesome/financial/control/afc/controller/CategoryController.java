@@ -1,6 +1,7 @@
 package com.awesome.financial.control.afc.controller;
 
 import com.awesome.financial.control.afc.dto.CategoryResponse;
+import com.awesome.financial.control.afc.dto.CreateCategoryRequest;
 import com.awesome.financial.control.afc.dto.UpdateCategoryRequest;
 import com.awesome.financial.control.afc.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,13 @@ public class CategoryController {
     @Operation(summary = "List all categories")
     public List<CategoryResponse> getCategories() {
         return categoryService.getAllCategories();
+    }
+
+    @PostMapping("/categories")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create a new category")
+    public CategoryResponse createCategory(@Valid @RequestBody CreateCategoryRequest request) {
+        return categoryService.createCategory(request);
     }
 
     @DeleteMapping("/categories/{id}")

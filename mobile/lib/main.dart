@@ -8,6 +8,7 @@ import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/view_models/category/category_bloc.dart';
 
 import 'package:afc/utils/config/injection.dart' as di;
 import 'package:afc/utils/config/injection.dart';
@@ -52,6 +53,10 @@ class _AfcAppState extends State<AfcApp> {
         BlocProvider.value(value: _authBloc),
         BlocProvider.value(value: _onboardingCubit),
         BlocProvider.value(value: sl<ThemeCubit>()),
+        BlocProvider(
+          create: (_) =>
+              sl<CategoryBloc>()..add(const CategoryFetchRequested()),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

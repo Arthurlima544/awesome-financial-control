@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
@@ -32,7 +33,16 @@ class _LimitView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.limitTitle)),
+      appBar: AppBar(
+        title: Text(l10n.limitTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.push('/limits/manage'),
+            tooltip: l10n.limitListTitle,
+          ),
+        ],
+      ),
       body: BlocBuilder<LimitBloc, LimitState>(
         builder: (context, state) {
           return switch (state) {

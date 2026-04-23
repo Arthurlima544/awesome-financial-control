@@ -13,4 +13,5 @@ class CategoryRepository {
 
   Future<CategoryModel> update(String id, String name) =>
       _service.update(id, name);
+  Future<CategoryModel> create(String name) => _service.create(name);
 }

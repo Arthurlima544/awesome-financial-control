@@ -30,6 +30,7 @@ public class Limit {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 }

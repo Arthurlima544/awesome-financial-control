@@ -13,6 +13,7 @@ import 'package:afc/widgets/adaptive_text_field/adaptive_text_field.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
+import 'package:afc/widgets/goal_form_sheet/goal_form_sheet.dart';
 import 'package:intl/intl.dart';
 
 class GoalsScreen extends StatelessWidget {
@@ -75,18 +76,20 @@ class _GoalsView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'goals_fab',
-        onPressed: () => _showAddGoalDialog(context),
+        onPressed: () => _showAddGoalForm(context),
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showAddGoalDialog(BuildContext context) {
-    showDialog(
+  void _showAddGoalForm(BuildContext context, [GoalModel? goal]) {
+    showModalBottomSheet(
       context: context,
-      builder: (dialogContext) => BlocProvider.value(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
         value: context.read<GoalBloc>(),
-        child: const _AddGoalDialog(),
+        child: GoalFormSheet(goal: goal),
       ),
     );
   }
@@ -264,106 +267,6 @@ class _GoalCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AddGoalDialog extends StatefulWidget {
-  const _AddGoalDialog();
-
-  @override
-  State<_AddGoalDialog> createState() => _AddGoalDialogState();
-}
-
-class _AddGoalDialogState extends State<_AddGoalDialog> {
-  final _nameController = TextEditingController();
-  final _targetController = TextEditingController();
-  DateTime _selectedDate = DateTime.now().add(const Duration(days: 30));
-
-  @override
-  Widget build(BuildContext context) {
-    final dateFormat = DateFormat.yMMMd('pt_BR');
-
-    return AlertDialog(
-      title: const Text('Novo Objetivo'),
-      content: SizedBox(
-        width: 300,
-        height: 350,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BlocProvider(
-                create: (_) => AdaptiveTextFieldCubit(),
-                child: AdaptiveTextField(
-                  controller: _nameController,
-                  hintText: 'Nome do objetivo',
-                  leadingIcon: const Icon(Icons.flag_outlined),
-                  focusedBorderColor: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              BlocProvider(
-                create: (_) => AdaptiveTextFieldCubit(),
-                child: AdaptiveTextField(
-                  controller: _targetController,
-                  hintText: 'Valor total (R\$)',
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  leadingIcon: const Icon(Icons.attach_money),
-                  focusedBorderColor: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.calendar_today),
-                title: const Text('Prazo final'),
-                subtitle: Text(dateFormat.format(_selectedDate)),
-                onTap: () async {
-                  final picked = await showDatePicker(
-                    context: context,
-                    initialDate: _selectedDate,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 3650)),
-                  );
-                  if (picked != null) {
-                    setState(() => _selectedDate = picked);
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
-        ),
-        BlocProvider(
-          create: (_) => AdaptiveButtonCubit(),
-          child: AdaptiveButton(
-            text: 'Salvar',
-            primaryColor: AppColors.primary,
-            onPressed: () {
-              final name = _nameController.text;
-              final target = double.tryParse(_targetController.text);
-              if (name.isNotEmpty && target != null && target > 0) {
-                context.read<GoalBloc>().add(
-                  CreateGoal(
-                    name: name,
-                    targetAmount: target,
-                    deadline: _selectedDate,
-                  ),
-                );
-                Navigator.pop(context);
-              }
-            },
-          ),
-        ),
-      ],
     );
   }
 }

@@ -40,28 +40,29 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: widget.navigationShell,
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'shell_fab',
-        onPressed: () async {
-          final result = await showModalBottomSheet<bool>(
-            context: context,
-            isScrollControlled: true,
-            useSafeArea: true,
-            builder: (_) => const QuickAddTransactionSheet(),
-          );
-          if (result == true) {
-            HapticFeedback.lightImpact();
-            // We use the same read<HomeBloc>() as in onHomeTabReactivated
-            if (context.mounted) {
-              context.read<HomeBloc>().add(const HomeDashboardLoaded());
-            }
-          }
-        },
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.onPrimary,
-        tooltip: l10n.fabAddTransaction,
-        child: const Icon(AppIcons.add),
-      ),
+      floatingActionButton: widget.navigationShell.currentIndex <= 1
+          ? FloatingActionButton(
+              heroTag: 'shell_fab',
+              onPressed: () async {
+                final result = await showModalBottomSheet<bool>(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const QuickAddTransactionSheet(),
+                );
+                if (result == true) {
+                  HapticFeedback.lightImpact();
+                  if (context.mounted) {
+                    context.read<HomeBloc>().add(const HomeDashboardLoaded());
+                  }
+                }
+              },
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.onPrimary,
+              tooltip: l10n.fabAddTransaction,
+              child: const Icon(AppIcons.add),
+            )
+          : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: widget.navigationShell.currentIndex,
         onDestinationSelected: _onDestinationSelected,

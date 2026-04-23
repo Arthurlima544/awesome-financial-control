@@ -1,6 +1,7 @@
 package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.CategoryResponse;
+import com.awesome.financial.control.afc.dto.CreateCategoryRequest;
 import com.awesome.financial.control.afc.dto.UpdateCategoryRequest;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.model.Category;
@@ -36,6 +37,17 @@ public class CategoryService {
             throw new ResourceNotFoundException("Category", id);
         }
         categoryRepository.deleteById(id);
+    }
+
+    @Transactional
+    public CategoryResponse createCategory(CreateCategoryRequest request) {
+        Category category = Category.builder().name(request.name()).build();
+        Category saved = categoryRepository.save(category);
+        return CategoryResponse.builder()
+                .id(saved.getId())
+                .name(saved.getName())
+                .createdAt(saved.getCreatedAt())
+                .build();
     }
 
     @Transactional

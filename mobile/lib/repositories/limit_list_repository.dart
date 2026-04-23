@@ -13,4 +13,6 @@ class LimitListRepository {
 
   Future<LimitModel> update(String id, double amount) =>
       _service.update(id, amount);
+  Future<LimitModel> create(String categoryName, double amount) =>
+      _service.create(categoryName, amount);
 }

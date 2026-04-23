@@ -21,6 +21,7 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
     on<LimitListFetchRequested>(_onFetchRequested);
     on<LimitListDeleteRequested>(_onDeleteRequested);
     on<LimitListUpdateRequested>(_onUpdateRequested);
+    on<LimitListCreateRequested>(_onCreateRequested);
 
     _refreshSubscription = _refreshBloc.stream.listen(
       (_) => add(const LimitListFetchRequested()),
@@ -73,6 +74,25 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
       final updatedList = current.limits.map((l) {
         return l.id == event.id ? updated : l;
       }).toList();
+      emit(LimitListData(updatedList));
+      _refreshBloc.add(DataChanged());
+    } catch (e) {
+      emit(LimitListError(e.toString()));
+    }
+  }
+
+  Future<void> _onCreateRequested(
+    LimitListCreateRequested event,
+    Emitter<LimitListState> emit,
+  ) async {
+    final current = state;
+    if (current is! LimitListData) return;
+    try {
+      final created = await _repository.create(
+        event.categoryName,
+        event.amount,
+      );
+      final updatedList = List<LimitModel>.from(current.limits)..add(created);
       emit(LimitListData(updatedList));
       _refreshBloc.add(DataChanged());
     } catch (e) {

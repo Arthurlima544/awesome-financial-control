@@ -21,6 +21,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<CategoryFetchRequested>(_onFetchRequested);
     on<CategoryDeleteRequested>(_onDeleteRequested);
     on<CategoryUpdateRequested>(_onUpdateRequested);
+    on<CategoryCreateRequested>(_onCreateRequested);
 
     _refreshSubscription = _refreshBloc.stream.listen(
       (_) => add(const CategoryFetchRequested()),
@@ -75,6 +76,23 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       final updatedList = current.categories.map((c) {
         return c.id == event.id ? updated : c;
       }).toList();
+      emit(CategoryData(updatedList));
+      _refreshBloc.add(DataChanged());
+    } catch (e) {
+      emit(CategoryError(e.toString()));
+    }
+  }
+
+  Future<void> _onCreateRequested(
+    CategoryCreateRequested event,
+    Emitter<CategoryState> emit,
+  ) async {
+    final current = state;
+    if (current is! CategoryData) return;
+    try {
+      final created = await _repository.create(event.name);
+      final updatedList = List<CategoryModel>.from(current.categories)
+        ..add(created);
       emit(CategoryData(updatedList));
       _refreshBloc.add(DataChanged());
     } catch (e) {

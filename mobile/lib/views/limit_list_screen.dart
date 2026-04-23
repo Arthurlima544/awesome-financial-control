@@ -10,7 +10,7 @@ import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/dismissible_delete_background/dismissible_delete_background.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
-import 'package:afc/services/navigation_service.dart';
+import 'package:afc/widgets/limit_form_sheet/limit_form_sheet.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/view_models/limit_list/limit_list_bloc.dart';
 import 'package:afc/models/limit_model.dart';
@@ -75,6 +75,22 @@ class _LimitListView extends StatelessWidget {
           return const SizedBox.shrink();
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showLimitForm(context),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showLimitForm(BuildContext context, [LimitModel? limit]) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: context.read<LimitListBloc>(),
+        child: LimitFormSheet(limit: limit),
+      ),
     );
   }
 }
@@ -119,11 +135,20 @@ class _DismissibleItem extends StatelessWidget {
         leadingIcon: Icons.price_change_outlined,
         trailingType: CustomListTileTrailing.arrow,
         primaryColor: AppColors.primary,
-        onTap: () => sl<NavigationService>().push(
-          '/limits/manage/${limit.id}/edit',
-          extra: context.read<LimitListBloc>(),
-        ),
+        onTap: () => _showLimitForm(context, limit),
       ),
     );
   }
+}
+
+void _showLimitForm(BuildContext context, [LimitModel? limit]) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) => BlocProvider.value(
+      value: context.read<LimitListBloc>(),
+      child: LimitFormSheet(limit: limit),
+    ),
+  );
 }

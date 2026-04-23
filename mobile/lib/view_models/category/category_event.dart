@@ -28,3 +28,12 @@ class CategoryUpdateRequested extends CategoryEvent {
   @override
   List<Object?> get props => [id, name];
 }
+
+class CategoryCreateRequested extends CategoryEvent {
+  const CategoryCreateRequested(this.name);
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}

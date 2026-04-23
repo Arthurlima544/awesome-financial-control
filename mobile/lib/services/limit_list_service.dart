@@ -40,4 +40,12 @@ class LimitListService {
     );
     return LimitModel.fromJson(response.data!);
   }
+
+  Future<LimitModel> create(String categoryName, double amount) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/api/v1/limits',
+      data: {'categoryName': categoryName, 'amount': amount},
+    );
+    return LimitModel.fromJson(response.data!);
+  }
 }

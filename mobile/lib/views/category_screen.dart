@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
-import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/adaptive_popup/adaptive_popup.dart';
 import 'package:afc/widgets/adaptive_popup/adaptive_popup_cubit.dart';
@@ -10,8 +9,8 @@ import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/dismissible_delete_background/dismissible_delete_background.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
+import 'package:afc/widgets/category_form_sheet/category_form_sheet.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
-import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/models/category_model.dart';
 
@@ -20,10 +19,7 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<CategoryBloc>()..add(const CategoryFetchRequested()),
-      child: const _CategoryView(),
-    );
+    return const _CategoryView();
   }
 }
 
@@ -75,6 +71,10 @@ class _CategoryView extends StatelessWidget {
           return const SizedBox.shrink();
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => CategoryFormSheet.show(context),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
@@ -119,10 +119,7 @@ class _DismissibleItem extends StatelessWidget {
         leadingIcon: Icons.category_outlined,
         trailingType: CustomListTileTrailing.arrow,
         primaryColor: AppColors.primary,
-        onTap: () => sl<NavigationService>().push(
-          '/categories/${category.id}/edit',
-          extra: context.read<CategoryBloc>(),
-        ),
+        onTap: () => CategoryFormSheet.show(context, category: category),
       ),
     );
   }
