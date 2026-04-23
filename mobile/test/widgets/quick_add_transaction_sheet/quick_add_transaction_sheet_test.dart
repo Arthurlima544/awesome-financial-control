@@ -85,7 +85,7 @@ void main() {
     );
   }
 
-  Future<void> _setupScreenSize(WidgetTester tester) async {
+  Future<void> setupScreenSize(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
@@ -94,7 +94,7 @@ void main() {
 
   group('QuickAddTransactionSheet Widget Tests', () {
     testWidgets('renders correctly', (tester) async {
-      await _setupScreenSize(tester);
+      await setupScreenSize(tester);
       await tester.pumpWidget(buildTestableWidget());
       await tester.pumpAndSettle();
 
@@ -105,7 +105,7 @@ void main() {
     });
 
     testWidgets('switches between income and expense', (tester) async {
-      await _setupScreenSize(tester);
+      await setupScreenSize(tester);
       await tester.pumpWidget(buildTestableWidget());
       await tester.pumpAndSettle();
 
@@ -117,7 +117,7 @@ void main() {
     });
 
     testWidgets('typing amount updates display', (tester) async {
-      await _setupScreenSize(tester);
+      await setupScreenSize(tester);
       await tester.pumpWidget(buildTestableWidget());
       await tester.pumpAndSettle();
 
@@ -129,7 +129,7 @@ void main() {
     });
 
     testWidgets('selecting category updates selection', (tester) async {
-      await _setupScreenSize(tester);
+      await setupScreenSize(tester);
       when(() => categoryBloc.state).thenReturn(
         CategoryData([
           CategoryModel(id: '1', name: 'Comida', createdAt: DateTime.now()),
@@ -147,7 +147,7 @@ void main() {
     testWidgets('submitting valid transaction calls repository', (
       tester,
     ) async {
-      await _setupScreenSize(tester);
+      await setupScreenSize(tester);
       when(
         () => transactionRepository.create(
           description: any(named: 'description'),
@@ -198,7 +198,7 @@ void main() {
     });
 
     testWidgets('typing multiple dots does not break display', (tester) async {
-      await _setupScreenSize(tester);
+      await setupScreenSize(tester);
       await tester.pumpWidget(buildTestableWidget());
       await tester.pumpAndSettle();
 

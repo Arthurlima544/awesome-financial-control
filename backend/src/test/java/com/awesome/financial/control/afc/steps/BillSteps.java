@@ -77,4 +77,10 @@ public class BillSteps {
                 Arrays.asList(restTemplate.getForObject("/api/v1/bills", BillResponse[].class));
         assertThat(bills).noneMatch(b -> b.name().equals(name));
     }
+
+    @When("I delete bill with id {string}")
+    public void iDeleteBillWithId(String id) {
+        context.response =
+                restTemplate.exchange("/api/v1/bills/" + id, HttpMethod.DELETE, null, String.class);
+    }
 }

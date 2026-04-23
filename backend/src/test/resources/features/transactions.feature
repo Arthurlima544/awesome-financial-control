@@ -41,3 +41,21 @@ Feature: Last transactions
   Scenario: Update a non-existing transaction returns 404
     When I update transaction with id "00000000-0000-0000-0000-000000000000" with description "X" amount 10.00 type EXPENSE
     Then the response status is 404
+
+  Scenario: Create a new transaction returns 201 and the transaction
+    When I create a transaction with description "Lunch" amount 45.50 type EXPENSE occurred today
+    Then the response status is 201
+    And the transaction description is "Lunch"
+    And the transaction amount is 45.50
+
+  Scenario: Create a transaction with negative amount returns 422
+    When I create a transaction with description "Invalid" amount -10.00 type EXPENSE occurred today
+    Then the response status is 422
+
+  Scenario: Create a transaction with zero amount returns 422
+    When I create a transaction with description "Invalid" amount 0.00 type EXPENSE occurred today
+    Then the response status is 422
+
+  Scenario: Create a transaction with empty description returns 422
+    When I create a transaction with description "" amount 10.00 type EXPENSE occurred today
+    Then the response status is 422

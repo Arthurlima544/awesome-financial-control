@@ -1,5 +1,4 @@
 import 'package:afc/models/recurring_transaction_model.dart';
-import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/widgets/error_state/error_state.dart';

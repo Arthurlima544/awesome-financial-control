@@ -49,6 +49,9 @@ public class RecurringTransactionService {
     }
 
     public void delete(UUID id) {
+        if (!recurringRepository.existsById(id)) {
+            throw new ResourceNotFoundException("RecurringTransaction", id);
+        }
         recurringRepository.deleteById(id);
     }
 

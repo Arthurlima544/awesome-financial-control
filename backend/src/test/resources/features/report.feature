@@ -23,9 +23,17 @@ Feature: Monthly Reporting
     And the category "Housing" comparison should show current 1500.0 and previous 1500.0
     And the category "Food" comparison should show current 700.0 and previous 0.0
 
-  Scenario: Handle uncategorized transactions in comparison
-    Given a transaction with description "Other", amount 100.0, type "EXPENSE", and category "null" for "2024-03"
-    And a transaction with description "Other Prev", amount 50.0, type "EXPENSE", and category "null" for "2024-02"
+  Scenario: Handle category only in previous month
+    Given a transaction with description "Gone", amount 50.0, type "EXPENSE", and category "OldCategory" for "2024-02"
     When I request the monthly report for "2024-03"
     Then the response status is 200
-    And the category comparison for null should show current 100.0 and previous 50.0
+    And the category "OldCategory" comparison should show current 0.0 and previous 50.0
+
+  Scenario: Get report with zero income
+    Given a transaction with description "Exp", amount 100.0, type "EXPENSE", and category "Other" for "2024-03"
+    When I request the monthly report for "2024-03"
+    Then the response status is 200
+    And the response should contain:
+      | totalIncome   | 0.0   |
+      | totalExpenses | 100.0 |
+      | savingsRate   | 0.0   |

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
@@ -97,5 +98,50 @@ public class GoalSteps {
         String body = (String) context.response.getBody();
         long commaCount = body.chars().filter(c -> c == '{').count();
         assertThat(commaCount).isEqualTo(count);
+    }
+
+    @When("I update goal with name {string} to have target {double}")
+    public void iUpdateGoalWithNameToHaveTarget(String name, double target) {
+        GoalRequest request =
+                GoalRequest.builder()
+                        .name(name)
+                        .targetAmount(BigDecimal.valueOf(target))
+                        .deadline(Instant.now().plusSeconds(86400 * 30))
+                        .currentAmount(BigDecimal.ZERO)
+                        .build();
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/goals/" + context.lastGoalId,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(request),
+                        GoalResponse.class);
+    }
+
+    @And("the goal {string} target should be {double}")
+    public void theGoalTargetShouldBe(String name, double expected) {
+        GoalResponse body = (GoalResponse) context.response.getBody();
+        assertThat(body.targetAmount()).isEqualByComparingTo(BigDecimal.valueOf(expected));
+    }
+
+    @When("I update goal with id {string} with name {string} target {double} deadline {string}")
+    public void iUpdateGoalWithId(String id, String name, double target, String deadline) {
+        GoalRequest request =
+                GoalRequest.builder()
+                        .name(name)
+                        .targetAmount(BigDecimal.valueOf(target))
+                        .deadline(Instant.parse(deadline + "T00:00:00Z"))
+                        .build();
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/goals/" + id,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(request),
+                        String.class);
+    }
+
+    @When("I delete goal with id {string}")
+    public void iDeleteGoalWithId(String id) {
+        context.response =
+                restTemplate.exchange("/api/v1/goals/" + id, HttpMethod.DELETE, null, String.class);
     }
 }

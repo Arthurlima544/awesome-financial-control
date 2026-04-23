@@ -26,6 +26,14 @@ public class CategorySteps {
         ctx.response = restTemplate.getForEntity("/api/v1/categories", String.class);
     }
 
+    @When("I create a category named {string}")
+    public void iCreateACategoryNamed(String name) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>("{\"name\":\"" + name + "\"}", headers);
+        ctx.response = restTemplate.postForEntity("/api/v1/categories", entity, String.class);
+    }
+
     @When("I delete the last created category")
     public void iDeleteTheLastCreatedCategory() {
         ctx.response =
