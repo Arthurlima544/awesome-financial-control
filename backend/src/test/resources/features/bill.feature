@@ -15,3 +15,11 @@ Feature: Bill Reminders Management
     Given a bill "Spotify" with amount 21.90 and due day 5 exists
     When I delete the bill "Spotify"
     Then the bill list should not contain "Spotify"
+
+  Scenario: Create a bill with invalid data returns 422
+    When I create a bill with name "", amount -50.0 and due day 32
+    Then the response status is 422
+
+  Scenario: Delete a non-existing bill returns 404
+    When I delete bill with id "00000000-0000-0000-0000-000000000000"
+    Then the response status is 404

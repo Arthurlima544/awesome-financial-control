@@ -84,6 +84,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get homeErrorLoading => 'Erro ao carregar dados';
 
   @override
+  String get homeSavingsRate => 'Taxa de Poupança';
+
+  @override
+  String get homeViewReport => 'Ver relatório completo';
+
+  @override
+  String homeInsightExcellent(Object rate) {
+    return 'Excelente! Você poupou $rate% da sua renda este mês.';
+  }
+
+  @override
+  String homeInsightGood(Object rate) {
+    return 'Bom trabalho! Você poupou $rate% este mês.';
+  }
+
+  @override
+  String homeInsightAttention(Object rate) {
+    return 'Atenção! Você poupou apenas $rate% este mês.';
+  }
+
+  @override
   String get limitTitle => 'Limites do mês';
 
   @override
@@ -112,6 +133,37 @@ class AppLocalizationsPt extends AppLocalizations {
   String get statsErrorLoading => 'Erro ao carregar estatísticas';
 
   @override
+  String get statsSummarySavings => 'Média de Poupança';
+
+  @override
+  String get statsSummaryTotal => 'Total Acumulado';
+
+  @override
+  String get statsSummaryBest => 'Melhor Mês';
+
+  @override
+  String get statsInsightPositiveTrend => 'Tendência Positiva';
+
+  @override
+  String get statsInsightNegativeTrend => 'Atenção aos Gastos';
+
+  @override
+  String get statsInsightPositiveTrendMsg =>
+      'Sua taxa de economia está subindo nos últimos meses. Continue assim!';
+
+  @override
+  String get statsInsightNegativeTrendMsg =>
+      'Sua taxa de economia caiu recentemente. Revise seus limites de gastos.';
+
+  @override
+  String get statsInsightBestMonth => 'Recorde de Economia';
+
+  @override
+  String statsInsightBestMonthMsg(Object month) {
+    return 'Em $month, você poupou o máximo do ano!';
+  }
+
+  @override
   String get transactionListTitle => 'Transações';
 
   @override
@@ -138,6 +190,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get navStats => 'Gráficos';
+
+  @override
+  String get navPlanning => 'Planejamento';
 
   @override
   String get fabAddTransaction => 'Adicionar transação';

@@ -29,6 +29,7 @@ public class Goal {
     @Column(name = "target_amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal targetAmount;
 
+    @Builder.Default
     @Column(name = "current_amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal currentAmount = BigDecimal.ZERO;
 
@@ -37,6 +38,7 @@ public class Goal {
 
     private String icon;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 }

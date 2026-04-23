@@ -21,6 +21,14 @@ Feature: Recurring Transactions management
     When I process pending recurring transactions
     Then the database has 0 transactions
 
+  Scenario: Weekly and Monthly rules are processed
+    Given I create a "WEEKLY" recurring transaction "Weekly" with amount 10.00 in category "Test" due in -1 days
+    And I create a "MONTHLY" recurring transaction "Monthly" with amount 100.00 in category "Test" due in -1 days
+    When I process pending recurring transactions
+    Then the database has 2 transactions
+    And the recurring rule "Weekly" next due date is updated
+    And the recurring rule "Monthly" next due date is updated
+
   Scenario: Update a recurring transaction rule
     Given I create a "MONTHLY" recurring transaction "Netflix" with amount 45.90 in category "Entertainment" due in 5 days
     When I update the last created recurring rule with amount 55.90
@@ -37,6 +45,10 @@ Feature: Recurring Transactions management
     Given I create a "MONTHLY" recurring transaction "Internet" with amount 150.00 in category "Utilities" due in 15 days
     And I create a "WEEKLY" recurring transaction "Weekly Coffee" with amount 25.00 in category "Food" due in 2 days
     When I list all recurring rules
-    Then the response status is 200
+    And the response status is 200
     And the response contains "Internet"
     And the response contains "Weekly Coffee"
+
+  Scenario: Create a recurring rule with invalid data returns 422
+    When I create a "MONTHLY" recurring transaction "" with amount -10.00 in category "Test" due in 5 days
+    Then the response status is 422

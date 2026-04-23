@@ -40,4 +40,12 @@ class CategoryService {
     );
     return CategoryModel.fromJson(response.data!);
   }
+
+  Future<CategoryModel> create(String name) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/api/v1/categories',
+      data: {'name': name},
+    );
+    return CategoryModel.fromJson(response.data!);
+  }
 }

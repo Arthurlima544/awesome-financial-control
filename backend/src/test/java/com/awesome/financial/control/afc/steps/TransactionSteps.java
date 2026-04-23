@@ -109,6 +109,20 @@ public class TransactionSteps {
         ctx.response = restTemplate.getForEntity("/api/v1/transactions", String.class);
     }
 
+    @When(
+            "I create a transaction with description {string} amount {bigdecimal} type {word} occurred today")
+    public void iCreateATransaction(String description, BigDecimal amount, String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"occurredAt\":\"%s\"}",
+                        description, amount.toPlainString(), type, Instant.now().toString());
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions", new HttpEntity<>(body, headers), String.class);
+    }
+
     @When("I delete the last created transaction")
     public void iDeleteTheLastCreatedTransaction() {
         ctx.response =

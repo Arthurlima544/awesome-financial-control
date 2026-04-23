@@ -2,6 +2,7 @@ package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.BillRequest;
 import com.awesome.financial.control.afc.dto.BillResponse;
+import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.BillMapper;
 import com.awesome.financial.control.afc.model.Bill;
 import com.awesome.financial.control.afc.repository.BillRepository;
@@ -38,7 +39,10 @@ public class BillService {
 
     @Transactional
     public BillResponse updateBill(UUID id, BillRequest request) {
-        Bill bill = billRepository.findById(id).orElseThrow();
+        Bill bill =
+                billRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Bill", id));
         bill.setName(request.name());
         bill.setAmount(request.amount());
         bill.setDueDay(request.dueDay());
@@ -49,6 +53,9 @@ public class BillService {
 
     @Transactional
     public void deleteBill(UUID id) {
+        if (!billRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Bill", id);
+        }
         billRepository.deleteById(id);
     }
 }

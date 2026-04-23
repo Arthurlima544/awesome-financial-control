@@ -6,6 +6,7 @@ import com.awesome.financial.control.afc.service.InvestmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -52,7 +53,8 @@ public class InvestmentController {
 
     @PatchMapping("/{id}/price")
     @Operation(summary = "Update investment current price")
-    public InvestmentResponse updatePrice(@PathVariable UUID id, @RequestParam BigDecimal price) {
+    public InvestmentResponse updatePrice(
+            @PathVariable UUID id, @RequestParam @DecimalMin("0.01") BigDecimal price) {
         return investmentService.updatePrice(id, price);
     }
 }

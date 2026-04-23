@@ -244,6 +244,36 @@ abstract class AppLocalizations {
   /// **'Erro ao carregar dados'**
   String get homeErrorLoading;
 
+  /// No description provided for @homeSavingsRate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa de Poupança'**
+  String get homeSavingsRate;
+
+  /// No description provided for @homeViewReport.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver relatório completo'**
+  String get homeViewReport;
+
+  /// No description provided for @homeInsightExcellent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excelente! Você poupou {rate}% da sua renda este mês.'**
+  String homeInsightExcellent(Object rate);
+
+  /// No description provided for @homeInsightGood.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bom trabalho! Você poupou {rate}% este mês.'**
+  String homeInsightGood(Object rate);
+
+  /// No description provided for @homeInsightAttention.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atenção! Você poupou apenas {rate}% este mês.'**
+  String homeInsightAttention(Object rate);
+
   /// Spending limits screen title
   ///
   /// In pt, this message translates to:
@@ -291,6 +321,60 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro ao carregar estatísticas'**
   String get statsErrorLoading;
+
+  /// No description provided for @statsSummarySavings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Média de Poupança'**
+  String get statsSummarySavings;
+
+  /// No description provided for @statsSummaryTotal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total Acumulado'**
+  String get statsSummaryTotal;
+
+  /// No description provided for @statsSummaryBest.
+  ///
+  /// In pt, this message translates to:
+  /// **'Melhor Mês'**
+  String get statsSummaryBest;
+
+  /// No description provided for @statsInsightPositiveTrend.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tendência Positiva'**
+  String get statsInsightPositiveTrend;
+
+  /// No description provided for @statsInsightNegativeTrend.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atenção aos Gastos'**
+  String get statsInsightNegativeTrend;
+
+  /// No description provided for @statsInsightPositiveTrendMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua taxa de economia está subindo nos últimos meses. Continue assim!'**
+  String get statsInsightPositiveTrendMsg;
+
+  /// No description provided for @statsInsightNegativeTrendMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua taxa de economia caiu recentemente. Revise seus limites de gastos.'**
+  String get statsInsightNegativeTrendMsg;
+
+  /// No description provided for @statsInsightBestMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recorde de Economia'**
+  String get statsInsightBestMonth;
+
+  /// No description provided for @statsInsightBestMonthMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em {month}, você poupou o máximo do ano!'**
+  String statsInsightBestMonthMsg(Object month);
 
   /// Transaction list screen title
   ///
@@ -345,6 +429,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Gráficos'**
   String get navStats;
+
+  /// Bottom nav bar planning tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Planejamento'**
+  String get navPlanning;
 
   /// FAB tooltip for adding a new transaction
   ///

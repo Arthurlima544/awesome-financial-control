@@ -1,5 +1,4 @@
 import 'package:afc/models/recurring_transaction_model.dart';
-import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
@@ -17,47 +16,43 @@ class RecurringListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocProvider(
-      create: (_) => sl<RecurringBloc>()..add(LoadRecurring()),
-      child: Scaffold(
-        appBar: AppBar(title: Text(l10n.recurringTitle)),
-        body: BlocBuilder<RecurringBloc, RecurringState>(
-          builder: (context, state) {
-            if (state is RecurringLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is RecurringError) {
-              return ErrorState(
-                message: l10n.recurringErrorLoading,
-                onRetry: () =>
-                    context.read<RecurringBloc>().add(LoadRecurring()),
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.recurringTitle)),
+      body: BlocBuilder<RecurringBloc, RecurringState>(
+        builder: (context, state) {
+          if (state is RecurringLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is RecurringError) {
+            return ErrorState(
+              message: l10n.recurringErrorLoading,
+              onRetry: () => context.read<RecurringBloc>().add(LoadRecurring()),
+            );
+          }
+          if (state is RecurringLoaded) {
+            if (state.rules.isEmpty) {
+              return Center(
+                child: EmptyState(
+                  icon: Icons.repeat,
+                  title: l10n.recurringEmpty,
+                ),
               );
             }
-            if (state is RecurringLoaded) {
-              if (state.rules.isEmpty) {
-                return Center(
-                  child: EmptyState(
-                    icon: Icons.repeat,
-                    title: l10n.recurringEmpty,
-                  ),
-                );
-              }
-              return ListView.builder(
-                itemCount: state.rules.length,
-                itemBuilder: (context, index) {
-                  final rule = state.rules[index];
-                  return _RecurringItem(rule: rule);
-                },
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'recurring_fab',
-          onPressed: () => RecurringFormSheet.show(context),
-          child: const Icon(Icons.add),
-        ),
+            return ListView.builder(
+              itemCount: state.rules.length,
+              itemBuilder: (context, index) {
+                final rule = state.rules[index];
+                return _RecurringItem(rule: rule);
+              },
+            );
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'recurring_fab',
+        onPressed: () => RecurringFormSheet.show(context),
+        child: const Icon(Icons.add),
       ),
     );
   }

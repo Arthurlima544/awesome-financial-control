@@ -5,6 +5,7 @@ import com.awesome.financial.control.afc.dto.BillResponse;
 import com.awesome.financial.control.afc.service.BillService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,13 @@ public class BillController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new bill")
-    public BillResponse createBill(@RequestBody BillRequest request) {
+    public BillResponse createBill(@Valid @RequestBody BillRequest request) {
         return billService.createBill(request);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing bill")
-    public BillResponse updateBill(@PathVariable UUID id, @RequestBody BillRequest request) {
+    public BillResponse updateBill(@PathVariable UUID id, @Valid @RequestBody BillRequest request) {
         return billService.updateBill(id, request);
     }
 

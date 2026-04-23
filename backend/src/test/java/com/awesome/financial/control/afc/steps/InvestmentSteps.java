@@ -101,6 +101,60 @@ public class InvestmentSteps {
         assertThat(body.gainLossPercentage()).isEqualByComparingTo(BigDecimal.valueOf(expected));
     }
 
+    @When("I delete investment with id {string}")
+    public void iDeleteInvestmentWithId(String id) {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/investments/" + id, HttpMethod.DELETE, null, String.class);
+    }
+
+    @Given("I have an investment {string} price {double} quantity {int}")
+    public void iHaveAnInvestmentPriceQuantity(String ticker, double price, int quantity) {
+        Investment investment = new Investment();
+        investment.setName(ticker);
+        investment.setTicker(ticker);
+        investment.setType(InvestmentType.STOCK);
+        investment.setQuantity(BigDecimal.valueOf(quantity));
+        investment.setAvgCost(BigDecimal.valueOf(price));
+        investment.setCurrentPrice(BigDecimal.valueOf(price));
+        context.lastInvestmentId = investmentRepository.save(investment).getId();
+    }
+
+    @When("I update {string} price to {double}")
+    public void iUpdatePriceTo(String ticker, double price) {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/investments/" + context.lastInvestmentId + "/price?price=" + price,
+                        HttpMethod.PATCH,
+                        null,
+                        InvestmentResponse.class);
+    }
+
+    @When("I delete investment {string}")
+    public void iDeleteInvestment(String ticker) {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/investments/" + context.lastInvestmentId,
+                        HttpMethod.DELETE,
+                        null,
+                        Void.class);
+    }
+
+    @And("the investment {string} should not exist")
+    public void theInvestmentShouldNotExist(String ticker) {
+        assertThat(investmentRepository.existsById(context.lastInvestmentId)).isFalse();
+    }
+
+    @When("I update investment with id {string} price to {double}")
+    public void iUpdateInvestmentPriceWithId(String id, double price) {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/investments/" + id + "/price?price=" + price,
+                        HttpMethod.PATCH,
+                        null,
+                        String.class);
+    }
+
     @When("I request all investments")
     public void iRequestAllInvestments() {
         context.response = restTemplate.getForEntity("/api/v1/investments", String.class);

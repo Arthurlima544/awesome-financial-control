@@ -16,6 +16,7 @@ import 'package:afc/widgets/skeleton/card_skeleton.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
+import 'package:afc/widgets/month_summary_card/month_summary_card.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
@@ -168,11 +169,13 @@ class _HomeViewState extends State<_HomeView> {
                         trigger: StatefulNavigationShell.of(
                           context,
                         ).currentIndex,
-                        child: _SummaryCard(
+                        child: MonthSummaryCard(
                           key: const ValueKey('summaryCard'),
                           totalIncome: totalIncomeFormatted,
                           totalExpenses: totalExpensesFormatted,
                           savingsRate: savingsRate,
+                          onViewReport: () =>
+                              StatefulNavigationShell.of(context).goBranch(3),
                         ),
                       ),
                       const SizedBox(height: AppSpacing.md),
@@ -293,104 +296,7 @@ class _HomeViewState extends State<_HomeView> {
   }
 }
 
-class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
-    super.key,
-    required this.totalIncome,
-    required this.totalExpenses,
-    required this.savingsRate,
-  });
-
-  final String totalIncome;
-  final String totalExpenses;
-  final int savingsRate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.grey.shade200),
-      ),
-      elevation: 0,
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    '$savingsRate%',
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Taxa de\npoupança',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-              ],
-            ),
-            Container(height: 40, width: 1, color: Colors.grey.shade300),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      totalIncome,
-                      style: TextStyle(
-                        color: AppColors.success,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Receita do mês',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            Container(height: 40, width: 1, color: Colors.grey.shade300),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      totalExpenses,
-                      style: TextStyle(
-                        color: AppColors.error,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Gastos do mês',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// MonthSummaryCard is now a separate reusable widget
 
 class _NetWorthCard extends StatelessWidget {
   const _NetWorthCard();

@@ -28,3 +28,16 @@ class LimitListUpdateRequested extends LimitListEvent {
   @override
   List<Object?> get props => [id, amount];
 }
+
+class LimitListCreateRequested extends LimitListEvent {
+  const LimitListCreateRequested({
+    required this.categoryName,
+    required this.amount,
+  });
+
+  final String categoryName;
+  final double amount;
+
+  @override
+  List<Object?> get props => [categoryName, amount];
+}

@@ -41,11 +41,19 @@ class _TransactionListView extends StatelessWidget {
         title: Text(l10n.transactionListTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.category_outlined),
+            tooltip: l10n.categoryListTitle,
+            onPressed: () => context.push('/categories'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.repeat),
+            tooltip: l10n.recurringTitle,
+            onPressed: () => context.push('/recurring'),
+          ),
+          IconButton(
             icon: const Icon(Icons.upload_file),
             tooltip: l10n.importTitle,
-            onPressed: () {
-              context.push('/import');
-            },
+            onPressed: () => context.push('/import'),
           ),
         ],
       ),

@@ -31,3 +31,17 @@ Feature: Categories management
   Scenario: Update a non-existing category returns 404
     When I update category with id "00000000-0000-0000-0000-000000000000" name to "Novo"
     Then the response status is 404
+
+  Scenario: Create a new category returns 201 and the category
+    When I create a category named "Saúde"
+    Then the response status is 201
+    And the category name is "Saúde"
+
+  Scenario: Create a category with empty name returns 422
+    When I create a category named ""
+    Then the response status is 422
+
+  Scenario: Update a category with empty name returns 422
+    Given a category named "Lazer"
+    When I update the last created category name to ""
+    Then the response status is 422

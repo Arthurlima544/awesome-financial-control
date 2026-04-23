@@ -40,28 +40,29 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: widget.navigationShell,
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'shell_fab',
-        onPressed: () async {
-          final result = await showModalBottomSheet<bool>(
-            context: context,
-            isScrollControlled: true,
-            useSafeArea: true,
-            builder: (_) => const QuickAddTransactionSheet(),
-          );
-          if (result == true) {
-            HapticFeedback.lightImpact();
-            // We use the same read<HomeBloc>() as in onHomeTabReactivated
-            if (context.mounted) {
-              context.read<HomeBloc>().add(const HomeDashboardLoaded());
-            }
-          }
-        },
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.onPrimary,
-        tooltip: l10n.fabAddTransaction,
-        child: const Icon(AppIcons.add),
-      ),
+      floatingActionButton: widget.navigationShell.currentIndex <= 1
+          ? FloatingActionButton(
+              heroTag: 'shell_fab',
+              onPressed: () async {
+                final result = await showModalBottomSheet<bool>(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const QuickAddTransactionSheet(),
+                );
+                if (result == true) {
+                  HapticFeedback.lightImpact();
+                  if (context.mounted) {
+                    context.read<HomeBloc>().add(const HomeDashboardLoaded());
+                  }
+                }
+              },
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.onPrimary,
+              tooltip: l10n.fabAddTransaction,
+              child: const Icon(AppIcons.add),
+            )
+          : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: widget.navigationShell.currentIndex,
         onDestinationSelected: _onDestinationSelected,
@@ -77,29 +78,14 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
             label: l10n.navTransactions,
           ),
           NavigationDestination(
-            icon: const Icon(AppIcons.limitsOutlined),
-            selectedIcon: const Icon(AppIcons.limits),
-            label: l10n.navLimits,
+            icon: const Icon(Icons.assignment_outlined),
+            selectedIcon: const Icon(Icons.assignment),
+            label: l10n.navPlanning,
           ),
           NavigationDestination(
             icon: const Icon(AppIcons.statsOutlined),
             selectedIcon: const Icon(AppIcons.stats),
             label: l10n.navStats,
-          ),
-          NavigationDestination(
-            icon: const Icon(AppIcons.goalsOutlined),
-            selectedIcon: const Icon(AppIcons.goals),
-            label: l10n.navGoals,
-          ),
-          NavigationDestination(
-            icon: const Icon(AppIcons.billsOutlined),
-            selectedIcon: const Icon(AppIcons.bills),
-            label: l10n.navBills,
-          ),
-          NavigationDestination(
-            icon: const Icon(AppIcons.recurringOutlined),
-            selectedIcon: const Icon(AppIcons.recurring),
-            label: l10n.recurringTitle,
           ),
         ],
       ),

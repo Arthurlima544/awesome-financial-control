@@ -19,6 +19,8 @@ import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
 import 'package:afc/widgets/adaptive_segmented_control/adaptive_segmented_control.dart';
 import 'package:afc/widgets/adaptive_segmented_control/adaptive_segmented_control_cubit.dart';
+import 'package:afc/widgets/category_form_sheet/category_form_sheet.dart';
+import 'package:afc/view_models/category/category_bloc.dart';
 
 class QuickAddTransactionSheet extends StatelessWidget {
   const QuickAddTransactionSheet({super.key});
@@ -85,6 +87,10 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
     if (value == '<') {
       if (current.isNotEmpty) {
         cubit.amountChanged(current.substring(0, current.length - 1));
+      }
+    } else if (value == '.') {
+      if (!current.contains('.') && current.isNotEmpty) {
+        cubit.amountChanged(current + value);
       }
     } else {
       cubit.amountChanged(current + value);
@@ -288,35 +294,59 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 8),
-                          BlocBuilder<
-                            QuickAddTransactionCubit,
-                            QuickAddTransactionState
-                          >(
-                            buildWhen: (p, c) => p.category != c.category,
-                            builder: (context, state) {
-                              final categories = [
-                                l10n.categorySalary,
-                                l10n.categoryTransport,
-                                l10n.categoryInvestments,
-                                l10n.categoryHealth,
-                                l10n.categoryFood,
-                                l10n.categoryHousing,
-                                l10n.categoryLeisure,
-                                l10n.categoryEducation,
-                              ];
-                              return Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: [
-                                  ...categories.map(
-                                    (c) => _buildCategoryChip(
-                                      c,
-                                      state.category == c,
-                                      context,
-                                    ),
-                                  ),
-                                  _buildNewCategoryChip(),
-                                ],
+                          BlocBuilder<CategoryBloc, CategoryState>(
+                            builder: (context, categoryState) {
+                              List<String> categoryNames = [];
+                              if (categoryState is CategoryData) {
+                                categoryNames = categoryState.categories
+                                    .map((c) => c.name)
+                                    .toList();
+                              } else {
+                                // Fallback to basic categories while loading
+                                categoryNames = [
+                                  l10n.categorySalary,
+                                  l10n.categoryTransport,
+                                  l10n.categoryInvestments,
+                                  l10n.categoryHealth,
+                                  l10n.categoryFood,
+                                  l10n.categoryHousing,
+                                  l10n.categoryLeisure,
+                                  l10n.categoryEducation,
+                                ];
+                              }
+
+                              return BlocBuilder<
+                                QuickAddTransactionCubit,
+                                QuickAddTransactionState
+                              >(
+                                buildWhen: (p, c) => p.category != c.category,
+                                builder: (context, state) {
+                                  // Ensure the current category is always in the list even if not yet in CategoryBloc data
+                                  final displayCategories = List<String>.from(
+                                    categoryNames,
+                                  );
+                                  if (state.category.isNotEmpty &&
+                                      !displayCategories.contains(
+                                        state.category,
+                                      )) {
+                                    displayCategories.add(state.category);
+                                  }
+
+                                  return Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      ...displayCategories.map(
+                                        (c) => _buildCategoryChip(
+                                          c,
+                                          state.category == c,
+                                          context,
+                                        ),
+                                      ),
+                                      _buildNewCategoryChip(),
+                                    ],
+                                  );
+                                },
                               );
                             },
                           ),
@@ -560,7 +590,12 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
           child: AdaptiveChip(
             label: l10n.quickAddCategoryNew,
             variant: AdaptiveChipVariant.outlined,
-            onPressed: () {},
+            onPressed: () => CategoryFormSheet.show(
+              context,
+              onCategoryCreated: (name) => context
+                  .read<QuickAddTransactionCubit>()
+                  .categoryChanged(name),
+            ),
           ),
         );
       },
