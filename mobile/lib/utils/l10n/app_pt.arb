@@ -200,11 +200,16 @@
   "devResetButton": "Limpar todos os dados",
   "@devResetButton": { "description": "Dev reset button label" },
 
+  "devResetOnboardingButton": "Resetar Onboarding",
+  "@devResetOnboardingButton": { "description": "Dev reset onboarding button label" },
+
   "devSeedSuccess": "Dados populados com sucesso",
   "@devSeedSuccess": { "description": "Dev seed success snackbar message" },
 
   "devResetSuccess": "Dados removidos com sucesso",
   "@devResetSuccess": { "description": "Dev reset success snackbar message" },
+
+  "devResetOnboardingSuccess": "Onboarding resetado com sucesso",
 
   "homeLimitExceeded": "Limite excedido: {limitNames}",
   "@homeLimitExceeded": {
@@ -269,6 +274,7 @@
   "@recurringTitle": { "description": "Recurring transactions screen title" },
 
   "recurringEmpty": "Nenhuma regra recorrente cadastrada",
+  "recurringErrorLoading": "Erro ao carregar regras recorrentes",
   "@recurringEmpty": { "description": "Empty state for recurring list" },
 
   "recurringFrequencyDaily": "Diário",
@@ -381,6 +387,7 @@
   "@goalsTitle": { "description": "Savings goals screen title" },
 
   "goalsNoGoals": "Nenhum objetivo cadastrado",
+  "goalsErrorLoading": "Erro ao carregar objetivos",
   "@goalsNoGoals": { "description": "Empty state for goals list" },
 
   "investmentsTitle": "Investimentos",
@@ -428,10 +435,20 @@
   "investmentTypeOther": "Outro",
   "@investmentTypeOther": { "description": "Other investment type" },
 
+  "statsChartLabel": "Gráfico de estatísticas mensais",
+  "@statsChartLabel": { "description": "Semantics label for stats chart" },
+  "reportsChartLabel": "Gráfico de relatórios",
+  "@reportsChartLabel": { "description": "Semantics label for reports chart" },
+  "progressBarLabel": "Barra de progresso",
+  "@progressBarLabel": { "description": "Semantics label for progress bar" },
+  "progressBarSteppedLabel": "Barra de progresso em etapas",
+  "@progressBarSteppedLabel": { "description": "Semantics label for stepped progress bar" },
+
   "billsTitle": "Contas",
   "@billsTitle": { "description": "Bills screen title" },
 
   "billsNoBills": "Nenhuma conta cadastrada",
+  "billsErrorLoading": "Erro ao carregar contas",
   "@billsNoBills": { "description": "Empty state for bills list" },
 
   "billName": "Nome da Conta",
@@ -479,5 +496,38 @@
   "healthScoreVariance": "Variância de Gastos",
   "@healthScoreVariance": { "description": "Expense variance score factor" },
 
-  "healthScoreTooltip": "Sua pontuação baseada nos últimos 30 dias"
+  "healthScoreTooltip": "Sua pontuação baseada nos últimos 30 dias",
+  "onboardingWelcomeTitle": "Bem-vindo ao AFC",
+  "onboardingWelcomeDesc": "Seu controle financeiro pessoal, simples e poderoso.",
+  "onboardingTrackTitle": "Controle seus Gastos",
+  "onboardingTrackDesc": "Acompanhe cada centavo e defina limites mensais para economizar mais.",
+  "onboardingInvestTitle": "Invista no Futuro",
+  "onboardingInvestDesc": "Monitore seus investimentos e alcance seus objetivos de economia.",
+  "onboardingHealthTitle": "Saúde Financeira",
+  "onboardingHealthDesc": "Veja sua pontuação de saúde financeira e receba insights reais.",
+  "onboardingSkip": "Pular",
+  "onboardingNext": "Próximo",
+  "onboardingStart": "Começar",
+
+  "settingsTitle": "Configurações",
+  "settingsProfile": "Perfil",
+  "settingsProfileName": "Nome completo",
+  "settingsProfileEmail": "E-mail",
+  "settingsAppearance": "Aparência",
+  "settingsAppearanceTheme": "Tema do aplicativo",
+  "settingsAppearanceSystem": "Padrão do sistema",
+  "settingsAppearanceLight": "Claro",
+  "settingsAppearanceDark": "Escuro",
+  "settingsNotifications": "Notificações",
+  "settingsNotificationsEnabled": "Notificações push",
+  "settingsNotificationsBiometric": "Bloqueio biométrico",
+  "settingsData": "Dados",
+  "settingsDataExport": "Exportar todos os dados",
+  "settingsDataClear": "Limpar cache local",
+  "settingsAbout": "Sobre",
+  "settingsAboutVersion": "Versão",
+  "settingsAboutTerms": "Termos de uso",
+  "settingsAboutPrivacy": "Política de privacidade",
+  "settingsLogout": "Sair da conta",
+  "settingsLogoutConfirm": "Deseja realmente sair da conta?"
 }

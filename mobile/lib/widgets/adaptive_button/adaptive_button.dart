@@ -156,7 +156,7 @@ class AdaptiveButton extends StatelessWidget {
         return Semantics(
           button: true,
           enabled: !isEffectivelyDisabled,
-          label: semanticLabel ?? 'Button: $text',
+          label: semanticLabel ?? text,
           child: Focus(
             focusNode: focusNode,
             onFocusChange: (hasFocus) {

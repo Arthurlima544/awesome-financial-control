@@ -5,7 +5,7 @@ import 'package:afc/repositories/dev_tools_repository.dart';
 
 // State
 
-enum DevToolsAction { seed, reset }
+enum DevToolsAction { seed, reset, resetOnboarding }
 
 abstract class DevToolsState extends Equatable {
   const DevToolsState();
@@ -63,5 +63,9 @@ class DevToolsCubit extends Cubit<DevToolsState> {
     } catch (e) {
       emit(DevToolsError(e.toString()));
     }
+  }
+
+  void resetOnboarding() {
+    emit(const DevToolsSuccess(DevToolsAction.resetOnboarding));
   }
 }

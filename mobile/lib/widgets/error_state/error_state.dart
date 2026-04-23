@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../adaptive_button/adaptive_button.dart';
 import '../adaptive_button/adaptive_button_cubit.dart';
-import 'error_view_cubit.dart';
+import 'error_state_cubit.dart';
 
-class ErrorView extends StatelessWidget {
+class ErrorState extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
   final String? retryText;
@@ -15,7 +15,7 @@ class ErrorView extends StatelessWidget {
   final EdgeInsetsGeometry? customPadding;
   final FocusNode? retryFocusNode;
 
-  const ErrorView({
+  const ErrorState({
     super.key,
     required this.message,
     this.onRetry,
@@ -30,8 +30,8 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ErrorViewCubit(),
-      child: _ErrorViewContent(
+      create: (_) => ErrorStateCubit(),
+      child: _ErrorStateContent(
         message: message,
         onRetry: onRetry,
         retryText: retryText,
@@ -45,7 +45,7 @@ class ErrorView extends StatelessWidget {
   }
 }
 
-class _ErrorViewContent extends StatelessWidget {
+class _ErrorStateContent extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
   final String? retryText;
@@ -55,7 +55,7 @@ class _ErrorViewContent extends StatelessWidget {
   final EdgeInsetsGeometry? customPadding;
   final FocusNode? retryFocusNode;
 
-  const _ErrorViewContent({
+  const _ErrorStateContent({
     required this.message,
     this.onRetry,
     this.retryText,
@@ -68,7 +68,7 @@ class _ErrorViewContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ErrorViewCubit, ErrorViewState>(
+    return BlocBuilder<ErrorStateCubit, ErrorStateViewState>(
       builder: (context, state) {
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -116,7 +116,7 @@ class _ErrorViewContent extends StatelessWidget {
                             onPressed: state.isRetrying
                                 ? null
                                 : () {
-                                    context.read<ErrorViewCubit>().setRetrying(
+                                    context.read<ErrorStateCubit>().setRetrying(
                                       true,
                                     );
                                     onRetry!();

@@ -1,6 +1,8 @@
 import 'package:afc/widgets/custom_progress_bar/custom_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 void main() {
   Widget buildTestWidget({
@@ -9,6 +11,14 @@ void main() {
     ValueChanged<double>? onChanged,
   }) {
     return MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('pt'),
       home: Scaffold(
         body: Center(
           child: Padding(

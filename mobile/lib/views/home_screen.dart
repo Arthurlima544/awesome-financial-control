@@ -11,9 +11,9 @@ import 'package:afc/widgets/dev_tools_sheet/dev_tools_sheet.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
 import 'package:afc/views/month_limit_view.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
-import 'package:afc/widgets/error_view/error_view.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/card_skeleton.dart';
-import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
+import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
@@ -22,6 +22,7 @@ import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/view_models/health_score/health_score_bloc.dart';
 import 'package:afc/widgets/health_score_card/health_score_card.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -70,6 +71,11 @@ class _HomeViewState extends State<_HomeView> {
                 ? const Icon(Icons.light_mode)
                 : const Icon(Icons.dark_mode),
             onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.push('/settings'),
+            tooltip: l10n.settingsTitle,
           ),
           if (AppConfig.isLocal)
             IconButton(
@@ -135,12 +141,10 @@ class _HomeViewState extends State<_HomeView> {
                     SizedBox(height: AppSpacing.lg),
                     SkeletonView(width: 150, height: 24),
                     SizedBox(height: 12),
-                    ListItemSkeleton(),
-                    ListItemSkeleton(),
-                    ListItemSkeleton(),
+                    SkeletonList(itemCount: 3, padding: EdgeInsets.zero),
                   ],
                 ),
-                HomeError() => ErrorView(
+                HomeError() => ErrorState(
                   key: const ValueKey('homeError'),
                   message: l10n.homeErrorLoading,
                   onRetry: () =>
@@ -160,11 +164,16 @@ class _HomeViewState extends State<_HomeView> {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 12),
-                      _SummaryCard(
-                        key: const ValueKey('summaryCard'),
-                        totalIncome: totalIncomeFormatted,
-                        totalExpenses: totalExpensesFormatted,
-                        savingsRate: savingsRate,
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        child: _SummaryCard(
+                          key: const ValueKey('summaryCard'),
+                          totalIncome: totalIncomeFormatted,
+                          totalExpenses: totalExpensesFormatted,
+                          savingsRate: savingsRate,
+                        ),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       BlocBuilder<HealthScoreBloc, HealthScoreState>(
@@ -174,15 +183,27 @@ class _HomeViewState extends State<_HomeView> {
                             return const CardSkeleton();
                           }
                           if (healthState.healthScore != null) {
-                            return HealthScoreCard(
-                              score: healthState.healthScore!,
+                            return FadeInAnimation(
+                              trigger: StatefulNavigationShell.of(
+                                context,
+                              ).currentIndex,
+                              delay: const Duration(milliseconds: 100),
+                              child: HealthScoreCard(
+                                score: healthState.healthScore!,
+                              ),
                             );
                           }
                           return const SizedBox.shrink();
                         },
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      const _NetWorthCard(),
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: const Duration(milliseconds: 200),
+                        child: const _NetWorthCard(),
+                      ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
                         l10n.homeRecentTransactions,
@@ -196,18 +217,25 @@ class _HomeViewState extends State<_HomeView> {
                           title: l10n.homeNoTransactions,
                         )
                       else
-                        ...transactions.map(
-                          (t) => TransactionListItem(
-                            key: ValueKey(t.id),
-                            description: t.description,
-                            amount: t.amount,
-                            type: t.type == TransactionType.income
-                                ? TransactionItemType.income
-                                : TransactionItemType.expense,
-                            category: t.category,
-                            occurredAt: t.occurredAt,
-                          ),
-                        ),
+                        ...List.generate(transactions.length, (index) {
+                          final t = transactions[index];
+                          return FadeInAnimation(
+                            trigger: StatefulNavigationShell.of(
+                              context,
+                            ).currentIndex,
+                            delay: Duration(milliseconds: 300 + (index * 50)),
+                            child: TransactionListItem(
+                              key: ValueKey(t.id),
+                              description: t.description,
+                              amount: t.amount,
+                              type: t.type == TransactionType.income
+                                  ? TransactionItemType.income
+                                  : TransactionItemType.expense,
+                              category: t.category,
+                              occurredAt: t.occurredAt,
+                            ),
+                          );
+                        }),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
                         'Limites',
@@ -224,7 +252,7 @@ class _HomeViewState extends State<_HomeView> {
                                 CardSkeleton(),
                               ],
                             ),
-                            LimitError() => ErrorView(
+                            LimitError() => ErrorState(
                               message: l10n.limitErrorLoading,
                               onRetry: () => context.read<LimitBloc>().add(
                                 const LimitProgressLoaded(),
@@ -293,12 +321,15 @@ class _SummaryCard extends StatelessWidget {
           children: [
             Column(
               children: [
-                Text(
-                  '$savingsRate%',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '$savingsRate%',
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
                 Text(
@@ -309,40 +340,50 @@ class _SummaryCard extends StatelessWidget {
               ],
             ),
             Container(height: 40, width: 1, color: Colors.grey.shade300),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  totalIncome,
-                  style: TextStyle(
-                    color: AppColors.success,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      totalIncome,
+                      style: TextStyle(
+                        color: AppColors.success,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                ),
-                Text(
-                  'Receita do mês',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-              ],
+                  Text(
+                    'Receita do mês',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
             Container(height: 40, width: 1, color: Colors.grey.shade300),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  totalExpenses,
-                  style: TextStyle(
-                    color: AppColors.error,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      totalExpenses,
+                      style: TextStyle(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                ),
-                Text(
-                  'Gastos do mês',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-              ],
+                  Text(
+                    'Gastos do mês',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

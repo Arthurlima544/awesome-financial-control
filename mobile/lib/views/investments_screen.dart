@@ -9,6 +9,8 @@ import 'package:afc/widgets/investment_form_sheet/investment_form_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class InvestmentsScreen extends StatelessWidget {
@@ -54,14 +56,20 @@ class InvestmentsScreen extends StatelessWidget {
                 builder: (context, state) {
                   return Column(
                     children: [
-                      _PortfolioSummaryCard(
-                        totalInvested: state.totalInvested,
-                        totalCurrentValue: state.totalCurrentValue,
-                        totalGainLoss: state.totalGainLoss,
-                        totalGainLossPercentage: state.totalGainLossPercentage,
-                        currencyFormat: currencyFormat,
-                        percentFormat: percentFormat,
-                        l10n: l10n,
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        child: _PortfolioSummaryCard(
+                          totalInvested: state.totalInvested,
+                          totalCurrentValue: state.totalCurrentValue,
+                          totalGainLoss: state.totalGainLoss,
+                          totalGainLossPercentage:
+                              state.totalGainLossPercentage,
+                          currencyFormat: currencyFormat,
+                          percentFormat: percentFormat,
+                          l10n: l10n,
+                        ),
                       ),
                       const SizedBox(height: AppSpacing.lg),
                     ],
@@ -97,11 +105,17 @@ class InvestmentsScreen extends StatelessWidget {
                     final investment = state.investments[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                      child: _InvestmentCard(
-                        investment: investment,
-                        currencyFormat: currencyFormat,
-                        percentFormat: percentFormat,
-                        onTap: () => _showInvestmentForm(context, investment),
+                      child: FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: Duration(milliseconds: 100 + (index * 50)),
+                        child: _InvestmentCard(
+                          investment: investment,
+                          currencyFormat: currencyFormat,
+                          percentFormat: percentFormat,
+                          onTap: () => _showInvestmentForm(context, investment),
+                        ),
                       ),
                     );
                   }, childCount: state.investments.length),

@@ -8,6 +8,8 @@ import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/views/login_screen.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/views/splash_screen.dart';
+import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
+import 'package:afc/views/onboarding_screen.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/views/category_edit_screen.dart';
 import 'package:afc/views/category_screen.dart';
@@ -29,6 +31,7 @@ import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/views/investments_screen.dart';
 import 'package:afc/view_models/bills/bill_bloc.dart';
 import 'package:afc/views/bills_screen.dart';
+import 'package:afc/views/settings_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -48,7 +51,7 @@ class _RouterRefreshStream extends ChangeNotifier {
   }
 }
 
-GoRouter createRouter(AuthBloc authBloc) {
+GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
   final refreshBloc = sl<AppRefreshBloc>();
   return GoRouter(
     navigatorKey: sl<NavigationService>().navigatorKey,
@@ -56,22 +59,44 @@ GoRouter createRouter(AuthBloc authBloc) {
     refreshListenable: Listenable.merge([
       _RouterRefreshStream(authBloc.stream),
       _RouterRefreshStream(refreshBloc.stream),
+      _RouterRefreshStream(onboardingCubit.stream),
     ]),
     redirect: (context, state) {
       final authState = authBloc.state;
+      final onboardingState = onboardingCubit.state;
       final location = state.matchedLocation;
 
-      if (authState is AuthInitial) {
+      // 1. Loading / Initializing
+      if (authState is AuthInitial || onboardingState.isLoading) {
         return location == '/' ? null : '/';
       }
+
+      // 2. Onboarding Guard
+      final isOnboarding = location == '/onboarding';
+      if (!onboardingState.isCompleted) {
+        return isOnboarding ? null : '/onboarding';
+      }
+
+      // 3. Post-Onboarding: If still on onboarding route, move to next destination
+      if (isOnboarding) {
+        return authState is AuthSignedIn ? '/home' : '/login';
+      }
+
+      // 4. Authentication Guard
       if (authState is AuthSignedOut) {
         return location == '/login' ? null : '/login';
       }
-      if (location == '/' || location == '/login') return '/home';
+
+      if (authState is AuthSignedIn &&
+          (location == '/' || location == '/login')) {
+        return '/home';
+      }
+
       return null;
     },
     routes: [
       GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(
         path: '/categories',
@@ -118,6 +143,7 @@ GoRouter createRouter(AuthBloc authBloc) {
         ),
       ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
+      GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
           create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),

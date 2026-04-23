@@ -205,10 +205,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get devResetButton => 'Limpar todos os dados';
 
   @override
+  String get devResetOnboardingButton => 'Resetar Onboarding';
+
+  @override
   String get devSeedSuccess => 'Dados populados com sucesso';
 
   @override
   String get devResetSuccess => 'Dados removidos com sucesso';
+
+  @override
+  String get devResetOnboardingSuccess => 'Onboarding resetado com sucesso';
 
   @override
   String homeLimitExceeded(String limitNames) {
@@ -271,6 +277,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get recurringEmpty => 'Nenhuma regra recorrente cadastrada';
+
+  @override
+  String get recurringErrorLoading => 'Erro ao carregar regras recorrentes';
 
   @override
   String get recurringFrequencyDaily => 'Diário';
@@ -380,6 +389,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get goalsNoGoals => 'Nenhum objetivo cadastrado';
 
   @override
+  String get goalsErrorLoading => 'Erro ao carregar objetivos';
+
+  @override
   String get investmentsTitle => 'Investimentos';
 
   @override
@@ -425,10 +437,25 @@ class AppLocalizationsPt extends AppLocalizations {
   String get investmentTypeOther => 'Outro';
 
   @override
+  String get statsChartLabel => 'Gráfico de estatísticas mensais';
+
+  @override
+  String get reportsChartLabel => 'Gráfico de relatórios';
+
+  @override
+  String get progressBarLabel => 'Barra de progresso';
+
+  @override
+  String get progressBarSteppedLabel => 'Barra de progresso em etapas';
+
+  @override
   String get billsTitle => 'Contas';
 
   @override
   String get billsNoBills => 'Nenhuma conta cadastrada';
+
+  @override
+  String get billsErrorLoading => 'Erro ao carregar contas';
 
   @override
   String get billName => 'Nome da Conta';
@@ -477,4 +504,104 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get healthScoreTooltip => 'Sua pontuação baseada nos últimos 30 dias';
+
+  @override
+  String get onboardingWelcomeTitle => 'Bem-vindo ao AFC';
+
+  @override
+  String get onboardingWelcomeDesc =>
+      'Seu controle financeiro pessoal, simples e poderoso.';
+
+  @override
+  String get onboardingTrackTitle => 'Controle seus Gastos';
+
+  @override
+  String get onboardingTrackDesc =>
+      'Acompanhe cada centavo e defina limites mensais para economizar mais.';
+
+  @override
+  String get onboardingInvestTitle => 'Invista no Futuro';
+
+  @override
+  String get onboardingInvestDesc =>
+      'Monitore seus investimentos e alcance seus objetivos de economia.';
+
+  @override
+  String get onboardingHealthTitle => 'Saúde Financeira';
+
+  @override
+  String get onboardingHealthDesc =>
+      'Veja sua pontuação de saúde financeira e receba insights reais.';
+
+  @override
+  String get onboardingSkip => 'Pular';
+
+  @override
+  String get onboardingNext => 'Próximo';
+
+  @override
+  String get onboardingStart => 'Começar';
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get settingsProfile => 'Perfil';
+
+  @override
+  String get settingsProfileName => 'Nome completo';
+
+  @override
+  String get settingsProfileEmail => 'E-mail';
+
+  @override
+  String get settingsAppearance => 'Aparência';
+
+  @override
+  String get settingsAppearanceTheme => 'Tema do aplicativo';
+
+  @override
+  String get settingsAppearanceSystem => 'Padrão do sistema';
+
+  @override
+  String get settingsAppearanceLight => 'Claro';
+
+  @override
+  String get settingsAppearanceDark => 'Escuro';
+
+  @override
+  String get settingsNotifications => 'Notificações';
+
+  @override
+  String get settingsNotificationsEnabled => 'Notificações push';
+
+  @override
+  String get settingsNotificationsBiometric => 'Bloqueio biométrico';
+
+  @override
+  String get settingsData => 'Dados';
+
+  @override
+  String get settingsDataExport => 'Exportar todos os dados';
+
+  @override
+  String get settingsDataClear => 'Limpar cache local';
+
+  @override
+  String get settingsAbout => 'Sobre';
+
+  @override
+  String get settingsAboutVersion => 'Versão';
+
+  @override
+  String get settingsAboutTerms => 'Termos de uso';
+
+  @override
+  String get settingsAboutPrivacy => 'Política de privacidade';
+
+  @override
+  String get settingsLogout => 'Sair da conta';
+
+  @override
+  String get settingsLogoutConfirm => 'Deseja realmente sair da conta?';
 }

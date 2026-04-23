@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/report/report_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
@@ -56,10 +58,13 @@ class ReportView extends StatelessWidget {
                 _MonthPicker(selectedMonth: state.selectedMonth),
                 const SizedBox(height: 24),
                 if (state.report != null) ...[
-                  _SummaryRow(
-                    income: state.report!.totalIncome,
-                    expenses: state.report!.totalExpenses,
-                    savingsRate: state.report!.savingsRate,
+                  FadeInAnimation(
+                    trigger: StatefulNavigationShell.of(context).currentIndex,
+                    child: _SummaryRow(
+                      income: state.report!.totalIncome,
+                      expenses: state.report!.totalExpenses,
+                      savingsRate: state.report!.savingsRate,
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Text(
@@ -70,7 +75,13 @@ class ReportView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _CategoryPieChart(categories: state.report!.categories),
+                  FadeInAnimation(
+                    trigger: StatefulNavigationShell.of(context).currentIndex,
+                    delay: const Duration(milliseconds: 200),
+                    child: _CategoryPieChart(
+                      categories: state.report!.categories,
+                    ),
+                  ),
                   const SizedBox(height: 32),
                   Text(
                     l10n.reportMoMComparison,
@@ -80,7 +91,13 @@ class ReportView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _ComparisonBarChart(comparison: state.report!.comparison),
+                  FadeInAnimation(
+                    trigger: StatefulNavigationShell.of(context).currentIndex,
+                    delay: const Duration(milliseconds: 400),
+                    child: _ComparisonBarChart(
+                      comparison: state.report!.comparison,
+                    ),
+                  ),
                   const SizedBox(height: 32),
                 ] else
                   Center(child: Text(l10n.reportNoData)),
@@ -215,6 +232,7 @@ class _CategoryPieChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (categories.isEmpty) {
       return const SizedBox(
         height: 200,
@@ -226,34 +244,37 @@ class _CategoryPieChart extends StatelessWidget {
       children: [
         AspectRatio(
           aspectRatio: 1.3,
-          child: PieChart(
-            PieChartData(
-              sectionsSpace: 2,
-              centerSpaceRadius: 40,
-              sections: categories.map((c) {
-                final index = categories.indexOf(c);
-                final isSmall = c.percentage < 5;
-                return PieChartSectionData(
-                  color: Colors.primaries[index % Colors.primaries.length],
-                  value: c.amount,
-                  title: isSmall ? '' : '${c.percentage.toStringAsFixed(0)}%',
-                  radius: 60,
-                  titleStyle: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [Shadow(color: Colors.black26, blurRadius: 2)],
-                  ),
-                  badgeWidget: isSmall
-                      ? null
-                      : _Badge(
-                          c.category ?? 'Outros',
-                          color:
-                              Colors.primaries[index % Colors.primaries.length],
-                        ),
-                  badgePositionPercentageOffset: 1.5,
-                );
-              }).toList(),
+          child: Semantics(
+            label: l10n.reportsChartLabel,
+            child: PieChart(
+              PieChartData(
+                sectionsSpace: 2,
+                centerSpaceRadius: 40,
+                sections: categories.map((c) {
+                  final index = categories.indexOf(c);
+                  final isSmall = c.percentage < 5;
+                  return PieChartSectionData(
+                    color: Colors.primaries[index % Colors.primaries.length],
+                    value: c.amount,
+                    title: isSmall ? '' : '${c.percentage.toStringAsFixed(0)}%',
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [Shadow(color: Colors.black26, blurRadius: 2)],
+                    ),
+                    badgeWidget: isSmall
+                        ? null
+                        : _Badge(
+                            c.category ?? 'Outros',
+                            color: Colors
+                                .primaries[index % Colors.primaries.length],
+                          ),
+                    badgePositionPercentageOffset: 1.5,
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
@@ -324,6 +345,7 @@ class _ComparisonBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (comparison.isEmpty) {
       return const SizedBox(
         height: 200,
@@ -338,98 +360,101 @@ class _ComparisonBarChart extends StatelessWidget {
 
     return AspectRatio(
       aspectRatio: 1.5,
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY:
-              (displayList.fold<double>(
-                0,
-                (max, c) => c.currentAmount > max ? c.currentAmount : max,
-              ) *
-              1.2),
-          barGroups: displayList.map((c) {
-            final index = displayList.indexOf(c);
-            return BarChartGroupData(
-              x: index,
-              barRods: [
-                BarChartRodData(
-                  toY: c.previousAmount,
-                  color: Colors.grey[300],
-                  width: 12,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(4),
+      child: Semantics(
+        label: l10n.reportsChartLabel,
+        child: BarChart(
+          BarChartData(
+            alignment: BarChartAlignment.spaceAround,
+            maxY:
+                (displayList.fold<double>(
+                  0,
+                  (max, c) => c.currentAmount > max ? c.currentAmount : max,
+                ) *
+                1.2),
+            barGroups: displayList.map((c) {
+              final index = displayList.indexOf(c);
+              return BarChartGroupData(
+                x: index,
+                barRods: [
+                  BarChartRodData(
+                    toY: c.previousAmount,
+                    color: Colors.grey[300],
+                    width: 12,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(4),
+                    ),
                   ),
-                ),
-                BarChartRodData(
-                  toY: c.currentAmount,
-                  color: Colors.blue,
-                  width: 12,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(4),
+                  BarChartRodData(
+                    toY: c.currentAmount,
+                    color: Colors.blue,
+                    width: 12,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(4),
+                    ),
                   ),
-                ),
-              ],
-            );
-          }).toList(),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 45,
-                getTitlesWidget: (value, meta) {
-                  if (value.toInt() >= 0 &&
-                      value.toInt() < displayList.length) {
-                    return SideTitleWidget(
-                      meta: meta,
-                      space: 10,
-                      child: Transform.rotate(
-                        angle: -0.5,
-                        child: Text(
-                          displayList[value.toInt()].category ?? 'Outros',
-                          style: const TextStyle(fontSize: 10),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                ],
+              );
+            }).toList(),
+            titlesData: FlTitlesData(
+              show: true,
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 45,
+                  getTitlesWidget: (value, meta) {
+                    if (value.toInt() >= 0 &&
+                        value.toInt() < displayList.length) {
+                      return SideTitleWidget(
+                        meta: meta,
+                        space: 10,
+                        child: Transform.rotate(
+                          angle: -0.5,
+                          child: Text(
+                            displayList[value.toInt()].category ?? 'Outros',
+                            style: const TextStyle(fontSize: 10),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      value.toInt().toString(),
+                      style: const TextStyle(fontSize: 10),
                     );
-                  }
-                  return const SizedBox();
-                },
+                  },
+                ),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
               ),
             ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 40,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    value.toInt().toString(),
-                    style: const TextStyle(fontSize: 10),
+            gridData: const FlGridData(show: false),
+            borderData: FlBorderData(show: false),
+            barTouchData: BarTouchData(
+              enabled: true,
+              touchTooltipData: BarTouchTooltipData(
+                getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
+                tooltipBorderRadius: BorderRadius.circular(8),
+                getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                  return BarTooltipItem(
+                    rod.toY.toStringAsFixed(2),
+                    const TextStyle(color: Colors.white, fontSize: 10),
                   );
                 },
               ),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-          ),
-          gridData: const FlGridData(show: false),
-          borderData: FlBorderData(show: false),
-          barTouchData: BarTouchData(
-            enabled: true,
-            touchTooltipData: BarTouchTooltipData(
-              getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
-              tooltipBorderRadius: BorderRadius.circular(8),
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  rod.toY.toStringAsFixed(2),
-                  const TextStyle(color: Colors.white, fontSize: 10),
-                );
-              },
             ),
           ),
         ),

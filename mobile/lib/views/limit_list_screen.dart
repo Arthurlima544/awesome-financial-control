@@ -9,8 +9,9 @@ import 'package:afc/widgets/adaptive_popup/adaptive_popup_cubit.dart';
 import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/dismissible_delete_background/dismissible_delete_background.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
-import 'package:afc/widgets/error_view/error_view.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/services/navigation_service.dart';
+import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/view_models/limit_list/limit_list_bloc.dart';
 import 'package:afc/models/limit_model.dart';
 
@@ -37,11 +38,11 @@ class _LimitListView extends StatelessWidget {
       body: BlocBuilder<LimitListBloc, LimitListState>(
         builder: (context, state) {
           if (state is LimitListLoading || state is LimitListInitial) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonList(itemCount: 6);
           }
           if (state is LimitListError) {
             return Center(
-              child: ErrorView(
+              child: ErrorState(
                 message: l10n.limitListError,
                 onRetry: () => context.read<LimitListBloc>().add(
                   const LimitListFetchRequested(),

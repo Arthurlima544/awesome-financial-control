@@ -32,6 +32,8 @@ import 'package:afc/view_models/goals/goal_bloc.dart';
 import 'package:afc/repositories/investment_repository.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
+import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -75,5 +77,7 @@ Future<void> init() async {
   sl.registerFactory(() => InvestmentBloc(repository: sl()));
   sl.registerFactory(() => BillBloc(repository: sl()));
   sl.registerFactory(() => HealthScoreBloc(repository: sl()));
+  sl.registerFactory(() => SettingsBloc());
   sl.registerLazySingleton(() => ThemeCubit());
+  sl.registerFactory(() => OnboardingCubit());
 }

@@ -472,6 +472,12 @@ abstract class AppLocalizations {
   /// **'Limpar todos os dados'**
   String get devResetButton;
 
+  /// Dev reset onboarding button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Resetar Onboarding'**
+  String get devResetOnboardingButton;
+
   /// Dev seed success snackbar message
   ///
   /// In pt, this message translates to:
@@ -483,6 +489,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Dados removidos com sucesso'**
   String get devResetSuccess;
+
+  /// No description provided for @devResetOnboardingSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Onboarding resetado com sucesso'**
+  String get devResetOnboardingSuccess;
 
   /// Message shown when limits are exceeded on the home dashboard
   ///
@@ -603,6 +615,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nenhuma regra recorrente cadastrada'**
   String get recurringEmpty;
+
+  /// No description provided for @recurringErrorLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar regras recorrentes'**
+  String get recurringErrorLoading;
 
   /// Daily frequency label
   ///
@@ -808,6 +826,12 @@ abstract class AppLocalizations {
   /// **'Nenhum objetivo cadastrado'**
   String get goalsNoGoals;
 
+  /// No description provided for @goalsErrorLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar objetivos'**
+  String get goalsErrorLoading;
+
   /// Investments screen title
   ///
   /// In pt, this message translates to:
@@ -898,6 +922,30 @@ abstract class AppLocalizations {
   /// **'Outro'**
   String get investmentTypeOther;
 
+  /// Semantics label for stats chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Gráfico de estatísticas mensais'**
+  String get statsChartLabel;
+
+  /// Semantics label for reports chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Gráfico de relatórios'**
+  String get reportsChartLabel;
+
+  /// Semantics label for progress bar
+  ///
+  /// In pt, this message translates to:
+  /// **'Barra de progresso'**
+  String get progressBarLabel;
+
+  /// Semantics label for stepped progress bar
+  ///
+  /// In pt, this message translates to:
+  /// **'Barra de progresso em etapas'**
+  String get progressBarSteppedLabel;
+
   /// Bills screen title
   ///
   /// In pt, this message translates to:
@@ -909,6 +957,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nenhuma conta cadastrada'**
   String get billsNoBills;
+
+  /// No description provided for @billsErrorLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar contas'**
+  String get billsErrorLoading;
 
   /// Label for bill name field
   ///
@@ -1005,6 +1059,198 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Sua pontuação baseada nos últimos 30 dias'**
   String get healthScoreTooltip;
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-vindo ao AFC'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu controle financeiro pessoal, simples e poderoso.'**
+  String get onboardingWelcomeDesc;
+
+  /// No description provided for @onboardingTrackTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle seus Gastos'**
+  String get onboardingTrackTitle;
+
+  /// No description provided for @onboardingTrackDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acompanhe cada centavo e defina limites mensais para economizar mais.'**
+  String get onboardingTrackDesc;
+
+  /// No description provided for @onboardingInvestTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Invista no Futuro'**
+  String get onboardingInvestTitle;
+
+  /// No description provided for @onboardingInvestDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Monitore seus investimentos e alcance seus objetivos de economia.'**
+  String get onboardingInvestDesc;
+
+  /// No description provided for @onboardingHealthTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saúde Financeira'**
+  String get onboardingHealthTitle;
+
+  /// No description provided for @onboardingHealthDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Veja sua pontuação de saúde financeira e receba insights reais.'**
+  String get onboardingHealthDesc;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pular'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Começar'**
+  String get onboardingStart;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsProfile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Perfil'**
+  String get settingsProfile;
+
+  /// No description provided for @settingsProfileName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome completo'**
+  String get settingsProfileName;
+
+  /// No description provided for @settingsProfileEmail.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get settingsProfileEmail;
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aparência'**
+  String get settingsAppearance;
+
+  /// No description provided for @settingsAppearanceTheme.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tema do aplicativo'**
+  String get settingsAppearanceTheme;
+
+  /// No description provided for @settingsAppearanceSystem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Padrão do sistema'**
+  String get settingsAppearanceSystem;
+
+  /// No description provided for @settingsAppearanceLight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Claro'**
+  String get settingsAppearanceLight;
+
+  /// No description provided for @settingsAppearanceDark.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escuro'**
+  String get settingsAppearanceDark;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notificações'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsNotificationsEnabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notificações push'**
+  String get settingsNotificationsEnabled;
+
+  /// No description provided for @settingsNotificationsBiometric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bloqueio biométrico'**
+  String get settingsNotificationsBiometric;
+
+  /// No description provided for @settingsData.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dados'**
+  String get settingsData;
+
+  /// No description provided for @settingsDataExport.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportar todos os dados'**
+  String get settingsDataExport;
+
+  /// No description provided for @settingsDataClear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar cache local'**
+  String get settingsDataClear;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sobre'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsAboutVersion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Versão'**
+  String get settingsAboutVersion;
+
+  /// No description provided for @settingsAboutTerms.
+  ///
+  /// In pt, this message translates to:
+  /// **'Termos de uso'**
+  String get settingsAboutTerms;
+
+  /// No description provided for @settingsAboutPrivacy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Política de privacidade'**
+  String get settingsAboutPrivacy;
+
+  /// No description provided for @settingsLogout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da conta'**
+  String get settingsLogout;
+
+  /// No description provided for @settingsLogoutConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja realmente sair da conta?'**
+  String get settingsLogoutConfirm;
 }
 
 class _AppLocalizationsDelegate
