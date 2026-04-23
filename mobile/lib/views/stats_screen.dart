@@ -69,7 +69,10 @@ class _StatsView extends StatelessWidget {
                 ),
               );
             }
-            return FadeInAnimation(child: _StatsChart(state: state));
+            return FadeInAnimation(
+              trigger: StatefulNavigationShell.of(context).currentIndex,
+              child: _StatsChart(state: state),
+            );
           }
           return const SizedBox.shrink();
         },
@@ -149,6 +152,7 @@ class _BarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
+      key: ValueKey(StatefulNavigationShell.of(context).currentIndex),
       tween: Tween<double>(begin: 0, end: 1),
       duration: const Duration(milliseconds: 1500),
       curve: Curves.elasticOut,

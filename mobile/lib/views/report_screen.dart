@@ -6,6 +6,7 @@ import 'package:afc/view_models/report/report_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
@@ -58,6 +59,7 @@ class ReportView extends StatelessWidget {
                 const SizedBox(height: 24),
                 if (state.report != null) ...[
                   FadeInAnimation(
+                    trigger: StatefulNavigationShell.of(context).currentIndex,
                     child: _SummaryRow(
                       income: state.report!.totalIncome,
                       expenses: state.report!.totalExpenses,
@@ -74,6 +76,7 @@ class ReportView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   FadeInAnimation(
+                    trigger: StatefulNavigationShell.of(context).currentIndex,
                     delay: const Duration(milliseconds: 200),
                     child: _CategoryPieChart(
                       categories: state.report!.categories,
@@ -89,6 +92,7 @@ class ReportView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   FadeInAnimation(
+                    trigger: StatefulNavigationShell.of(context).currentIndex,
                     delay: const Duration(milliseconds: 400),
                     child: _ComparisonBarChart(
                       comparison: state.report!.comparison,

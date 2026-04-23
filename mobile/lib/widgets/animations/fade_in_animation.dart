@@ -7,12 +7,14 @@ class FadeInAnimation extends StatefulWidget {
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 500),
     this.offset = const Offset(0, 0.2),
+    this.trigger,
   });
 
   final Widget child;
   final Duration delay;
   final Duration duration;
   final Offset offset;
+  final Object? trigger;
 
   @override
   State<FadeInAnimation> createState() => _FadeInAnimationState();
@@ -47,6 +49,23 @@ class _FadeInAnimationState extends State<FadeInAnimation>
           _controller.forward();
         }
       });
+    }
+  }
+
+  @override
+  void didUpdateWidget(FadeInAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.trigger != oldWidget.trigger) {
+      _controller.reset();
+      if (widget.delay == Duration.zero) {
+        _controller.forward();
+      } else {
+        Future.delayed(widget.delay, () {
+          if (mounted) {
+            _controller.forward();
+          }
+        });
+      }
     }
   }
 

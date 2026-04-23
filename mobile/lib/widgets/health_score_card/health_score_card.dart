@@ -5,6 +5,7 @@ import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HealthScoreCard extends StatelessWidget {
   final HealthScoreModel score;
@@ -70,6 +71,7 @@ class HealthScoreCard extends StatelessWidget {
           Row(
             children: [
               TweenAnimationBuilder<double>(
+                key: ValueKey(StatefulNavigationShell.of(context).currentIndex),
                 tween: Tween<double>(begin: 0, end: score.score / 100),
                 duration: const Duration(seconds: 1),
                 curve: Curves.easeOutCubic,
@@ -112,6 +114,9 @@ class HealthScoreCard extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     TweenAnimationBuilder<double>(
+                      key: ValueKey(
+                        StatefulNavigationShell.of(context).currentIndex,
+                      ),
                       tween: Tween<double>(begin: 0, end: 1),
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeInOut,

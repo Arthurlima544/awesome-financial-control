@@ -160,6 +160,9 @@ class _HomeViewState extends State<_HomeView> {
                       ),
                       const SizedBox(height: 12),
                       FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
                         child: _SummaryCard(
                           key: const ValueKey('summaryCard'),
                           totalIncome: totalIncomeFormatted,
@@ -176,6 +179,9 @@ class _HomeViewState extends State<_HomeView> {
                           }
                           if (healthState.healthScore != null) {
                             return FadeInAnimation(
+                              trigger: StatefulNavigationShell.of(
+                                context,
+                              ).currentIndex,
                               delay: const Duration(milliseconds: 100),
                               child: HealthScoreCard(
                                 score: healthState.healthScore!,
@@ -186,9 +192,12 @@ class _HomeViewState extends State<_HomeView> {
                         },
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      const FadeInAnimation(
-                        delay: Duration(milliseconds: 200),
-                        child: _NetWorthCard(),
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: const Duration(milliseconds: 200),
+                        child: const _NetWorthCard(),
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
@@ -206,6 +215,9 @@ class _HomeViewState extends State<_HomeView> {
                         ...List.generate(transactions.length, (index) {
                           final t = transactions[index];
                           return FadeInAnimation(
+                            trigger: StatefulNavigationShell.of(
+                              context,
+                            ).currentIndex,
                             delay: Duration(milliseconds: 300 + (index * 50)),
                             child: TransactionListItem(
                               key: ValueKey(t.id),
