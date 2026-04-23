@@ -7,6 +7,8 @@ import 'package:afc/view_models/bills/bill_bloc.dart';
 import 'package:afc/widgets/circular_button/circular_button.dart';
 import 'package:afc/widgets/circular_button/circular_button_cubit.dart';
 import 'package:afc/widgets/bill_form_sheet/bill_form_sheet.dart';
+import 'package:afc/widgets/empty_state/empty_state.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +48,18 @@ class BillsScreen extends StatelessWidget {
           ),
           BlocBuilder<BillBloc, BillState>(
             builder: (context, state) {
+              if (state.status == BillStatus.failure) {
+                return SliverFillRemaining(
+                  child: Center(
+                    child: ErrorState(
+                      message: state.errorMessage ?? l10n.genericError,
+                      onRetry: () =>
+                          context.read<BillBloc>().add(const LoadBills()),
+                    ),
+                  ),
+                );
+              }
+
               if (state.status == BillStatus.loading && state.bills.isEmpty) {
                 return SliverPadding(
                   padding: const EdgeInsets.all(AppSpacing.lg),
@@ -64,9 +78,9 @@ class BillsScreen extends StatelessWidget {
               if (state.bills.isEmpty) {
                 return SliverFillRemaining(
                   child: Center(
-                    child: Text(
-                      l10n.billsNoBills,
-                      style: AppTextStyles.bodyMedium,
+                    child: EmptyState(
+                      icon: Icons.receipt_long_outlined,
+                      title: l10n.billsNoBills,
                     ),
                   ),
                 );

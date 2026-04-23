@@ -11,7 +11,7 @@ import 'package:afc/widgets/dev_tools_sheet/dev_tools_sheet.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
 import 'package:afc/views/month_limit_view.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
-import 'package:afc/widgets/error_view/error_view.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/card_skeleton.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
@@ -144,7 +144,7 @@ class _HomeViewState extends State<_HomeView> {
                     SkeletonList(itemCount: 3, padding: EdgeInsets.zero),
                   ],
                 ),
-                HomeError() => ErrorView(
+                HomeError() => ErrorState(
                   key: const ValueKey('homeError'),
                   message: l10n.homeErrorLoading,
                   onRetry: () =>
@@ -252,7 +252,7 @@ class _HomeViewState extends State<_HomeView> {
                                 CardSkeleton(),
                               ],
                             ),
-                            LimitError() => ErrorView(
+                            LimitError() => ErrorState(
                               message: l10n.limitErrorLoading,
                               onRetry: () => context.read<LimitBloc>().add(
                                 const LimitProgressLoaded(),

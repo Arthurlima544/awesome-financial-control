@@ -8,7 +8,7 @@ import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
-import 'package:afc/widgets/error_view/error_view.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/view_models/stats/stats_bloc.dart';
 import 'package:afc/models/monthly_stat_model.dart';
@@ -53,7 +53,7 @@ class _StatsView extends StatelessWidget {
           }
           if (state is StatsError) {
             return Center(
-              child: ErrorView(
+              child: ErrorState(
                 message: l10n.statsErrorLoading,
                 onRetry: () =>
                     context.read<StatsBloc>().add(const StatsLoaded()),

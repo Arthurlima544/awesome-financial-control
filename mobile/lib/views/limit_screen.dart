@@ -7,7 +7,7 @@ import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/custom_progress_bar/custom_progress_bar.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
-import 'package:afc/widgets/error_view/error_view.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/card_skeleton.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
 import 'package:afc/models/limit_progress_model.dart';
@@ -40,7 +40,7 @@ class _LimitView extends StatelessWidget {
               itemCount: 4,
               itemBuilder: (context, index) => const CardSkeleton(),
             ),
-            LimitError() => ErrorView(
+            LimitError() => ErrorState(
               key: const ValueKey('limitError'),
               message: l10n.limitErrorLoading,
               onRetry: () =>

@@ -7,7 +7,7 @@ import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
-import 'package:afc/widgets/error_view/error_view.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
@@ -49,7 +49,7 @@ class _GoalsView extends StatelessWidget {
           }
           if (state.status == GoalStatus.failure) {
             return Center(
-              child: ErrorView(
+              child: ErrorState(
                 message: state.errorMessage ?? l10n.genericError,
                 onRetry: () => context.read<GoalBloc>().add(LoadGoals()),
               ),
