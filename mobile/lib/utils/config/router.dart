@@ -76,20 +76,19 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
         return isOnboarding ? null : '/onboarding';
       }
 
-      // 3. Authenticated state
-      if (authState is AuthSignedIn) {
-        // If on guest routes, send to home
-        if (location == '/' || location == '/login' || isOnboarding) {
-          return '/home';
-        }
-        return null;
+      // 3. Post-Onboarding: If still on onboarding route, move to next destination
+      if (isOnboarding) {
+        return authState is AuthSignedIn ? '/home' : '/login';
       }
 
-      // 4. Unauthenticated state
+      // 4. Authentication Guard
       if (authState is AuthSignedOut) {
-        // Allow onboarding even if signed out (though guard above handles it)
-        if (isOnboarding) return null;
         return location == '/login' ? null : '/login';
+      }
+
+      if (authState is AuthSignedIn &&
+          (location == '/' || location == '/login')) {
+        return '/home';
       }
 
       return null;
