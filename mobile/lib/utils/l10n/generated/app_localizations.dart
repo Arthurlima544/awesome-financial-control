@@ -1083,6 +1083,132 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Começar'**
   String get onboardingStart;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsProfile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Perfil'**
+  String get settingsProfile;
+
+  /// No description provided for @settingsProfileName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome completo'**
+  String get settingsProfileName;
+
+  /// No description provided for @settingsProfileEmail.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get settingsProfileEmail;
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aparência'**
+  String get settingsAppearance;
+
+  /// No description provided for @settingsAppearanceTheme.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tema do aplicativo'**
+  String get settingsAppearanceTheme;
+
+  /// No description provided for @settingsAppearanceSystem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Padrão do sistema'**
+  String get settingsAppearanceSystem;
+
+  /// No description provided for @settingsAppearanceLight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Claro'**
+  String get settingsAppearanceLight;
+
+  /// No description provided for @settingsAppearanceDark.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escuro'**
+  String get settingsAppearanceDark;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notificações'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsNotificationsEnabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notificações push'**
+  String get settingsNotificationsEnabled;
+
+  /// No description provided for @settingsNotificationsBiometric.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bloqueio biométrico'**
+  String get settingsNotificationsBiometric;
+
+  /// No description provided for @settingsData.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dados'**
+  String get settingsData;
+
+  /// No description provided for @settingsDataExport.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportar todos os dados'**
+  String get settingsDataExport;
+
+  /// No description provided for @settingsDataClear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar cache local'**
+  String get settingsDataClear;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sobre'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsAboutVersion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Versão'**
+  String get settingsAboutVersion;
+
+  /// No description provided for @settingsAboutTerms.
+  ///
+  /// In pt, this message translates to:
+  /// **'Termos de uso'**
+  String get settingsAboutTerms;
+
+  /// No description provided for @settingsAboutPrivacy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Política de privacidade'**
+  String get settingsAboutPrivacy;
+
+  /// No description provided for @settingsLogout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da conta'**
+  String get settingsLogout;
+
+  /// No description provided for @settingsLogoutConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja realmente sair da conta?'**
+  String get settingsLogoutConfirm;
 }
 
 class _AppLocalizationsDelegate

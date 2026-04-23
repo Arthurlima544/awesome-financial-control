@@ -31,6 +31,7 @@ import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/views/investments_screen.dart';
 import 'package:afc/view_models/bills/bill_bloc.dart';
 import 'package:afc/views/bills_screen.dart';
+import 'package:afc/views/settings_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -142,6 +143,7 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
         ),
       ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
+      GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
           create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),

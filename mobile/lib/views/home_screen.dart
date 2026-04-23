@@ -72,6 +72,11 @@ class _HomeViewState extends State<_HomeView> {
                 : const Icon(Icons.dark_mode),
             onPressed: () => context.read<ThemeCubit>().toggleTheme(),
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.push('/settings'),
+            tooltip: l10n.settingsTitle,
+          ),
           if (AppConfig.isLocal)
             IconButton(
               icon: const Icon(Icons.developer_mode),

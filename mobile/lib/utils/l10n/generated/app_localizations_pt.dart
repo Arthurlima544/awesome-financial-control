@@ -520,4 +520,67 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get onboardingStart => 'Começar';
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get settingsProfile => 'Perfil';
+
+  @override
+  String get settingsProfileName => 'Nome completo';
+
+  @override
+  String get settingsProfileEmail => 'E-mail';
+
+  @override
+  String get settingsAppearance => 'Aparência';
+
+  @override
+  String get settingsAppearanceTheme => 'Tema do aplicativo';
+
+  @override
+  String get settingsAppearanceSystem => 'Padrão do sistema';
+
+  @override
+  String get settingsAppearanceLight => 'Claro';
+
+  @override
+  String get settingsAppearanceDark => 'Escuro';
+
+  @override
+  String get settingsNotifications => 'Notificações';
+
+  @override
+  String get settingsNotificationsEnabled => 'Notificações push';
+
+  @override
+  String get settingsNotificationsBiometric => 'Bloqueio biométrico';
+
+  @override
+  String get settingsData => 'Dados';
+
+  @override
+  String get settingsDataExport => 'Exportar todos os dados';
+
+  @override
+  String get settingsDataClear => 'Limpar cache local';
+
+  @override
+  String get settingsAbout => 'Sobre';
+
+  @override
+  String get settingsAboutVersion => 'Versão';
+
+  @override
+  String get settingsAboutTerms => 'Termos de uso';
+
+  @override
+  String get settingsAboutPrivacy => 'Política de privacidade';
+
+  @override
+  String get settingsLogout => 'Sair da conta';
+
+  @override
+  String get settingsLogoutConfirm => 'Deseja realmente sair da conta?';
 }

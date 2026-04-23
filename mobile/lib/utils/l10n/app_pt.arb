@@ -495,5 +495,27 @@
   "onboardingHealthDesc": "Veja sua pontuação de saúde financeira e receba insights reais.",
   "onboardingSkip": "Pular",
   "onboardingNext": "Próximo",
-  "onboardingStart": "Começar"
+  "onboardingStart": "Começar",
+
+  "settingsTitle": "Configurações",
+  "settingsProfile": "Perfil",
+  "settingsProfileName": "Nome completo",
+  "settingsProfileEmail": "E-mail",
+  "settingsAppearance": "Aparência",
+  "settingsAppearanceTheme": "Tema do aplicativo",
+  "settingsAppearanceSystem": "Padrão do sistema",
+  "settingsAppearanceLight": "Claro",
+  "settingsAppearanceDark": "Escuro",
+  "settingsNotifications": "Notificações",
+  "settingsNotificationsEnabled": "Notificações push",
+  "settingsNotificationsBiometric": "Bloqueio biométrico",
+  "settingsData": "Dados",
+  "settingsDataExport": "Exportar todos os dados",
+  "settingsDataClear": "Limpar cache local",
+  "settingsAbout": "Sobre",
+  "settingsAboutVersion": "Versão",
+  "settingsAboutTerms": "Termos de uso",
+  "settingsAboutPrivacy": "Política de privacidade",
+  "settingsLogout": "Sair da conta",
+  "settingsLogoutConfirm": "Deseja realmente sair da conta?"
 }
