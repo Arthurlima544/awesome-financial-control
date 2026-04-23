@@ -25,6 +25,8 @@ import 'package:afc/views/recurring_list_screen.dart';
 import 'package:afc/views/import_screen.dart';
 import 'package:afc/views/report_screen.dart';
 import 'package:afc/views/goals_screen.dart';
+import 'package:afc/view_models/investments/investment_bloc.dart';
+import 'package:afc/views/investments_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -104,6 +106,13 @@ GoRouter createRouter(AuthBloc authBloc) {
           child: TransactionEditScreen(
             transactionId: state.pathParameters['id']!,
           ),
+        ),
+      ),
+      GoRoute(
+        path: '/investments',
+        builder: (_, _) => BlocProvider(
+          create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
+          child: const InvestmentsScreen(),
         ),
       ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),

@@ -16,6 +16,9 @@
   "confirm": "Confirmar",
   "@confirm": { "description": "Confirm button label" },
 
+  "add": "Adicionar",
+  "@add": { "description": "Add button label" },
+
   "save": "Salvar",
   "@save": { "description": "Save button label" },
 
@@ -378,5 +381,50 @@
   "@goalsTitle": { "description": "Savings goals screen title" },
 
   "goalsNoGoals": "Nenhum objetivo cadastrado",
-  "@goalsNoGoals": { "description": "Empty state for goals list" }
+  "@goalsNoGoals": { "description": "Empty state for goals list" },
+
+  "investmentsTitle": "Investimentos",
+  "@investmentsTitle": { "description": "Investments screen title" },
+
+  "totalNetWorth": "Patrimônio Total",
+  "@totalNetWorth": { "description": "Total net worth label (balance + investments)" },
+
+  "investmentsCurrentValue": "Valor Atual",
+  "@investmentsCurrentValue": { "description": "Current portfolio value label" },
+
+  "investmentsTotalInvested": "Total Investido",
+  "@investmentsTotalInvested": { "description": "Total invested amount label" },
+
+  "investmentsNoInvestments": "Nenhum investimento cadastrado",
+  "@investmentsNoInvestments": { "description": "Empty state for investments list" },
+
+  "investmentName": "Nome do Ativo",
+  "@investmentName": { "description": "Label for investment name field" },
+
+  "investmentTicker": "Símbolo/Ticker",
+  "@investmentTicker": { "description": "Label for investment ticker field" },
+
+  "investmentQuantity": "Quantidade",
+  "@investmentQuantity": { "description": "Label for investment quantity field" },
+
+  "investmentAvgCost": "Custo Médio",
+  "@investmentAvgCost": { "description": "Label for investment average cost field" },
+
+  "investmentCurrentPrice": "Preço Atual",
+  "@investmentCurrentPrice": { "description": "Label for investment current price field" },
+
+  "investmentType": "Tipo de Ativo",
+  "@investmentType": { "description": "Label for investment type selector" },
+
+  "investmentTypeStock": "Ação",
+  "@investmentTypeStock": { "description": "Stock investment type" },
+
+  "investmentTypeFixedIncome": "Renda Fixa",
+  "@investmentTypeFixedIncome": { "description": "Fixed income investment type" },
+
+  "investmentTypeCrypto": "Cripto",
+  "@investmentTypeCrypto": { "description": "Crypto investment type" },
+
+  "investmentTypeOther": "Outro",
+  "@investmentTypeOther": { "description": "Other investment type" }
 }

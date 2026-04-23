@@ -17,14 +17,25 @@ import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/view_models/investments/investment_bloc.dart';
+import 'package:afc/utils/config/app_text_styles.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<LimitBloc>()..add(const LimitProgressLoaded()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => sl<LimitBloc>()..add(const LimitProgressLoaded()),
+        ),
+        BlocProvider(
+          create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
+        ),
+      ],
       child: const _HomeView(),
     );
   }
@@ -99,6 +110,7 @@ class _HomeViewState extends State<_HomeView> {
           onRefresh: () async {
             context.read<HomeBloc>().add(const HomeDashboardLoaded());
             context.read<LimitBloc>().add(const LimitProgressLoaded());
+            context.read<InvestmentBloc>().add(LoadInvestments());
           },
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
@@ -141,6 +153,8 @@ class _HomeViewState extends State<_HomeView> {
                         totalExpenses: totalExpensesFormatted,
                         savingsRate: savingsRate,
                       ),
+                      const SizedBox(height: AppSpacing.md),
+                      const _NetWorthCard(),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
                         l10n.homeRecentTransactions,
@@ -305,6 +319,95 @@ class _SummaryCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _NetWorthCard extends StatelessWidget {
+  const _NetWorthCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
+    return BlocBuilder<InvestmentBloc, InvestmentState>(
+      builder: (context, state) {
+        if (state.status == InvestmentStatus.loading &&
+            state.investments.isEmpty) {
+          return const SkeletonView(width: double.infinity, height: 80);
+        }
+
+        final totalInvestments = state.totalCurrentValue;
+
+        return BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, homeState) {
+            double balance = 0;
+            if (homeState is HomeLoaded) {
+              balance = homeState.summary.balance;
+            }
+
+            final totalNetWorth = balance + totalInvestments;
+
+            return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: BorderSide(color: Colors.grey.shade200),
+              ),
+              elevation: 0,
+              color: AppColors.primary.withValues(alpha: 0.05),
+              child: InkWell(
+                onTap: () => context.push('/investments'),
+                borderRadius: BorderRadius.circular(16),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.account_balance_wallet_outlined,
+                          color: AppColors.primary,
+                          size: AppSpacing.iconMd,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.totalNetWorth,
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.neutral700,
+                              ),
+                            ),
+                            Text(
+                              currencyFormat.format(totalNetWorth),
+                              style: AppTextStyles.titleLarge.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        color: AppColors.neutral500,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

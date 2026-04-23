@@ -124,6 +124,12 @@ abstract class AppLocalizations {
   /// **'Confirmar'**
   String get confirm;
 
+  /// Add button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar'**
+  String get add;
+
   /// Save button label
   ///
   /// In pt, this message translates to:
@@ -801,6 +807,96 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nenhum objetivo cadastrado'**
   String get goalsNoGoals;
+
+  /// Investments screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Investimentos'**
+  String get investmentsTitle;
+
+  /// Total net worth label (balance + investments)
+  ///
+  /// In pt, this message translates to:
+  /// **'Patrimônio Total'**
+  String get totalNetWorth;
+
+  /// Current portfolio value label
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Atual'**
+  String get investmentsCurrentValue;
+
+  /// Total invested amount label
+  ///
+  /// In pt, this message translates to:
+  /// **'Total Investido'**
+  String get investmentsTotalInvested;
+
+  /// Empty state for investments list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum investimento cadastrado'**
+  String get investmentsNoInvestments;
+
+  /// Label for investment name field
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do Ativo'**
+  String get investmentName;
+
+  /// Label for investment ticker field
+  ///
+  /// In pt, this message translates to:
+  /// **'Símbolo/Ticker'**
+  String get investmentTicker;
+
+  /// Label for investment quantity field
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade'**
+  String get investmentQuantity;
+
+  /// Label for investment average cost field
+  ///
+  /// In pt, this message translates to:
+  /// **'Custo Médio'**
+  String get investmentAvgCost;
+
+  /// Label for investment current price field
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço Atual'**
+  String get investmentCurrentPrice;
+
+  /// Label for investment type selector
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de Ativo'**
+  String get investmentType;
+
+  /// Stock investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Ação'**
+  String get investmentTypeStock;
+
+  /// Fixed income investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Renda Fixa'**
+  String get investmentTypeFixedIncome;
+
+  /// Crypto investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Cripto'**
+  String get investmentTypeCrypto;
+
+  /// Other investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Outro'**
+  String get investmentTypeOther;
 }
 
 class _AppLocalizationsDelegate

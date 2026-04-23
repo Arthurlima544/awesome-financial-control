@@ -2,6 +2,8 @@ package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.model.Category;
 import com.awesome.financial.control.afc.model.Goal;
+import com.awesome.financial.control.afc.model.Investment;
+import com.awesome.financial.control.afc.model.InvestmentType;
 import com.awesome.financial.control.afc.model.Limit;
 import com.awesome.financial.control.afc.model.RecurrenceFrequency;
 import com.awesome.financial.control.afc.model.RecurringTransaction;
@@ -9,6 +11,7 @@ import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.CategoryRepository;
 import com.awesome.financial.control.afc.repository.GoalRepository;
+import com.awesome.financial.control.afc.repository.InvestmentRepository;
 import com.awesome.financial.control.afc.repository.LimitRepository;
 import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
@@ -31,6 +34,7 @@ public class DevSeedService {
     private final TransactionRepository transactionRepository;
     private final GoalRepository goalRepository;
     private final RecurringTransactionRepository recurringTransactionRepository;
+    private final InvestmentRepository investmentRepository;
 
     @Transactional
     public void seed() {
@@ -79,10 +83,20 @@ public class DevSeedService {
                 lazer.getName(),
                 RecurrenceFrequency.MONTHLY,
                 today.plus(5, ChronoUnit.DAYS));
+
+        saveInvestment("Vale", "VALE3", InvestmentType.STOCK, "50", "72.50", "75.20");
+        saveInvestment("Petrobras", "PETR4", InvestmentType.STOCK, "100", "34.20", "36.80");
+        saveInvestment("Bitcoin", "BTC", InvestmentType.CRYPTO, "0.05", "380000.00", "420000.00");
+        saveInvestment("Ethereum", "ETH", InvestmentType.CRYPTO, "1.5", "12000.00", "14500.00");
+        saveInvestment("CDB Inter", "", InvestmentType.FIXED_INCOME, "1", "5000.00", "5150.00");
+        saveInvestment(
+                "Tesouro Selic", "", InvestmentType.FIXED_INCOME, "1", "10000.00", "10250.00");
+        saveInvestment("S&P 500 ETF", "IVVB11", InvestmentType.OTHER, "20", "240.00", "275.00");
     }
 
     @Transactional
     public void reset() {
+        investmentRepository.deleteAll();
         recurringTransactionRepository.deleteAll();
         goalRepository.deleteAll();
         transactionRepository.deleteAll();
@@ -142,6 +156,23 @@ public class DevSeedService {
         rt.setFrequency(frequency);
         rt.setNextDueAt(nextDueAt);
         recurringTransactionRepository.save(rt);
+    }
+
+    private void saveInvestment(
+            String name,
+            String ticker,
+            InvestmentType type,
+            String quantity,
+            String avgCost,
+            String currentPrice) {
+        Investment i = new Investment();
+        i.setName(name);
+        i.setTicker(ticker);
+        i.setType(type);
+        i.setQuantity(new BigDecimal(quantity));
+        i.setAvgCost(new BigDecimal(avgCost));
+        i.setCurrentPrice(new BigDecimal(currentPrice));
+        investmentRepository.save(i);
     }
 
     public List<String> seededCategories() {

@@ -25,6 +25,8 @@ import 'package:afc/repositories/report_repository.dart';
 import 'package:afc/view_models/report/report_bloc.dart';
 import 'package:afc/repositories/goal_repository.dart';
 import 'package:afc/view_models/goals/goal_bloc.dart';
+import 'package:afc/repositories/investment_repository.dart';
+import 'package:afc/view_models/investments/investment_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -47,6 +49,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => TemplateRepository());
   sl.registerLazySingleton<ReportRepository>(() => ReportRepositoryImpl());
   sl.registerLazySingleton(() => GoalRepository());
+  sl.registerLazySingleton(() => InvestmentRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -62,4 +65,5 @@ Future<void> init() async {
   );
   sl.registerFactory(() => ReportBloc(repository: sl()));
   sl.registerFactory(() => GoalBloc(repository: sl()));
+  sl.registerFactory(() => InvestmentBloc(repository: sl()));
 }

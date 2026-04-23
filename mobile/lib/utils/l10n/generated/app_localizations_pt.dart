@@ -24,6 +24,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get confirm => 'Confirmar';
 
   @override
+  String get add => 'Adicionar';
+
+  @override
   String get save => 'Salvar';
 
   @override
@@ -375,4 +378,49 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get goalsNoGoals => 'Nenhum objetivo cadastrado';
+
+  @override
+  String get investmentsTitle => 'Investimentos';
+
+  @override
+  String get totalNetWorth => 'Patrimônio Total';
+
+  @override
+  String get investmentsCurrentValue => 'Valor Atual';
+
+  @override
+  String get investmentsTotalInvested => 'Total Investido';
+
+  @override
+  String get investmentsNoInvestments => 'Nenhum investimento cadastrado';
+
+  @override
+  String get investmentName => 'Nome do Ativo';
+
+  @override
+  String get investmentTicker => 'Símbolo/Ticker';
+
+  @override
+  String get investmentQuantity => 'Quantidade';
+
+  @override
+  String get investmentAvgCost => 'Custo Médio';
+
+  @override
+  String get investmentCurrentPrice => 'Preço Atual';
+
+  @override
+  String get investmentType => 'Tipo de Ativo';
+
+  @override
+  String get investmentTypeStock => 'Ação';
+
+  @override
+  String get investmentTypeFixedIncome => 'Renda Fixa';
+
+  @override
+  String get investmentTypeCrypto => 'Cripto';
+
+  @override
+  String get investmentTypeOther => 'Outro';
 }
