@@ -52,7 +52,7 @@ class BillsScreen extends StatelessWidget {
                 return SliverFillRemaining(
                   child: Center(
                     child: ErrorState(
-                      message: state.errorMessage ?? l10n.genericError,
+                      message: l10n.billsErrorLoading,
                       onRetry: () =>
                           context.read<BillBloc>().add(const LoadBills()),
                     ),

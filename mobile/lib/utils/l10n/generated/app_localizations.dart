@@ -616,6 +616,12 @@ abstract class AppLocalizations {
   /// **'Nenhuma regra recorrente cadastrada'**
   String get recurringEmpty;
 
+  /// No description provided for @recurringErrorLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar regras recorrentes'**
+  String get recurringErrorLoading;
+
   /// Daily frequency label
   ///
   /// In pt, this message translates to:
@@ -820,6 +826,12 @@ abstract class AppLocalizations {
   /// **'Nenhum objetivo cadastrado'**
   String get goalsNoGoals;
 
+  /// No description provided for @goalsErrorLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar objetivos'**
+  String get goalsErrorLoading;
+
   /// Investments screen title
   ///
   /// In pt, this message translates to:
@@ -921,6 +933,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nenhuma conta cadastrada'**
   String get billsNoBills;
+
+  /// No description provided for @billsErrorLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao carregar contas'**
+  String get billsErrorLoading;
 
   /// Label for bill name field
   ///

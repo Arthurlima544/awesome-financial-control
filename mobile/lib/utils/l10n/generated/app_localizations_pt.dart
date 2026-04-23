@@ -279,6 +279,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get recurringEmpty => 'Nenhuma regra recorrente cadastrada';
 
   @override
+  String get recurringErrorLoading => 'Erro ao carregar regras recorrentes';
+
+  @override
   String get recurringFrequencyDaily => 'Diário';
 
   @override
@@ -386,6 +389,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get goalsNoGoals => 'Nenhum objetivo cadastrado';
 
   @override
+  String get goalsErrorLoading => 'Erro ao carregar objetivos';
+
+  @override
   String get investmentsTitle => 'Investimentos';
 
   @override
@@ -435,6 +441,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get billsNoBills => 'Nenhuma conta cadastrada';
+
+  @override
+  String get billsErrorLoading => 'Erro ao carregar contas';
 
   @override
   String get billName => 'Nome da Conta';

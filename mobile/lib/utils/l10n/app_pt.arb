@@ -274,6 +274,7 @@
   "@recurringTitle": { "description": "Recurring transactions screen title" },
 
   "recurringEmpty": "Nenhuma regra recorrente cadastrada",
+  "recurringErrorLoading": "Erro ao carregar regras recorrentes",
   "@recurringEmpty": { "description": "Empty state for recurring list" },
 
   "recurringFrequencyDaily": "Diário",
@@ -386,6 +387,7 @@
   "@goalsTitle": { "description": "Savings goals screen title" },
 
   "goalsNoGoals": "Nenhum objetivo cadastrado",
+  "goalsErrorLoading": "Erro ao carregar objetivos",
   "@goalsNoGoals": { "description": "Empty state for goals list" },
 
   "investmentsTitle": "Investimentos",
@@ -437,6 +439,7 @@
   "@billsTitle": { "description": "Bills screen title" },
 
   "billsNoBills": "Nenhuma conta cadastrada",
+  "billsErrorLoading": "Erro ao carregar contas",
   "@billsNoBills": { "description": "Empty state for bills list" },
 
   "billName": "Nome da Conta",

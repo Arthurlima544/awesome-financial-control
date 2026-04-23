@@ -50,7 +50,7 @@ class _GoalsView extends StatelessWidget {
           if (state.status == GoalStatus.failure) {
             return Center(
               child: ErrorState(
-                message: state.errorMessage ?? l10n.genericError,
+                message: l10n.goalsErrorLoading,
                 onRetry: () => context.read<GoalBloc>().add(LoadGoals()),
               ),
             );

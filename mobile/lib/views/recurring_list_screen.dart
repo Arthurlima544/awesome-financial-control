@@ -28,7 +28,7 @@ class RecurringListScreen extends StatelessWidget {
             }
             if (state is RecurringError) {
               return ErrorState(
-                message: state.message,
+                message: l10n.recurringErrorLoading,
                 onRetry: () =>
                     context.read<RecurringBloc>().add(LoadRecurring()),
               );
