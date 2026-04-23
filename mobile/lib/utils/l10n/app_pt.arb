@@ -75,6 +75,11 @@
 
   "homeErrorLoading": "Erro ao carregar dados",
   "@homeErrorLoading": { "description": "Error message when home data fails to load" },
+  "homeSavingsRate": "Taxa de Poupança",
+  "homeViewReport": "Ver relatório completo",
+  "homeInsightExcellent": "Excelente! Você poupou {rate}% da sua renda este mês.",
+  "homeInsightGood": "Bom trabalho! Você poupou {rate}% este mês.",
+  "homeInsightAttention": "Atenção! Você poupou apenas {rate}% este mês.",
 
   "limitTitle": "Limites do mês",
   "@limitTitle": { "description": "Spending limits screen title" },
@@ -109,6 +114,15 @@
 
   "statsErrorLoading": "Erro ao carregar estatísticas",
   "@statsErrorLoading": { "description": "Error message when stats data fails to load" },
+  "statsSummarySavings": "Média de Poupança",
+  "statsSummaryTotal": "Total Acumulado",
+  "statsSummaryBest": "Melhor Mês",
+  "statsInsightPositiveTrend": "Tendência Positiva",
+  "statsInsightNegativeTrend": "Atenção aos Gastos",
+  "statsInsightPositiveTrendMsg": "Sua taxa de economia está subindo nos últimos meses. Continue assim!",
+  "statsInsightNegativeTrendMsg": "Sua taxa de economia caiu recentemente. Revise seus limites de gastos.",
+  "statsInsightBestMonth": "Recorde de Economia",
+  "statsInsightBestMonthMsg": "Em {month}, você poupou o máximo do ano!",
 
   "transactionListTitle": "Transações",
   "@transactionListTitle": { "description": "Transaction list screen title" },
