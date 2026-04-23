@@ -14,6 +14,7 @@ import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/widgets/error_view/error_view.dart';
 import 'package:afc/widgets/skeleton/card_skeleton.dart';
 import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
+import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/widgets/skeleton/skeleton_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
@@ -135,9 +136,7 @@ class _HomeViewState extends State<_HomeView> {
                     SizedBox(height: AppSpacing.lg),
                     SkeletonView(width: 150, height: 24),
                     SizedBox(height: 12),
-                    ListItemSkeleton(),
-                    ListItemSkeleton(),
-                    ListItemSkeleton(),
+                    SkeletonList(itemCount: 3, padding: EdgeInsets.zero),
                   ],
                 ),
                 HomeError() => ErrorView(

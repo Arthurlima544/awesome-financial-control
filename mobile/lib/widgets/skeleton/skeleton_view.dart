@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
+import 'shimmer_loading.dart';
 
 class SkeletonView extends StatelessWidget {
   const SkeletonView({
     super.key,
     required this.width,
-    required this.height,
+    this.height,
     this.borderRadius = AppSpacing.radiusMd,
   });
 
   final double width;
-  final double height;
+  final double? height;
   final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
+    return ShimmerLoading(
       baseColor: AppColors.neutral100,
       highlightColor: AppColors.surface,
       child: Container(

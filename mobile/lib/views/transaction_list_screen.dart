@@ -12,7 +12,7 @@ import 'package:afc/widgets/error_view/error_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
 
 import 'package:afc/utils/config/injection.dart';
-import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
+import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
@@ -53,10 +53,7 @@ class _TransactionListView extends StatelessWidget {
         builder: (context, state) {
           if (state is TransactionListLoading ||
               state is TransactionListInitial) {
-            return ListView.builder(
-              itemCount: 8,
-              itemBuilder: (context, index) => const ListItemSkeleton(),
-            );
+            return const SkeletonList(itemCount: 8);
           }
           if (state is TransactionListError) {
             return Center(

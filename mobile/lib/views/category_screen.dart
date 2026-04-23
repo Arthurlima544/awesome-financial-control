@@ -10,7 +10,7 @@ import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/dismissible_delete_background/dismissible_delete_background.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/widgets/error_view/error_view.dart';
-import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
+import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/models/category_model.dart';
@@ -38,10 +38,7 @@ class _CategoryView extends StatelessWidget {
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
           if (state is CategoryLoading || state is CategoryInitial) {
-            return ListView.builder(
-              itemCount: 6,
-              itemBuilder: (context, index) => const ListItemSkeleton(),
-            );
+            return const SkeletonList(itemCount: 6);
           }
           if (state is CategoryError) {
             return Center(
