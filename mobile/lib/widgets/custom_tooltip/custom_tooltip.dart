@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'custom_tooltip_cubit.dart';
+export 'custom_tooltip_cubit.dart';
 
 class CustomTooltip extends StatelessWidget {
   final String title;
@@ -42,7 +43,7 @@ class CustomTooltip extends StatelessWidget {
   }
 }
 
-class _TooltipInternal extends StatelessWidget {
+class _TooltipInternal extends StatefulWidget {
   final String title;
   final String description;
   final Widget child;
@@ -64,49 +65,134 @@ class _TooltipInternal extends StatelessWidget {
   });
 
   @override
+  State<_TooltipInternal> createState() => _TooltipInternalState();
+}
+
+class _TooltipInternalState extends State<_TooltipInternal> {
+  OverlayEntry? _overlayEntry;
+  final LayerLink _layerLink = LayerLink();
+
+  void _showTooltip() {
+    _hideTooltip();
+    _overlayEntry = _createOverlayEntry();
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _hideTooltip() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    Size size = renderBox.size;
+    Offset offset = renderBox.localToGlobal(Offset.zero);
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double width = widget.maxWidth ?? (screenWidth * 0.8).clamp(0, 300.0);
+
+    // Calculate horizontal shift to keep within screen bounds
+    double targetCenterX = offset.dx + size.width / 2;
+    double halfWidth = width / 2;
+    double horizontalShift = 0;
+
+    if (targetCenterX - halfWidth < 16) {
+      horizontalShift = 16 - (targetCenterX - halfWidth);
+    } else if (targetCenterX + halfWidth > screenWidth - 16) {
+      horizontalShift = (screenWidth - 16) - (targetCenterX + halfWidth);
+    }
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: width,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: _getOffset(size).translate(horizontalShift, 0),
+          targetAnchor: _getTargetAnchor(),
+          followerAnchor: _getFollowerAnchor(),
+          child: _TooltipBubble(
+            title: widget.title,
+            description: widget.description,
+            backgroundColor: widget.backgroundColor,
+            textColor: widget.textColor,
+            maxWidth: width,
+            position: widget.position,
+            onClose: () => context.read<CustomTooltipCubit>().hide(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Offset _getOffset(Size size) {
+    switch (widget.position) {
+      case TooltipPosition.top:
+        return const Offset(0, -8);
+      case TooltipPosition.bottom:
+        return const Offset(0, 8);
+      case TooltipPosition.left:
+        return const Offset(-8, 0);
+      case TooltipPosition.right:
+        return const Offset(8, 0);
+    }
+  }
+
+  Alignment _getTargetAnchor() {
+    switch (widget.position) {
+      case TooltipPosition.top:
+        return Alignment.topCenter;
+      case TooltipPosition.bottom:
+        return Alignment.bottomCenter;
+      case TooltipPosition.left:
+        return Alignment.centerLeft;
+      case TooltipPosition.right:
+        return Alignment.centerRight;
+    }
+  }
+
+  Alignment _getFollowerAnchor() {
+    switch (widget.position) {
+      case TooltipPosition.top:
+        return Alignment.bottomCenter;
+      case TooltipPosition.bottom:
+        return Alignment.topCenter;
+      case TooltipPosition.left:
+        return Alignment.centerRight;
+      case TooltipPosition.right:
+        return Alignment.centerLeft;
+    }
+  }
+
+  @override
+  void dispose() {
+    _hideTooltip();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<CustomTooltipCubit, CustomTooltipState>(
       listener: (context, state) {
-        if (onVisibleChanged != null) onVisibleChanged!();
+        if (state.isVisible) {
+          _showTooltip();
+        } else {
+          _hideTooltip();
+        }
+        if (widget.onVisibleChanged != null) widget.onVisibleChanged!();
       },
       builder: (context, state) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final isMobile = constraints.maxWidth < 600;
-            final computedMaxWidth =
-                maxWidth ?? (isMobile ? constraints.maxWidth * 0.8 : 300.0);
-
-            return Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => context.read<CustomTooltipCubit>().toggle(),
-                  child: Semantics(
-                    label: 'Info icon for $title',
-                    hint: 'Tap to see details',
-                    child: child,
-                  ),
-                ),
-                if (state.isVisible)
-                  Positioned(
-                    bottom: position == TooltipPosition.top ? 40 : null,
-                    top: position == TooltipPosition.bottom ? 40 : null,
-                    left: position == TooltipPosition.right ? 40 : null,
-                    right: position == TooltipPosition.left ? 40 : null,
-                    child: _TooltipBubble(
-                      title: title,
-                      description: description,
-                      backgroundColor: backgroundColor,
-                      textColor: textColor,
-                      maxWidth: computedMaxWidth,
-                      position: position,
-                    ),
-                  ),
-              ],
-            );
-          },
+        return CompositedTransformTarget(
+          link: _layerLink,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => context.read<CustomTooltipCubit>().toggle(),
+            child: Semantics(
+              label: 'Info icon for ${widget.title}',
+              hint: 'Tap to see details',
+              child: widget.child,
+            ),
+          ),
         );
       },
     );
@@ -120,6 +206,7 @@ class _TooltipBubble extends StatelessWidget {
   final Color textColor;
   final double maxWidth;
   final TooltipPosition position;
+  final VoidCallback onClose;
 
   const _TooltipBubble({
     required this.title,
@@ -128,6 +215,7 @@ class _TooltipBubble extends StatelessWidget {
     required this.textColor,
     required this.maxWidth,
     required this.position,
+    required this.onClose,
   });
 
   @override
@@ -155,13 +243,24 @@ class _TooltipBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: textColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: onClose,
+                      child: Icon(Icons.close, color: textColor, size: 18),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Text(

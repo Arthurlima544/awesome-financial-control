@@ -1,3 +1,4 @@
+import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +20,8 @@ import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
+import 'package:afc/view_models/health_score/health_score_bloc.dart';
+import 'package:afc/widgets/health_score_card/health_score_card.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -34,6 +37,9 @@ class HomeScreen extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
+        ),
+        BlocProvider(
+          create: (_) => sl<HealthScoreBloc>()..add(const LoadHealthScore()),
         ),
       ],
       child: const _HomeView(),
@@ -59,6 +65,12 @@ class _HomeViewState extends State<_HomeView> {
       appBar: AppBar(
         title: Text(l10n.homeTitle),
         actions: [
+          IconButton(
+            icon: context.watch<ThemeCubit>().state == ThemeMode.dark
+                ? const Icon(Icons.light_mode)
+                : const Icon(Icons.dark_mode),
+            onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+          ),
           if (AppConfig.isLocal)
             IconButton(
               icon: const Icon(Icons.developer_mode),
@@ -111,6 +123,7 @@ class _HomeViewState extends State<_HomeView> {
             context.read<HomeBloc>().add(const HomeDashboardLoaded());
             context.read<LimitBloc>().add(const LimitProgressLoaded());
             context.read<InvestmentBloc>().add(LoadInvestments());
+            context.read<HealthScoreBloc>().add(const LoadHealthScore());
           },
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
@@ -152,6 +165,21 @@ class _HomeViewState extends State<_HomeView> {
                         totalIncome: totalIncomeFormatted,
                         totalExpenses: totalExpensesFormatted,
                         savingsRate: savingsRate,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      BlocBuilder<HealthScoreBloc, HealthScoreState>(
+                        builder: (context, healthState) {
+                          if (healthState.status == HealthScoreStatus.loading &&
+                              healthState.healthScore == null) {
+                            return const CardSkeleton();
+                          }
+                          if (healthState.healthScore != null) {
+                            return HealthScoreCard(
+                              score: healthState.healthScore!,
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
                       const SizedBox(height: AppSpacing.md),
                       const _NetWorthCard(),

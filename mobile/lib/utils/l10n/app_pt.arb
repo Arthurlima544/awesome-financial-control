@@ -453,5 +453,31 @@
   "@billStatusPaid": { "description": "Paid bills status label" },
 
   "navBills": "Contas",
-  "@navBills": { "description": "Bottom nav bar bills tab label" }
+  "@navBills": { "description": "Bottom nav bar bills tab label" },
+
+  "healthScoreTitle": "Saúde Financeira",
+  "@healthScoreTitle": { "description": "Financial health score title" },
+
+  "healthScoreExcellent": "Excelente",
+  "@healthScoreExcellent": { "description": "Excellent health score status" },
+
+  "healthScoreGood": "Boa",
+  "@healthScoreGood": { "description": "Good health score status" },
+
+  "healthScoreAttention": "Atenção",
+  "@healthScoreAttention": { "description": "Needs attention health score status" },
+
+  "healthScoreSavings": "Taxa de Poupança",
+  "@healthScoreSavings": { "description": "Savings rate score factor" },
+
+  "healthScoreLimits": "Aderência a Limites",
+  "@healthScoreLimits": { "description": "Limit adherence score factor" },
+
+  "healthScoreGoals": "Progresso de Objetivos",
+  "@healthScoreGoals": { "description": "Goal progress score factor" },
+
+  "healthScoreVariance": "Variância de Gastos",
+  "@healthScoreVariance": { "description": "Expense variance score factor" },
+
+  "healthScoreTooltip": "Sua pontuação baseada nos últimos 30 dias"
 }

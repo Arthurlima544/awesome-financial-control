@@ -450,4 +450,31 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get navBills => 'Contas';
+
+  @override
+  String get healthScoreTitle => 'Saúde Financeira';
+
+  @override
+  String get healthScoreExcellent => 'Excelente';
+
+  @override
+  String get healthScoreGood => 'Boa';
+
+  @override
+  String get healthScoreAttention => 'Atenção';
+
+  @override
+  String get healthScoreSavings => 'Taxa de Poupança';
+
+  @override
+  String get healthScoreLimits => 'Aderência a Limites';
+
+  @override
+  String get healthScoreGoals => 'Progresso de Objetivos';
+
+  @override
+  String get healthScoreVariance => 'Variância de Gastos';
+
+  @override
+  String get healthScoreTooltip => 'Sua pontuação baseada nos últimos 30 dias';
 }

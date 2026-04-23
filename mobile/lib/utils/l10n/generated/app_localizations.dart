@@ -951,6 +951,60 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Contas'**
   String get navBills;
+
+  /// Financial health score title
+  ///
+  /// In pt, this message translates to:
+  /// **'Saúde Financeira'**
+  String get healthScoreTitle;
+
+  /// Excellent health score status
+  ///
+  /// In pt, this message translates to:
+  /// **'Excelente'**
+  String get healthScoreExcellent;
+
+  /// Good health score status
+  ///
+  /// In pt, this message translates to:
+  /// **'Boa'**
+  String get healthScoreGood;
+
+  /// Needs attention health score status
+  ///
+  /// In pt, this message translates to:
+  /// **'Atenção'**
+  String get healthScoreAttention;
+
+  /// Savings rate score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa de Poupança'**
+  String get healthScoreSavings;
+
+  /// Limit adherence score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Aderência a Limites'**
+  String get healthScoreLimits;
+
+  /// Goal progress score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso de Objetivos'**
+  String get healthScoreGoals;
+
+  /// Expense variance score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Variância de Gastos'**
+  String get healthScoreVariance;
+
+  /// No description provided for @healthScoreTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua pontuação baseada nos últimos 30 dias'**
+  String get healthScoreTooltip;
 }
 
 class _AppLocalizationsDelegate
