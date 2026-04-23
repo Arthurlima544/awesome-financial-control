@@ -10,6 +10,7 @@ import 'package:afc/widgets/dismissible_delete_background/dismissible_delete_bac
 import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/widgets/error_view/error_view.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
 
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
@@ -82,7 +83,10 @@ class _TransactionListView extends StatelessWidget {
                 itemCount: state.transactions.length,
                 itemBuilder: (context, index) {
                   final t = state.transactions[index];
-                  return _DismissibleItem(transaction: t, l10n: l10n);
+                  return FadeInAnimation(
+                    delay: Duration(milliseconds: index * 50),
+                    child: _DismissibleItem(transaction: t, l10n: l10n),
+                  );
                 },
               ),
             );

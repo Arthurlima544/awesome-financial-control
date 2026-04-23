@@ -8,6 +8,7 @@ import 'package:afc/widgets/circular_button/circular_button.dart';
 import 'package:afc/widgets/circular_button/circular_button_cubit.dart';
 import 'package:afc/widgets/bill_form_sheet/bill_form_sheet.dart';
 import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
+import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -77,12 +78,15 @@ class BillsScreen extends StatelessWidget {
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final bill = state.bills[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                      child: _BillCard(
-                        bill: bill,
-                        currencyFormat: currencyFormat,
-                        onTap: () => _showBillForm(context, bill),
+                    return FadeInAnimation(
+                      delay: Duration(milliseconds: index * 50),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                        child: _BillCard(
+                          bill: bill,
+                          currencyFormat: currencyFormat,
+                          onTap: () => _showBillForm(context, bill),
+                        ),
                       ),
                     );
                   }, childCount: state.bills.length),

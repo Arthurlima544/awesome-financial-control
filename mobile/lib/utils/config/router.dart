@@ -94,19 +94,49 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
       return null;
     },
     routes: [
-      GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
-      GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
-      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+      GoRoute(
+        path: '/',
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: SplashScreen()),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const OnboardingScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+              child: child,
+            );
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/login',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ),
       GoRoute(
         path: '/categories',
-        builder: (_, _) => const CategoryScreen(),
+        pageBuilder: (context, state) =>
+            _buildSlideTransitionPage(context, state, const CategoryScreen()),
         routes: [
           GoRoute(
             path: ':id/edit',
-            builder: (_, state) => BlocProvider.value(
-              value: state.extra! as CategoryBloc,
-              child: CategoryEditScreen(
-                categoryId: state.pathParameters['id']!,
+            pageBuilder: (context, state) => _buildSlideTransitionPage(
+              context,
+              state,
+              BlocProvider.value(
+                value: state.extra! as CategoryBloc,
+                child: CategoryEditScreen(
+                  categoryId: state.pathParameters['id']!,
+                ),
               ),
             ),
           ),
@@ -114,34 +144,51 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
       ),
       GoRoute(
         path: '/limits/manage',
-        builder: (_, _) => const LimitListScreen(),
+        pageBuilder: (context, state) =>
+            _buildSlideTransitionPage(context, state, const LimitListScreen()),
         routes: [
           GoRoute(
             path: ':id/edit',
-            builder: (_, state) => BlocProvider.value(
-              value: state.extra! as LimitListBloc,
-              child: LimitEditScreen(limitId: state.pathParameters['id']!),
+            pageBuilder: (context, state) => _buildSlideTransitionPage(
+              context,
+              state,
+              BlocProvider.value(
+                value: state.extra! as LimitListBloc,
+                child: LimitEditScreen(limitId: state.pathParameters['id']!),
+              ),
             ),
           ),
         ],
       ),
       GoRoute(
         path: '/transactions/:id/edit',
-        builder: (_, state) => BlocProvider.value(
-          value: state.extra! as TransactionListBloc,
-          child: TransactionEditScreen(
-            transactionId: state.pathParameters['id']!,
+        pageBuilder: (context, state) => _buildSlideTransitionPage(
+          context,
+          state,
+          BlocProvider.value(
+            value: state.extra! as TransactionListBloc,
+            child: TransactionEditScreen(
+              transactionId: state.pathParameters['id']!,
+            ),
           ),
         ),
       ),
       GoRoute(
         path: '/investments',
-        builder: (_, _) => BlocProvider(
-          create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
-          child: const InvestmentsScreen(),
+        pageBuilder: (context, state) => _buildSlideTransitionPage(
+          context,
+          state,
+          BlocProvider(
+            create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
+            child: const InvestmentsScreen(),
+          ),
         ),
       ),
-      GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
+      GoRoute(
+        path: '/import',
+        pageBuilder: (context, state) =>
+            _buildSlideTransitionPage(context, state, const ImportScreen()),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
           create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),
@@ -157,31 +204,45 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
         branches: [
           StatefulShellBranch(
             routes: [
-              GoRoute(path: '/home', builder: (_, _) => const HomeScreen()),
+              GoRoute(
+                path: '/home',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: HomeScreen()),
+              ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/transactions',
-                builder: (_, _) => const TransactionListScreen(),
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: TransactionListScreen()),
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: '/limits', builder: (_, _) => const LimitScreen()),
+              GoRoute(
+                path: '/limits',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: LimitScreen()),
+              ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/stats',
-                builder: (_, _) => const StatsScreen(),
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: StatsScreen()),
                 routes: [
                   GoRoute(
                     path: 'report',
-                    builder: (_, _) => const ReportScreen(),
+                    pageBuilder: (context, state) => _buildSlideTransitionPage(
+                      context,
+                      state,
+                      const ReportScreen(),
+                    ),
                   ),
                 ],
               ),
@@ -191,22 +252,29 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
             routes: [
               GoRoute(
                 path: '/recurring',
-                builder: (_, _) => const RecurringListScreen(),
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: RecurringListScreen()),
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: '/goals', builder: (_, _) => const GoalsScreen()),
+              GoRoute(
+                path: '/goals',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: GoalsScreen()),
+              ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/bills',
-                builder: (_, _) => BlocProvider(
-                  create: (_) => sl<BillBloc>()..add(const LoadBills()),
-                  child: const BillsScreen(),
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: BlocProvider(
+                    create: (_) => sl<BillBloc>()..add(const LoadBills()),
+                    child: const BillsScreen(),
+                  ),
                 ),
               ),
             ],
@@ -214,5 +282,25 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
         ],
       ),
     ],
+  );
+}
+
+CustomTransitionPage _buildSlideTransitionPage(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return SlideTransition(
+        position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+            ),
+        child: FadeTransition(opacity: animation, child: child),
+      );
+    },
   );
 }
