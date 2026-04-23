@@ -16,6 +16,7 @@ class AdaptiveTextField extends StatelessWidget {
   final Color? errorBorderColor;
   final TextStyle? customTextStyle;
   final String? semanticLabel;
+  final TextInputType? keyboardType;
 
   const AdaptiveTextField({
     super.key,
@@ -32,6 +33,7 @@ class AdaptiveTextField extends StatelessWidget {
     this.errorBorderColor,
     this.customTextStyle,
     this.semanticLabel,
+    this.keyboardType,
   });
 
   @override
@@ -41,131 +43,128 @@ class AdaptiveTextField extends StatelessWidget {
 
     return BlocBuilder<AdaptiveTextFieldCubit, AdaptiveTextFieldState>(
       builder: (context, state) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            // Adaptive relative padding clamped for extreme screen sizes
-            final double rawHPadding = constraints.maxWidth * 0.04;
-            final double hPadding = rawHPadding.clamp(12.0, 20.0);
+        final screenWidth = MediaQuery.of(context).size.width;
 
-            final double rawVPadding = constraints.maxWidth * 0.035;
-            final double vPadding = rawVPadding.clamp(14.0, 18.0);
+        // Adaptive relative padding clamped for extreme screen sizes
+        final double rawHPadding = screenWidth * 0.04;
+        final double hPadding = rawHPadding.clamp(12.0, 20.0);
 
-            final double rawFontSize = constraints.maxWidth * 0.035;
-            final double fontSize = rawFontSize.clamp(14.0, 16.0);
+        final double rawVPadding = screenWidth * 0.035;
+        final double vPadding = rawVPadding.clamp(14.0, 18.0);
 
-            // Determine border and background colors based on state
-            Color borderColor = const Color(0xFFE0E0E0); // Default grey
-            Color backgroundColor = Colors.transparent;
-            double borderWidth = 1.0;
+        final double rawFontSize = screenWidth * 0.035;
+        final double fontSize = rawFontSize.clamp(14.0, 16.0);
 
-            if (state.isDisabled) {
-              backgroundColor = const Color(0xFFF5F5F5);
-              borderColor = const Color(0xFFEEEEEE);
-            } else if (state.errorMessage != null) {
-              borderColor = defaultErrorColor;
-              borderWidth = 1.5;
-            } else if (state.isFocused) {
-              borderColor = defaultFocusColor;
-              borderWidth = 2.0;
-            }
+        // Determine border and background colors based on state
+        Color borderColor = const Color(0xFFE0E0E0); // Default grey
+        Color backgroundColor = Colors.transparent;
+        double borderWidth = 1.0;
 
-            return Semantics(
-              textField: true,
-              enabled: !state.isDisabled,
-              label: semanticLabel ?? hintText,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Focus(
-                    onFocusChange: (hasFocus) {
-                      if (!state.isDisabled) {
-                        context.read<AdaptiveTextFieldCubit>().focusChanged(
-                          hasFocus,
-                        );
-                      }
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: EdgeInsets.symmetric(horizontal: hPadding),
-                      decoration: BoxDecoration(
-                        color: backgroundColor,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(
-                          color: borderColor,
-                          width: borderWidth,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          if (leadingIcon != null) ...[
-                            leadingIcon!,
-                            SizedBox(width: hPadding * 0.8),
-                          ],
-                          if (prefixWidget != null) ...[
-                            prefixWidget!,
-                            SizedBox(width: hPadding * 0.5),
-                          ],
-                          Expanded(
-                            child: TextField(
-                              controller: controller,
-                              focusNode: focusNode,
-                              enabled: !state.isDisabled,
-                              obscureText: obscureText,
-                              onChanged: (val) {
-                                context
-                                    .read<AdaptiveTextFieldCubit>()
-                                    .textChanged(val);
-                                onChanged?.call(val);
-                              },
-                              onSubmitted: onSubmitted,
-                              style:
-                                  customTextStyle ??
-                                  TextStyle(
-                                    fontSize: fontSize,
-                                    color: state.isDisabled
-                                        ? Colors.grey
-                                        : Colors.black87,
-                                  ),
-                              decoration: InputDecoration(
-                                hintText: hintText,
-                                hintStyle: TextStyle(
-                                  fontSize: fontSize,
-                                  color: const Color(0xFF9E9E9E),
-                                ),
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: vPadding,
-                                ),
+        if (state.isDisabled) {
+          backgroundColor = const Color(0xFFF5F5F5);
+          borderColor = const Color(0xFFEEEEEE);
+        } else if (state.errorMessage != null) {
+          borderColor = defaultErrorColor;
+          borderWidth = 1.5;
+        } else if (state.isFocused) {
+          borderColor = defaultFocusColor;
+          borderWidth = 2.0;
+        }
+
+        return Semantics(
+          textField: true,
+          enabled: !state.isDisabled,
+          label: semanticLabel ?? hintText,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Focus(
+                onFocusChange: (hasFocus) {
+                  if (!state.isDisabled) {
+                    context.read<AdaptiveTextFieldCubit>().focusChanged(
+                      hasFocus,
+                    );
+                  }
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(color: borderColor, width: borderWidth),
+                  ),
+                  child: Row(
+                    children: [
+                      if (leadingIcon != null) ...[
+                        leadingIcon!,
+                        SizedBox(width: hPadding * 0.8),
+                      ],
+                      if (prefixWidget != null) ...[
+                        prefixWidget!,
+                        SizedBox(width: hPadding * 0.5),
+                      ],
+                      Expanded(
+                        child: TextField(
+                          controller: controller,
+                          focusNode: focusNode,
+                          enabled: !state.isDisabled,
+                          obscureText: obscureText,
+                          keyboardType: keyboardType,
+                          onChanged: (val) {
+                            context.read<AdaptiveTextFieldCubit>().textChanged(
+                              val,
+                            );
+                            onChanged?.call(val);
+                          },
+                          onSubmitted: onSubmitted,
+                          style:
+                              customTextStyle ??
+                              TextStyle(
+                                fontSize: fontSize,
+                                color: state.isDisabled
+                                    ? Colors.grey
+                                    : Colors.black87,
                               ),
+                          decoration: InputDecoration(
+                            hintText: hintText,
+                            hintStyle: TextStyle(
+                              fontSize: fontSize,
+                              color: const Color(0xFF9E9E9E),
+                            ),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: vPadding,
                             ),
                           ),
-                          if (trailingIcon != null) ...[
-                            SizedBox(width: hPadding * 0.8),
-                            trailingIcon!,
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (state.errorMessage != null) ...[
-                    SizedBox(height: vPadding * 0.4),
-                    Padding(
-                      padding: EdgeInsets.only(left: hPadding * 0.5),
-                      child: Text(
-                        state.errorMessage!,
-                        style: TextStyle(
-                          color: defaultErrorColor,
-                          fontSize: fontSize * 0.85,
                         ),
                       ),
-                    ),
-                  ],
-                ],
+                      if (trailingIcon != null) ...[
+                        SizedBox(width: hPadding * 0.8),
+                        trailingIcon!,
+                      ],
+                    ],
+                  ),
+                ),
               ),
-            );
-          },
+              if (state.errorMessage != null) ...[
+                SizedBox(height: vPadding * 0.4),
+                Padding(
+                  padding: EdgeInsets.only(left: hPadding * 0.5),
+                  child: Text(
+                    state.errorMessage!,
+                    style: TextStyle(
+                      color: defaultErrorColor,
+                      fontSize: fontSize * 0.85,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
         );
       },
     );

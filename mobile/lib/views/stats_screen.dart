@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
@@ -31,7 +32,16 @@ class _StatsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.statsTitle)),
+      appBar: AppBar(
+        title: Text(l10n.statsTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.assignment_outlined),
+            onPressed: () => context.go('/stats/report'),
+            tooltip: l10n.reportFullReport,
+          ),
+        ],
+      ),
       body: BlocBuilder<StatsBloc, StatsState>(
         builder: (context, state) {
           if (state is StatsLoading || state is StatsInitial) {

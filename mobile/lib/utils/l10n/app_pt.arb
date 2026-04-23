@@ -16,6 +16,9 @@
   "confirm": "Confirmar",
   "@confirm": { "description": "Confirm button label" },
 
+  "add": "Adicionar",
+  "@add": { "description": "Add button label" },
+
   "save": "Salvar",
   "@save": { "description": "Save button label" },
 
@@ -342,5 +345,139 @@
   "@importDuplicate": { "description": "Duplicate badge" },
 
   "importSuccess": "Transações importadas com sucesso!",
-  "@importSuccess": { "description": "Success message for import" }
+  "@importSuccess": { "description": "Success message for import" },
+
+  "reportTitle": "Relatório Mensal",
+  "@reportTitle": { "description": "Report screen title" },
+
+  "reportCategorySpending": "Gastos por Categoria",
+  "@reportCategorySpending": { "description": "Category spending section title" },
+
+  "reportMoMComparison": "Comparação com Mês Anterior",
+  "@reportMoMComparison": { "description": "MoM comparison section title" },
+
+  "reportSavingsRate": "Economia",
+  "@reportSavingsRate": { "description": "Savings rate label" },
+
+  "reportFullReport": "Relatório Completo",
+  "@reportFullReport": { "description": "Tooltip for full report button" },
+
+  "reportNoData": "Nenhum dado para este mês",
+  "@reportNoData": { "description": "Empty state for report" },
+
+  "reportExportSuccess": "Relatório exportado com sucesso",
+  "@reportExportSuccess": { "description": "Success message for report export" },
+
+  "reportExportError": "Erro ao exportar relatório",
+  "@reportExportError": { "description": "Error message for report export" },
+
+  "reportLegend": "Legenda",
+  "@reportLegend": { "description": "Legend label in report chart" },
+
+  "navGoals": "Objetivos",
+  "@navGoals": { "description": "Bottom nav bar goals tab label" },
+
+  "goalsTitle": "Objetivos de Economia",
+  "@goalsTitle": { "description": "Savings goals screen title" },
+
+  "goalsNoGoals": "Nenhum objetivo cadastrado",
+  "@goalsNoGoals": { "description": "Empty state for goals list" },
+
+  "investmentsTitle": "Investimentos",
+  "@investmentsTitle": { "description": "Investments screen title" },
+
+  "totalNetWorth": "Patrimônio Total",
+  "@totalNetWorth": { "description": "Total net worth label (balance + investments)" },
+
+  "investmentsCurrentValue": "Valor Atual",
+  "@investmentsCurrentValue": { "description": "Current portfolio value label" },
+
+  "investmentsTotalInvested": "Total Investido",
+  "@investmentsTotalInvested": { "description": "Total invested amount label" },
+
+  "investmentsNoInvestments": "Nenhum investimento cadastrado",
+  "@investmentsNoInvestments": { "description": "Empty state for investments list" },
+
+  "investmentName": "Nome do Ativo",
+  "@investmentName": { "description": "Label for investment name field" },
+
+  "investmentTicker": "Símbolo/Ticker",
+  "@investmentTicker": { "description": "Label for investment ticker field" },
+
+  "investmentQuantity": "Quantidade",
+  "@investmentQuantity": { "description": "Label for investment quantity field" },
+
+  "investmentAvgCost": "Custo Médio",
+  "@investmentAvgCost": { "description": "Label for investment average cost field" },
+
+  "investmentCurrentPrice": "Preço Atual",
+  "@investmentCurrentPrice": { "description": "Label for investment current price field" },
+
+  "investmentType": "Tipo de Ativo",
+  "@investmentType": { "description": "Label for investment type selector" },
+
+  "investmentTypeStock": "Ação",
+  "@investmentTypeStock": { "description": "Stock investment type" },
+
+  "investmentTypeFixedIncome": "Renda Fixa",
+  "@investmentTypeFixedIncome": { "description": "Fixed income investment type" },
+
+  "investmentTypeCrypto": "Cripto",
+  "@investmentTypeCrypto": { "description": "Crypto investment type" },
+
+  "investmentTypeOther": "Outro",
+  "@investmentTypeOther": { "description": "Other investment type" },
+
+  "billsTitle": "Contas",
+  "@billsTitle": { "description": "Bills screen title" },
+
+  "billsNoBills": "Nenhuma conta cadastrada",
+  "@billsNoBills": { "description": "Empty state for bills list" },
+
+  "billName": "Nome da Conta",
+  "@billName": { "description": "Label for bill name field" },
+
+  "billAmount": "Valor",
+  "@billAmount": { "description": "Label for bill amount field" },
+
+  "billDueDay": "Dia do Vencimento",
+  "@billDueDay": { "description": "Label for bill due day field" },
+
+  "billStatusUpcoming": "Próximas",
+  "@billStatusUpcoming": { "description": "Upcoming bills status label" },
+
+  "billStatusOverdue": "Vencidas",
+  "@billStatusOverdue": { "description": "Overdue bills status label" },
+
+  "billStatusPaid": "Pagas",
+  "@billStatusPaid": { "description": "Paid bills status label" },
+
+  "navBills": "Contas",
+  "@navBills": { "description": "Bottom nav bar bills tab label" },
+
+  "healthScoreTitle": "Saúde Financeira",
+  "@healthScoreTitle": { "description": "Financial health score title" },
+
+  "healthScoreExcellent": "Excelente",
+  "@healthScoreExcellent": { "description": "Excellent health score status" },
+
+  "healthScoreGood": "Boa",
+  "@healthScoreGood": { "description": "Good health score status" },
+
+  "healthScoreAttention": "Atenção",
+  "@healthScoreAttention": { "description": "Needs attention health score status" },
+
+  "healthScoreSavings": "Taxa de Poupança",
+  "@healthScoreSavings": { "description": "Savings rate score factor" },
+
+  "healthScoreLimits": "Aderência a Limites",
+  "@healthScoreLimits": { "description": "Limit adherence score factor" },
+
+  "healthScoreGoals": "Progresso de Objetivos",
+  "@healthScoreGoals": { "description": "Goal progress score factor" },
+
+  "healthScoreVariance": "Variância de Gastos",
+  "@healthScoreVariance": { "description": "Expense variance score factor" },
+
+  "healthScoreTooltip": "Sua pontuação baseada nos últimos 30 dias"
 }

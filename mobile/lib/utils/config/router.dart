@@ -23,6 +23,12 @@ import 'package:afc/views/transaction_edit_screen.dart';
 import 'package:afc/views/transaction_list_screen.dart';
 import 'package:afc/views/recurring_list_screen.dart';
 import 'package:afc/views/import_screen.dart';
+import 'package:afc/views/report_screen.dart';
+import 'package:afc/views/goals_screen.dart';
+import 'package:afc/view_models/investments/investment_bloc.dart';
+import 'package:afc/views/investments_screen.dart';
+import 'package:afc/view_models/bills/bill_bloc.dart';
+import 'package:afc/views/bills_screen.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -104,6 +110,13 @@ GoRouter createRouter(AuthBloc authBloc) {
           ),
         ),
       ),
+      GoRoute(
+        path: '/investments',
+        builder: (_, _) => BlocProvider(
+          create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
+          child: const InvestmentsScreen(),
+        ),
+      ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
@@ -138,7 +151,16 @@ GoRouter createRouter(AuthBloc authBloc) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
+              GoRoute(
+                path: '/stats',
+                builder: (_, _) => const StatsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'report',
+                    builder: (_, _) => const ReportScreen(),
+                  ),
+                ],
+              ),
             ],
           ),
           StatefulShellBranch(
@@ -146,6 +168,22 @@ GoRouter createRouter(AuthBloc authBloc) {
               GoRoute(
                 path: '/recurring',
                 builder: (_, _) => const RecurringListScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/goals', builder: (_, _) => const GoalsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/bills',
+                builder: (_, _) => BlocProvider(
+                  create: (_) => sl<BillBloc>()..add(const LoadBills()),
+                  child: const BillsScreen(),
+                ),
               ),
             ],
           ),

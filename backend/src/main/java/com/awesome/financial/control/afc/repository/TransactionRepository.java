@@ -32,4 +32,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             @Param("category") String category,
             @Param("from") Instant from,
             @Param("to") Instant to);
+
+    @Query(
+            "SELECT t.category, SUM(t.amount) FROM Transaction t WHERE t.type = :type AND t.occurredAt >= :from AND t.occurredAt < :to GROUP BY t.category")
+    List<Object[]> sumAmountByTypeGroupByCategoryAndOccurredAtBetween(
+            @Param("type") TransactionType type,
+            @Param("from") Instant from,
+            @Param("to") Instant to);
 }

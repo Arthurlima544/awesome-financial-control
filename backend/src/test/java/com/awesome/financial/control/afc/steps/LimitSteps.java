@@ -85,16 +85,17 @@ public class LimitSteps {
 
     @And("the limits list is empty")
     public void theLimitsListIsEmpty() {
-        assertThat(ctx.response.getBody()).isEqualTo("[]");
+        assertThat((String) ctx.response.getBody()).isEqualTo("[]");
     }
 
     @And("the limit for {string} has spent {bigdecimal} and percentage {double}")
     public void theLimitForHasSpentAndPercentage(
             String categoryName, BigDecimal spent, double percentage) {
-        assertThat(ctx.response.getBody()).contains("\"categoryName\":\"" + categoryName + "\"");
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
+                .contains("\"categoryName\":\"" + categoryName + "\"");
+        assertThat((String) ctx.response.getBody())
                 .contains("\"spent\":" + spent.stripTrailingZeros().toPlainString());
-        assertThat(ctx.response.getBody()).contains("\"percentage\":" + percentage);
+        assertThat((String) ctx.response.getBody()).contains("\"percentage\":" + percentage);
     }
 
     @When("I request all limits")
@@ -146,12 +147,12 @@ public class LimitSteps {
 
     @And("the all-limits list is empty")
     public void theAllLimitsListIsEmpty() {
-        assertThat(ctx.response.getBody()).isEqualTo("[]");
+        assertThat((String) ctx.response.getBody()).isEqualTo("[]");
     }
 
     @And("the all-limits list has {int} items")
     public void theAllLimitsListHasItems(int count) {
-        long objCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        long objCount = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
         assertThat(objCount).isEqualTo(count);
     }
 
@@ -162,7 +163,7 @@ public class LimitSteps {
 
     @And("the limit amount is {bigdecimal}")
     public void theLimitAmountIs(BigDecimal amount) {
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
                 .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
     }
 }

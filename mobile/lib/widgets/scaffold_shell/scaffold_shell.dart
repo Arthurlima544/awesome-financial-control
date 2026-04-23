@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
+import 'package:afc/utils/config/app_icons.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/widgets/quick_add_transaction_sheet/quick_add_transaction_sheet.dart';
@@ -58,35 +59,45 @@ class _ScaffoldShellState extends State<ScaffoldShell> {
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.onPrimary,
         tooltip: l10n.fabAddTransaction,
-        child: const Icon(Icons.add),
+        child: const Icon(AppIcons.add),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: widget.navigationShell.currentIndex,
         onDestinationSelected: _onDestinationSelected,
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
+            icon: const Icon(AppIcons.homeOutlined),
+            selectedIcon: const Icon(AppIcons.home),
             label: l10n.navHome,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.receipt_long_outlined),
-            selectedIcon: const Icon(Icons.receipt_long),
+            icon: const Icon(AppIcons.transactionsOutlined),
+            selectedIcon: const Icon(AppIcons.transactions),
             label: l10n.navTransactions,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.price_change_outlined),
-            selectedIcon: const Icon(Icons.price_change),
+            icon: const Icon(AppIcons.limitsOutlined),
+            selectedIcon: const Icon(AppIcons.limits),
             label: l10n.navLimits,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.bar_chart_outlined),
-            selectedIcon: const Icon(Icons.bar_chart),
+            icon: const Icon(AppIcons.statsOutlined),
+            selectedIcon: const Icon(AppIcons.stats),
             label: l10n.navStats,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.replay_outlined),
-            selectedIcon: const Icon(Icons.replay),
+            icon: const Icon(AppIcons.goalsOutlined),
+            selectedIcon: const Icon(AppIcons.goals),
+            label: l10n.navGoals,
+          ),
+          NavigationDestination(
+            icon: const Icon(AppIcons.billsOutlined),
+            selectedIcon: const Icon(AppIcons.bills),
+            label: l10n.navBills,
+          ),
+          NavigationDestination(
+            icon: const Icon(AppIcons.recurringOutlined),
+            selectedIcon: const Icon(AppIcons.recurring),
             label: l10n.recurringTitle,
           ),
         ],

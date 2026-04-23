@@ -1,3 +1,4 @@
+import 'package:afc/utils/config/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,8 +8,24 @@ import 'package:afc/widgets/scaffold_shell/scaffold_shell.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 GoRouter _buildRouter({int initialIndex = 0}) {
-  final paths = ['/home', '/transactions', '/limits', '/stats', '/recurring'];
-  final labels = ['Home', 'Transactions', 'Limits', 'Stats', 'Recurring'];
+  final paths = [
+    '/home',
+    '/transactions',
+    '/limits',
+    '/stats',
+    '/goals',
+    '/bills',
+    '/recurring',
+  ];
+  final labels = [
+    'Home',
+    'Transactions',
+    'Limits',
+    'Stats',
+    'Goals',
+    'Bills',
+    'Recurring',
+  ];
 
   return GoRouter(
     initialLocation: paths[initialIndex],
@@ -52,12 +69,12 @@ Widget _buildApp({int initialIndex = 0}) {
 
 void main() {
   group('ScaffoldShell', () {
-    testWidgets('renders NavigationBar with 4 destinations', (tester) async {
+    testWidgets('renders NavigationBar with 7 destinations', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
       expect(find.byType(NavigationBar), findsOneWidget);
-      expect(find.byType(NavigationDestination), findsNWidgets(5));
+      expect(find.byType(NavigationDestination), findsNWidgets(7));
     });
 
     testWidgets('shows all tab labels', (tester) async {
@@ -68,6 +85,8 @@ void main() {
       expect(find.text('Transações'), findsOneWidget);
       expect(find.text('Limites'), findsOneWidget);
       expect(find.text('Gráficos'), findsOneWidget);
+      expect(find.text('Objetivos'), findsOneWidget);
+      expect(find.text('Contas'), findsOneWidget);
       expect(find.text('Recorrentes'), findsOneWidget);
     });
 
@@ -76,7 +95,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(FloatingActionButton), findsOneWidget);
-      expect(find.byIcon(Icons.add), findsOneWidget);
+      expect(find.byIcon(AppIcons.add), findsOneWidget);
     });
 
     testWidgets('initial selected index is 0 (Home)', (tester) async {

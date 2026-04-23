@@ -24,6 +24,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get confirm => 'Confirmar';
 
   @override
+  String get add => 'Adicionar';
+
+  @override
   String get save => 'Salvar';
 
   @override
@@ -339,4 +342,139 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get importSuccess => 'Transações importadas com sucesso!';
+
+  @override
+  String get reportTitle => 'Relatório Mensal';
+
+  @override
+  String get reportCategorySpending => 'Gastos por Categoria';
+
+  @override
+  String get reportMoMComparison => 'Comparação com Mês Anterior';
+
+  @override
+  String get reportSavingsRate => 'Economia';
+
+  @override
+  String get reportFullReport => 'Relatório Completo';
+
+  @override
+  String get reportNoData => 'Nenhum dado para este mês';
+
+  @override
+  String get reportExportSuccess => 'Relatório exportado com sucesso';
+
+  @override
+  String get reportExportError => 'Erro ao exportar relatório';
+
+  @override
+  String get reportLegend => 'Legenda';
+
+  @override
+  String get navGoals => 'Objetivos';
+
+  @override
+  String get goalsTitle => 'Objetivos de Economia';
+
+  @override
+  String get goalsNoGoals => 'Nenhum objetivo cadastrado';
+
+  @override
+  String get investmentsTitle => 'Investimentos';
+
+  @override
+  String get totalNetWorth => 'Patrimônio Total';
+
+  @override
+  String get investmentsCurrentValue => 'Valor Atual';
+
+  @override
+  String get investmentsTotalInvested => 'Total Investido';
+
+  @override
+  String get investmentsNoInvestments => 'Nenhum investimento cadastrado';
+
+  @override
+  String get investmentName => 'Nome do Ativo';
+
+  @override
+  String get investmentTicker => 'Símbolo/Ticker';
+
+  @override
+  String get investmentQuantity => 'Quantidade';
+
+  @override
+  String get investmentAvgCost => 'Custo Médio';
+
+  @override
+  String get investmentCurrentPrice => 'Preço Atual';
+
+  @override
+  String get investmentType => 'Tipo de Ativo';
+
+  @override
+  String get investmentTypeStock => 'Ação';
+
+  @override
+  String get investmentTypeFixedIncome => 'Renda Fixa';
+
+  @override
+  String get investmentTypeCrypto => 'Cripto';
+
+  @override
+  String get investmentTypeOther => 'Outro';
+
+  @override
+  String get billsTitle => 'Contas';
+
+  @override
+  String get billsNoBills => 'Nenhuma conta cadastrada';
+
+  @override
+  String get billName => 'Nome da Conta';
+
+  @override
+  String get billAmount => 'Valor';
+
+  @override
+  String get billDueDay => 'Dia do Vencimento';
+
+  @override
+  String get billStatusUpcoming => 'Próximas';
+
+  @override
+  String get billStatusOverdue => 'Vencidas';
+
+  @override
+  String get billStatusPaid => 'Pagas';
+
+  @override
+  String get navBills => 'Contas';
+
+  @override
+  String get healthScoreTitle => 'Saúde Financeira';
+
+  @override
+  String get healthScoreExcellent => 'Excelente';
+
+  @override
+  String get healthScoreGood => 'Boa';
+
+  @override
+  String get healthScoreAttention => 'Atenção';
+
+  @override
+  String get healthScoreSavings => 'Taxa de Poupança';
+
+  @override
+  String get healthScoreLimits => 'Aderência a Limites';
+
+  @override
+  String get healthScoreGoals => 'Progresso de Objetivos';
+
+  @override
+  String get healthScoreVariance => 'Variância de Gastos';
+
+  @override
+  String get healthScoreTooltip => 'Sua pontuação baseada nos últimos 30 dias';
 }

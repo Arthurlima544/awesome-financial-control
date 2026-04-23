@@ -4,6 +4,8 @@ import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/repositories/category_repository.dart';
 import 'package:afc/repositories/dev_tools_repository.dart';
+import 'package:afc/view_models/bills/bill_bloc.dart';
+import 'package:afc/view_models/health_score/health_score_bloc.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/repositories/home_repository.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
@@ -21,6 +23,15 @@ import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/services/import_parser_service.dart';
 import 'package:afc/services/receipt_service.dart';
 import 'package:afc/view_models/import/import_bloc.dart';
+import 'package:afc/repositories/report_repository.dart';
+import 'package:afc/view_models/report/report_bloc.dart';
+import 'package:afc/repositories/bill_repository.dart';
+import 'package:afc/repositories/health_score_repository.dart';
+import 'package:afc/repositories/goal_repository.dart';
+import 'package:afc/view_models/goals/goal_bloc.dart';
+import 'package:afc/repositories/investment_repository.dart';
+import 'package:afc/view_models/investments/investment_bloc.dart';
+import 'package:afc/view_models/theme/theme_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -41,6 +52,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => TransactionListRepository());
   sl.registerLazySingleton(() => RecurringRepository());
   sl.registerLazySingleton(() => TemplateRepository());
+  sl.registerLazySingleton<ReportRepository>(() => ReportRepositoryImpl());
+  sl.registerLazySingleton(() => GoalRepository());
+  sl.registerLazySingleton(() => InvestmentRepository());
+  sl.registerLazySingleton(() => BillRepository());
+  sl.registerLazySingleton(() => HealthScoreRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -54,4 +70,10 @@ Future<void> init() async {
   sl.registerFactory(
     () => ImportBloc(parserService: sl(), repository: sl(), refreshBloc: sl()),
   );
+  sl.registerFactory(() => ReportBloc(repository: sl()));
+  sl.registerFactory(() => GoalBloc(repository: sl()));
+  sl.registerFactory(() => InvestmentBloc(repository: sl()));
+  sl.registerFactory(() => BillBloc(repository: sl()));
+  sl.registerFactory(() => HealthScoreBloc(repository: sl()));
+  sl.registerLazySingleton(() => ThemeCubit());
 }

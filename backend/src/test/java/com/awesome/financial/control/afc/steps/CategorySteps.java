@@ -74,12 +74,12 @@ public class CategorySteps {
 
     @And("the category list is empty")
     public void theCategoryListIsEmpty() {
-        assertThat(ctx.response.getBody()).isEqualTo("[]");
+        assertThat((String) ctx.response.getBody()).isEqualTo("[]");
     }
 
     @And("the category list has {int} items")
     public void theCategoryListHasItems(int count) {
-        long objCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        long objCount = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
         assertThat(objCount).isEqualTo(count);
     }
 
@@ -90,6 +90,6 @@ public class CategorySteps {
 
     @And("the category name is {string}")
     public void theCategoryNameIs(String name) {
-        assertThat(ctx.response.getBody()).contains("\"name\":\"" + name + "\"");
+        assertThat((String) ctx.response.getBody()).contains("\"name\":\"" + name + "\"");
     }
 }

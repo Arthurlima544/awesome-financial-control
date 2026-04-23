@@ -124,6 +124,12 @@ abstract class AppLocalizations {
   /// **'Confirmar'**
   String get confirm;
 
+  /// Add button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar'**
+  String get add;
+
   /// Save button label
   ///
   /// In pt, this message translates to:
@@ -729,6 +735,276 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Transações importadas com sucesso!'**
   String get importSuccess;
+
+  /// Report screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório Mensal'**
+  String get reportTitle;
+
+  /// Category spending section title
+  ///
+  /// In pt, this message translates to:
+  /// **'Gastos por Categoria'**
+  String get reportCategorySpending;
+
+  /// MoM comparison section title
+  ///
+  /// In pt, this message translates to:
+  /// **'Comparação com Mês Anterior'**
+  String get reportMoMComparison;
+
+  /// Savings rate label
+  ///
+  /// In pt, this message translates to:
+  /// **'Economia'**
+  String get reportSavingsRate;
+
+  /// Tooltip for full report button
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório Completo'**
+  String get reportFullReport;
+
+  /// Empty state for report
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum dado para este mês'**
+  String get reportNoData;
+
+  /// Success message for report export
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatório exportado com sucesso'**
+  String get reportExportSuccess;
+
+  /// Error message for report export
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao exportar relatório'**
+  String get reportExportError;
+
+  /// Legend label in report chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Legenda'**
+  String get reportLegend;
+
+  /// Bottom nav bar goals tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Objetivos'**
+  String get navGoals;
+
+  /// Savings goals screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Objetivos de Economia'**
+  String get goalsTitle;
+
+  /// Empty state for goals list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum objetivo cadastrado'**
+  String get goalsNoGoals;
+
+  /// Investments screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Investimentos'**
+  String get investmentsTitle;
+
+  /// Total net worth label (balance + investments)
+  ///
+  /// In pt, this message translates to:
+  /// **'Patrimônio Total'**
+  String get totalNetWorth;
+
+  /// Current portfolio value label
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Atual'**
+  String get investmentsCurrentValue;
+
+  /// Total invested amount label
+  ///
+  /// In pt, this message translates to:
+  /// **'Total Investido'**
+  String get investmentsTotalInvested;
+
+  /// Empty state for investments list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum investimento cadastrado'**
+  String get investmentsNoInvestments;
+
+  /// Label for investment name field
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do Ativo'**
+  String get investmentName;
+
+  /// Label for investment ticker field
+  ///
+  /// In pt, this message translates to:
+  /// **'Símbolo/Ticker'**
+  String get investmentTicker;
+
+  /// Label for investment quantity field
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade'**
+  String get investmentQuantity;
+
+  /// Label for investment average cost field
+  ///
+  /// In pt, this message translates to:
+  /// **'Custo Médio'**
+  String get investmentAvgCost;
+
+  /// Label for investment current price field
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço Atual'**
+  String get investmentCurrentPrice;
+
+  /// Label for investment type selector
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de Ativo'**
+  String get investmentType;
+
+  /// Stock investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Ação'**
+  String get investmentTypeStock;
+
+  /// Fixed income investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Renda Fixa'**
+  String get investmentTypeFixedIncome;
+
+  /// Crypto investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Cripto'**
+  String get investmentTypeCrypto;
+
+  /// Other investment type
+  ///
+  /// In pt, this message translates to:
+  /// **'Outro'**
+  String get investmentTypeOther;
+
+  /// Bills screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas'**
+  String get billsTitle;
+
+  /// Empty state for bills list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma conta cadastrada'**
+  String get billsNoBills;
+
+  /// Label for bill name field
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da Conta'**
+  String get billName;
+
+  /// Label for bill amount field
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get billAmount;
+
+  /// Label for bill due day field
+  ///
+  /// In pt, this message translates to:
+  /// **'Dia do Vencimento'**
+  String get billDueDay;
+
+  /// Upcoming bills status label
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximas'**
+  String get billStatusUpcoming;
+
+  /// Overdue bills status label
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencidas'**
+  String get billStatusOverdue;
+
+  /// Paid bills status label
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagas'**
+  String get billStatusPaid;
+
+  /// Bottom nav bar bills tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas'**
+  String get navBills;
+
+  /// Financial health score title
+  ///
+  /// In pt, this message translates to:
+  /// **'Saúde Financeira'**
+  String get healthScoreTitle;
+
+  /// Excellent health score status
+  ///
+  /// In pt, this message translates to:
+  /// **'Excelente'**
+  String get healthScoreExcellent;
+
+  /// Good health score status
+  ///
+  /// In pt, this message translates to:
+  /// **'Boa'**
+  String get healthScoreGood;
+
+  /// Needs attention health score status
+  ///
+  /// In pt, this message translates to:
+  /// **'Atenção'**
+  String get healthScoreAttention;
+
+  /// Savings rate score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa de Poupança'**
+  String get healthScoreSavings;
+
+  /// Limit adherence score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Aderência a Limites'**
+  String get healthScoreLimits;
+
+  /// Goal progress score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Progresso de Objetivos'**
+  String get healthScoreGoals;
+
+  /// Expense variance score factor
+  ///
+  /// In pt, this message translates to:
+  /// **'Variância de Gastos'**
+  String get healthScoreVariance;
+
+  /// No description provided for @healthScoreTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sua pontuação baseada nos últimos 30 dias'**
+  String get healthScoreTooltip;
 }
 
 class _AppLocalizationsDelegate

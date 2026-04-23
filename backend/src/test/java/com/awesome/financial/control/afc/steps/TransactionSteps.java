@@ -71,36 +71,37 @@ public class TransactionSteps {
 
     @And("the total income is {bigdecimal}")
     public void theTotalIncomeIs(BigDecimal expected) {
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
                 .contains("\"totalIncome\":" + expected.stripTrailingZeros().toPlainString());
     }
 
     @And("the total expenses is {bigdecimal}")
     public void theTotalExpensesIs(BigDecimal expected) {
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
                 .contains("\"totalExpenses\":" + expected.stripTrailingZeros().toPlainString());
     }
 
     @And("the balance is {bigdecimal}")
     public void theBalanceIs(BigDecimal expected) {
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
                 .contains("\"balance\":" + expected.stripTrailingZeros().toPlainString());
     }
 
     @And("the transaction list is empty")
     public void theTransactionListIsEmpty() {
-        assertThat(ctx.response.getBody()).isEqualTo("[]");
+        assertThat((String) ctx.response.getBody()).isEqualTo("[]");
     }
 
     @And("the transaction list has {int} items")
     public void theTransactionListHasItems(int count) {
-        long commaCount = ctx.response.getBody().chars().filter(c -> c == '{').count();
+        long commaCount = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
         assertThat(commaCount).isEqualTo(count);
     }
 
     @And("the first transaction description is {string}")
     public void theFirstTransactionDescriptionIs(String description) {
-        assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
+        assertThat((String) ctx.response.getBody())
+                .contains("\"description\":\"" + description + "\"");
     }
 
     @When("I request all transactions")
@@ -171,12 +172,13 @@ public class TransactionSteps {
 
     @And("the transaction description is {string}")
     public void theTransactionDescriptionIs(String description) {
-        assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
+        assertThat((String) ctx.response.getBody())
+                .contains("\"description\":\"" + description + "\"");
     }
 
     @And("the transaction amount is {bigdecimal}")
     public void theTransactionAmountIs(BigDecimal amount) {
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
                 .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
     }
 
@@ -208,8 +210,9 @@ public class TransactionSteps {
     @And("the transaction list contains description {string} with amount {bigdecimal}")
     public void theTransactionListContainsDescriptionWithAmount(
             String description, BigDecimal amount) {
-        assertThat(ctx.response.getBody()).contains("\"description\":\"" + description + "\"");
-        assertThat(ctx.response.getBody())
+        assertThat((String) ctx.response.getBody())
+                .contains("\"description\":\"" + description + "\"");
+        assertThat((String) ctx.response.getBody())
                 .contains("\"amount\":" + amount.stripTrailingZeros().toPlainString());
     }
 
@@ -231,5 +234,22 @@ public class TransactionSteps {
         ctx.response =
                 restTemplate.postForEntity(
                         "/api/v1/transactions/bulk", new HttpEntity<>(body, headers), String.class);
+    }
+
+    @Given(
+            "a transaction with description {string}, amount {double}, type {string}, and category {string} for {string}")
+    public void aTransactionForMonth(
+            String description, double amount, String type, String category, String monthStr) {
+        Transaction transaction = new Transaction();
+        transaction.setDescription(description);
+        transaction.setAmount(BigDecimal.valueOf(amount));
+        transaction.setType(TransactionType.valueOf(type));
+        transaction.setCategory("null".equals(category) ? null : category);
+
+        java.time.YearMonth yearMonth = java.time.YearMonth.parse(monthStr);
+        transaction.setOccurredAt(
+                yearMonth.atDay(1).atStartOfDay().toInstant(java.time.ZoneOffset.UTC));
+
+        ctx.lastTransactionId = transactionRepository.save(transaction).getId();
     }
 }
