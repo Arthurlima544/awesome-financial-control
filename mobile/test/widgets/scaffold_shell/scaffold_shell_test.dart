@@ -7,8 +7,22 @@ import 'package:afc/widgets/scaffold_shell/scaffold_shell.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 GoRouter _buildRouter({int initialIndex = 0}) {
-  final paths = ['/home', '/transactions', '/limits', '/stats', '/recurring'];
-  final labels = ['Home', 'Transactions', 'Limits', 'Stats', 'Recurring'];
+  final paths = [
+    '/home',
+    '/transactions',
+    '/limits',
+    '/stats',
+    '/goals',
+    '/recurring',
+  ];
+  final labels = [
+    'Home',
+    'Transactions',
+    'Limits',
+    'Stats',
+    'Goals',
+    'Recurring',
+  ];
 
   return GoRouter(
     initialLocation: paths[initialIndex],
@@ -52,12 +66,12 @@ Widget _buildApp({int initialIndex = 0}) {
 
 void main() {
   group('ScaffoldShell', () {
-    testWidgets('renders NavigationBar with 4 destinations', (tester) async {
+    testWidgets('renders NavigationBar with 6 destinations', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
       expect(find.byType(NavigationBar), findsOneWidget);
-      expect(find.byType(NavigationDestination), findsNWidgets(5));
+      expect(find.byType(NavigationDestination), findsNWidgets(6));
     });
 
     testWidgets('shows all tab labels', (tester) async {
@@ -68,6 +82,7 @@ void main() {
       expect(find.text('Transações'), findsOneWidget);
       expect(find.text('Limites'), findsOneWidget);
       expect(find.text('Gráficos'), findsOneWidget);
+      expect(find.text('Objetivos'), findsOneWidget);
       expect(find.text('Recorrentes'), findsOneWidget);
     });
 

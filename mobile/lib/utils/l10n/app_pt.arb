@@ -369,5 +369,14 @@
   "@reportExportError": { "description": "Error message for report export" },
 
   "reportLegend": "Legenda",
-  "@reportLegend": { "description": "Legend label in report chart" }
+  "@reportLegend": { "description": "Legend label in report chart" },
+
+  "navGoals": "Objetivos",
+  "@navGoals": { "description": "Bottom nav bar goals tab label" },
+
+  "goalsTitle": "Objetivos de Economia",
+  "@goalsTitle": { "description": "Savings goals screen title" },
+
+  "goalsNoGoals": "Nenhum objetivo cadastrado",
+  "@goalsNoGoals": { "description": "Empty state for goals list" }
 }

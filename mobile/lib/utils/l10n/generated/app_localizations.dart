@@ -783,6 +783,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Legenda'**
   String get reportLegend;
+
+  /// Bottom nav bar goals tab label
+  ///
+  /// In pt, this message translates to:
+  /// **'Objetivos'**
+  String get navGoals;
+
+  /// Savings goals screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Objetivos de Economia'**
+  String get goalsTitle;
+
+  /// Empty state for goals list
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum objetivo cadastrado'**
+  String get goalsNoGoals;
 }
 
 class _AppLocalizationsDelegate

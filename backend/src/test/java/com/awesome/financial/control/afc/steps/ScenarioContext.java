@@ -17,4 +17,5 @@ public class ScenarioContext {
     public UUID lastLimitId;
     public UUID lastTemplateId;
     public UUID lastRecurringId;
+    public UUID lastGoalId;
 }

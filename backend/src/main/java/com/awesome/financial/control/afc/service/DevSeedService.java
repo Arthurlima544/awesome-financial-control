@@ -1,11 +1,16 @@
 package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.model.Category;
+import com.awesome.financial.control.afc.model.Goal;
 import com.awesome.financial.control.afc.model.Limit;
+import com.awesome.financial.control.afc.model.RecurrenceFrequency;
+import com.awesome.financial.control.afc.model.RecurringTransaction;
 import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.CategoryRepository;
+import com.awesome.financial.control.afc.repository.GoalRepository;
 import com.awesome.financial.control.afc.repository.LimitRepository;
+import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -24,6 +29,8 @@ public class DevSeedService {
     private final CategoryRepository categoryRepository;
     private final LimitRepository limitRepository;
     private final TransactionRepository transactionRepository;
+    private final GoalRepository goalRepository;
+    private final RecurringTransactionRepository recurringTransactionRepository;
 
     @Transactional
     public void seed() {
@@ -54,10 +61,30 @@ public class DevSeedService {
                 "Restaurante", "80.00", TransactionType.EXPENSE, alimentacao.getName(), lastMonth);
         saveTransaction(
                 "Combustível", "200.00", TransactionType.EXPENSE, transporte.getName(), lastMonth);
+
+        saveGoal("Viagem Japão", "15000.00", "2000.00", today.plus(365, ChronoUnit.DAYS));
+        saveGoal("Reserva de Emergência", "20000.00", "5000.00", today.plus(730, ChronoUnit.DAYS));
+
+        saveRecurringTransaction(
+                "Internet",
+                "120.00",
+                TransactionType.EXPENSE,
+                moradia.getName(),
+                RecurrenceFrequency.MONTHLY,
+                today.plus(15, ChronoUnit.DAYS));
+        saveRecurringTransaction(
+                "Spotify",
+                "21.90",
+                TransactionType.EXPENSE,
+                lazer.getName(),
+                RecurrenceFrequency.MONTHLY,
+                today.plus(5, ChronoUnit.DAYS));
     }
 
     @Transactional
     public void reset() {
+        recurringTransactionRepository.deleteAll();
+        goalRepository.deleteAll();
         transactionRepository.deleteAll();
         limitRepository.deleteAll();
         categoryRepository.deleteAll();
@@ -89,6 +116,32 @@ public class DevSeedService {
         t.setCategory(category);
         t.setOccurredAt(occurredAt);
         transactionRepository.save(t);
+    }
+
+    private void saveGoal(String name, String target, String current, Instant deadline) {
+        Goal g = new Goal();
+        g.setName(name);
+        g.setTargetAmount(new BigDecimal(target));
+        g.setCurrentAmount(new BigDecimal(current));
+        g.setDeadline(deadline);
+        goalRepository.save(g);
+    }
+
+    private void saveRecurringTransaction(
+            String description,
+            String amount,
+            TransactionType type,
+            String category,
+            RecurrenceFrequency frequency,
+            Instant nextDueAt) {
+        RecurringTransaction rt = new RecurringTransaction();
+        rt.setDescription(description);
+        rt.setAmount(new BigDecimal(amount));
+        rt.setType(type);
+        rt.setCategory(category);
+        rt.setFrequency(frequency);
+        rt.setNextDueAt(nextDueAt);
+        recurringTransactionRepository.save(rt);
     }
 
     public List<String> seededCategories() {

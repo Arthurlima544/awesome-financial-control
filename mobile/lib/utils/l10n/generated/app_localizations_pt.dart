@@ -366,4 +366,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get reportLegend => 'Legenda';
+
+  @override
+  String get navGoals => 'Objetivos';
+
+  @override
+  String get goalsTitle => 'Objetivos de Economia';
+
+  @override
+  String get goalsNoGoals => 'Nenhum objetivo cadastrado';
 }
