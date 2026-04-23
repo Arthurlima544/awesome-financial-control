@@ -477,4 +477,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get healthScoreTooltip => 'Sua pontuação baseada nos últimos 30 dias';
+
+  @override
+  String get onboardingWelcomeTitle => 'Bem-vindo ao AFC';
+
+  @override
+  String get onboardingWelcomeDesc =>
+      'Seu controle financeiro pessoal, simples e poderoso.';
+
+  @override
+  String get onboardingTrackTitle => 'Controle seus Gastos';
+
+  @override
+  String get onboardingTrackDesc =>
+      'Acompanhe cada centavo e defina limites mensais para economizar mais.';
+
+  @override
+  String get onboardingInvestTitle => 'Invista no Futuro';
+
+  @override
+  String get onboardingInvestDesc =>
+      'Monitore seus investimentos e alcance seus objetivos de economia.';
+
+  @override
+  String get onboardingHealthTitle => 'Saúde Financeira';
+
+  @override
+  String get onboardingHealthDesc =>
+      'Veja sua pontuação de saúde financeira e receba insights reais.';
+
+  @override
+  String get onboardingSkip => 'Pular';
+
+  @override
+  String get onboardingNext => 'Próximo';
+
+  @override
+  String get onboardingStart => 'Começar';
 }

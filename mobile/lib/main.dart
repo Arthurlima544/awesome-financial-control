@@ -6,6 +6,7 @@ import 'package:afc/utils/config/app_theme.dart';
 import 'package:afc/utils/config/router.dart';
 import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
+import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 import 'package:afc/utils/config/injection.dart' as di;
@@ -26,13 +27,15 @@ class AfcApp extends StatefulWidget {
 
 class _AfcAppState extends State<AfcApp> {
   late final AuthBloc _authBloc;
+  late final OnboardingCubit _onboardingCubit;
   late final GoRouter _router;
 
   @override
   void initState() {
     super.initState();
     _authBloc = sl<AuthBloc>();
-    _router = createRouter(_authBloc);
+    _onboardingCubit = sl<OnboardingCubit>()..loadOnboardingStatus();
+    _router = createRouter(_authBloc, _onboardingCubit);
     _authBloc.add(const AppLaunched());
   }
 
@@ -47,6 +50,7 @@ class _AfcAppState extends State<AfcApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: _authBloc),
+        BlocProvider.value(value: _onboardingCubit),
         BlocProvider.value(value: sl<ThemeCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(

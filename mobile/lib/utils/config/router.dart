@@ -8,6 +8,8 @@ import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/views/login_screen.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/views/splash_screen.dart';
+import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
+import 'package:afc/views/onboarding_screen.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/views/category_edit_screen.dart';
 import 'package:afc/views/category_screen.dart';
@@ -48,7 +50,7 @@ class _RouterRefreshStream extends ChangeNotifier {
   }
 }
 
-GoRouter createRouter(AuthBloc authBloc) {
+GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
   final refreshBloc = sl<AppRefreshBloc>();
   return GoRouter(
     navigatorKey: sl<NavigationService>().navigatorKey,
@@ -56,6 +58,7 @@ GoRouter createRouter(AuthBloc authBloc) {
     refreshListenable: Listenable.merge([
       _RouterRefreshStream(authBloc.stream),
       _RouterRefreshStream(refreshBloc.stream),
+      _RouterRefreshStream(onboardingCubit.stream),
     ]),
     redirect: (context, state) {
       final authState = authBloc.state;
@@ -64,14 +67,31 @@ GoRouter createRouter(AuthBloc authBloc) {
       if (authState is AuthInitial) {
         return location == '/' ? null : '/';
       }
+
+      final onboardingState = onboardingCubit.state;
+      if (onboardingState.isLoading) {
+        return location == '/' ? null : '/';
+      }
+
+      if (!onboardingState.isCompleted && location != '/onboarding') {
+        return '/onboarding';
+      }
+
       if (authState is AuthSignedOut) {
+        if (location == '/onboarding') return null;
         return location == '/login' ? null : '/login';
       }
-      if (location == '/' || location == '/login') return '/home';
+
+      if (location == '/' ||
+          location == '/login' ||
+          location == '/onboarding') {
+        return '/home';
+      }
       return null;
     },
     routes: [
       GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(
         path: '/categories',

@@ -1005,6 +1005,72 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Sua pontuação baseada nos últimos 30 dias'**
   String get healthScoreTooltip;
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Bem-vindo ao AFC'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu controle financeiro pessoal, simples e poderoso.'**
+  String get onboardingWelcomeDesc;
+
+  /// No description provided for @onboardingTrackTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle seus Gastos'**
+  String get onboardingTrackTitle;
+
+  /// No description provided for @onboardingTrackDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acompanhe cada centavo e defina limites mensais para economizar mais.'**
+  String get onboardingTrackDesc;
+
+  /// No description provided for @onboardingInvestTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Invista no Futuro'**
+  String get onboardingInvestTitle;
+
+  /// No description provided for @onboardingInvestDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Monitore seus investimentos e alcance seus objetivos de economia.'**
+  String get onboardingInvestDesc;
+
+  /// No description provided for @onboardingHealthTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saúde Financeira'**
+  String get onboardingHealthTitle;
+
+  /// No description provided for @onboardingHealthDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Veja sua pontuação de saúde financeira e receba insights reais.'**
+  String get onboardingHealthDesc;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pular'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Começar'**
+  String get onboardingStart;
 }
 
 class _AppLocalizationsDelegate

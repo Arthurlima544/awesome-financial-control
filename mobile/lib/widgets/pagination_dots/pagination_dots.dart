@@ -10,6 +10,7 @@ class PaginationDots extends StatelessWidget {
   final Color activeColor;
   final Color inactiveColor;
   final FocusNode? focusNode;
+  final PaginationDotsCubit? cubit;
 
   const PaginationDots({
     super.key,
@@ -19,10 +20,23 @@ class PaginationDots extends StatelessWidget {
     this.activeColor = const Color(0xFF2962FF),
     this.inactiveColor = const Color(0xFFE5E7EB),
     this.focusNode,
+    this.cubit,
   }) : assert(totalPages > 0, 'totalPages must be greater than 0');
 
   @override
   Widget build(BuildContext context) {
+    if (cubit != null) {
+      return BlocProvider.value(
+        value: cubit!,
+        child: _PaginationDotsView(
+          totalPages: totalPages,
+          onPageSelected: onPageSelected,
+          activeColor: activeColor,
+          inactiveColor: inactiveColor,
+          focusNode: focusNode,
+        ),
+      );
+    }
     return BlocProvider(
       create: (_) => PaginationDotsCubit(initialPage: initialPage),
       child: _PaginationDotsView(
@@ -56,7 +70,9 @@ class _PaginationDotsView extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Adaptive sizing based on available width
-        final double maxWidth = constraints.maxWidth;
+        final double maxWidth = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : 300.0;
         // Calculate relative dot size and spacing, clamped to reasonable minimums/maximums
         final double dotSize = (maxWidth * 0.03).clamp(8.0, 16.0);
         final double activeDotSize =

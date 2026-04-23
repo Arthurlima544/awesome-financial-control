@@ -479,5 +479,16 @@
   "healthScoreVariance": "Variância de Gastos",
   "@healthScoreVariance": { "description": "Expense variance score factor" },
 
-  "healthScoreTooltip": "Sua pontuação baseada nos últimos 30 dias"
+  "healthScoreTooltip": "Sua pontuação baseada nos últimos 30 dias",
+  "onboardingWelcomeTitle": "Bem-vindo ao AFC",
+  "onboardingWelcomeDesc": "Seu controle financeiro pessoal, simples e poderoso.",
+  "onboardingTrackTitle": "Controle seus Gastos",
+  "onboardingTrackDesc": "Acompanhe cada centavo e defina limites mensais para economizar mais.",
+  "onboardingInvestTitle": "Invista no Futuro",
+  "onboardingInvestDesc": "Monitore seus investimentos e alcance seus objetivos de economia.",
+  "onboardingHealthTitle": "Saúde Financeira",
+  "onboardingHealthDesc": "Veja sua pontuação de saúde financeira e receba insights reais.",
+  "onboardingSkip": "Pular",
+  "onboardingNext": "Próximo",
+  "onboardingStart": "Começar"
 }
