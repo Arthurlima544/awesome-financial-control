@@ -148,60 +148,67 @@ class _BarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BarChart(
-      BarChartData(
-        maxY: state.maxValue * 1.2,
-        barGroups: _buildGroups(),
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 56,
-              interval: state.yInterval,
-              getTitlesWidget: (value, meta) => Text(
-                state.formatYLabel(value),
-                style: Theme.of(context).textTheme.labelSmall,
-                textAlign: TextAlign.right,
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 1500),
+      curve: Curves.elasticOut,
+      builder: (context, value, child) {
+        return BarChart(
+          BarChartData(
+            maxY: state.maxValue * 1.2,
+            barGroups: _buildGroups(value),
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 56,
+                  interval: state.yInterval,
+                  getTitlesWidget: (value, meta) => Text(
+                    state.formatYLabel(value),
+                    style: Theme.of(context).textTheme.labelSmall,
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 28,
+                  getTitlesWidget: (value, meta) {
+                    final index = value.toInt();
+                    if (index < 0 || index >= stats.length) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.xs),
+                      child: Text(
+                        stats[index].monthAbbreviation,
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
               ),
             ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 28,
-              getTitlesWidget: (value, meta) {
-                final index = value.toInt();
-                if (index < 0 || index >= stats.length) {
-                  return const SizedBox.shrink();
-                }
-                return Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.xs),
-                  child: Text(
-                    stats[index].monthAbbreviation,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                );
-              },
+            gridData: FlGridData(
+              horizontalInterval: state.yInterval,
+              drawVerticalLine: false,
             ),
+            borderData: FlBorderData(show: false),
+            barTouchData: BarTouchData(enabled: true),
           ),
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-        ),
-        gridData: FlGridData(
-          horizontalInterval: state.yInterval,
-          drawVerticalLine: false,
-        ),
-        borderData: FlBorderData(show: false),
-        barTouchData: BarTouchData(enabled: false),
-      ),
+        );
+      },
     );
   }
 
-  List<BarChartGroupData> _buildGroups() {
+  List<BarChartGroupData> _buildGroups(double animationValue) {
     return List.generate(stats.length, (i) {
       final s = stats[i];
       return BarChartGroupData(
@@ -209,13 +216,13 @@ class _BarChart extends StatelessWidget {
         barsSpace: 4,
         barRods: [
           BarChartRodData(
-            toY: s.income,
+            toY: s.income * animationValue,
             color: AppColors.primary,
             width: 10,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
           ),
           BarChartRodData(
-            toY: s.expenses,
+            toY: s.expenses * animationValue,
             color: AppColors.error,
             width: 10,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
