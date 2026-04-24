@@ -14,12 +14,15 @@ class FireCalculationRequested extends FireCalculatorEvent {
   final double annualReturnRate;
   final double safeWithdrawalRate;
 
+  final bool adjustForInflation;
+
   const FireCalculationRequested({
     required this.monthlyExpenses,
     required this.currentPortfolio,
     required this.monthlySavings,
     required this.annualReturnRate,
     required this.safeWithdrawalRate,
+    required this.adjustForInflation,
   });
 
   @override
@@ -29,5 +32,6 @@ class FireCalculationRequested extends FireCalculatorEvent {
     monthlySavings,
     annualReturnRate,
     safeWithdrawalRate,
+    adjustForInflation,
   ];
 }

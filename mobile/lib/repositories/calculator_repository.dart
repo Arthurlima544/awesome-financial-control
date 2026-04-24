@@ -12,6 +12,7 @@ class CalculatorRepository {
     required double monthlySavings,
     required double annualReturnRate,
     required double safeWithdrawalRate,
+    required bool adjustForInflation,
   }) async {
     try {
       final response = await _dio.post(
@@ -22,6 +23,7 @@ class CalculatorRepository {
           'monthlySavings': monthlySavings,
           'annualReturnRate': annualReturnRate,
           'safeWithdrawalRate': safeWithdrawalRate,
+          'adjustForInflation': adjustForInflation,
         },
       );
 
@@ -32,6 +34,35 @@ class CalculatorRepository {
       }
     } catch (e) {
       throw Exception('Failed to calculate FIRE: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> calculateCompoundInterest({
+    required double initialAmount,
+    required double monthlyContribution,
+    required int years,
+    required double annualInterestRate,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${AppConfig.apiBaseUrl}/api/v1/calculators/compound-interest',
+        data: {
+          'initialAmount': initialAmount,
+          'monthlyContribution': monthlyContribution,
+          'years': years,
+          'annualInterestRate': annualInterestRate,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      } else {
+        throw Exception(
+          'Failed to calculate compound interest: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Failed to calculate compound interest: $e');
     }
   }
 }

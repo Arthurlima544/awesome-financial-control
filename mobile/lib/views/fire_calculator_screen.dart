@@ -93,6 +93,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
           monthlySavings: savings,
           annualReturnRate: annualReturn,
           safeWithdrawalRate: _swr,
+          adjustForInflation: _adjustForInflation,
         ),
       );
     }
@@ -472,11 +473,12 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               showTitles: true,
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
-                if (value == 0)
+                if (value == 0) {
                   return const Text(
                     'R\$ 0',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
+                }
                 if (value >= 1000000) {
                   return Text(
                     'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
@@ -494,16 +496,18 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value == 0)
+                if (value == 0) {
                   return const Text(
                     'Hoje',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
-                if (value % 10 == 0)
+                }
+                if (value % 10 == 0) {
                   return Text(
                     'A${value.toInt()}',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
+                }
                 return const SizedBox.shrink();
               },
             ),

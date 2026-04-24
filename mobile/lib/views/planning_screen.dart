@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/utils/config/app_icons.dart';
+import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/planning_quick_add_sheet/planning_quick_add_sheet.dart';
 
@@ -30,6 +31,24 @@ class PlanningScreen extends StatelessWidget {
             title: l10n.billsTitle,
             leadingIcon: AppIcons.bills,
             onTap: () => context.push('/bills'),
+          ),
+          const Divider(height: 32),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Text('Calculadoras', style: AppTextStyles.titleSmall),
+          ),
+          CustomListTile(
+            title: 'Calculadora FIRE',
+            leadingIcon: Icons.local_fire_department,
+            onTap: () => context.push('/fire-calculadora'),
+          ),
+          CustomListTile(
+            title: 'Juros Compostos',
+            leadingIcon: Icons.trending_up,
+            onTap: () => context.push('/juros-compostos'),
           ),
         ],
       ),

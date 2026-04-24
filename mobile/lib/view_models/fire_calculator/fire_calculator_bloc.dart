@@ -27,6 +27,7 @@ class FireCalculatorBloc
         monthlySavings: event.monthlySavings,
         annualReturnRate: event.annualReturnRate,
         safeWithdrawalRate: event.safeWithdrawalRate,
+        adjustForInflation: event.adjustForInflation,
       );
       emit(
         state.copyWith(status: FireCalculatorStatus.success, result: result),

@@ -215,6 +215,14 @@ class _HomeViewState extends State<_HomeView> {
                         delay: const Duration(milliseconds: 250),
                         child: const _FireCard(),
                       ),
+                      const SizedBox(height: AppSpacing.md),
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: const Duration(milliseconds: 275),
+                        child: const _CompoundInterestCard(),
+                      ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
                         l10n.homeRecentTransactions,
@@ -437,6 +445,61 @@ class _FireCard extends StatelessWidget {
                     ),
                     Text(
                       'Descubra seu número FIRE e quando se aposentar.',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CompoundInterestCard extends StatelessWidget {
+  const _CompoundInterestCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      elevation: 0,
+      child: InkWell(
+        onTap: () => context.push('/juros-compostos'),
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.trending_up, color: Colors.teal),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Simulador de Juros Compostos',
+                      style: AppTextStyles.labelLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Veja o poder do tempo sobre seus investimentos.',
                       style: AppTextStyles.labelSmall.copyWith(
                         color: Colors.grey,
                       ),
