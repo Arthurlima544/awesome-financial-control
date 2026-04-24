@@ -52,6 +52,8 @@ public class TransactionService {
         transaction.setType(request.type());
         transaction.setCategory(request.category());
         transaction.setOccurredAt(request.occurredAt());
+        transaction.setPassive(request.isPassive());
+        transaction.setInvestmentId(request.investmentId());
         Transaction saved = transactionRepository.save(transaction);
         return transactionMapper.toResponse(saved);
     }
@@ -65,6 +67,8 @@ public class TransactionService {
         transaction.setType(request.type());
         transaction.setCategory(request.category());
         transaction.setOccurredAt(request.occurredAt());
+        transaction.setPassive(request.isPassive());
+        transaction.setInvestmentId(request.investmentId());
         Transaction saved = transactionRepository.save(transaction);
         return transactionMapper.toResponse(saved);
     }
@@ -82,6 +86,8 @@ public class TransactionService {
                                     transaction.setType(request.type());
                                     transaction.setCategory(request.category());
                                     transaction.setOccurredAt(request.occurredAt());
+                                    transaction.setPassive(request.isPassive());
+                                    transaction.setInvestmentId(request.investmentId());
                                     return transaction;
                                 })
                         .toList();

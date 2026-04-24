@@ -8,6 +8,8 @@ class TransactionModel {
     required this.type,
     this.category,
     required this.occurredAt,
+    this.isPassive = false,
+    this.investmentId,
   });
 
   final String id;
@@ -16,6 +18,8 @@ class TransactionModel {
   final TransactionType type;
   final String? category;
   final DateTime occurredAt;
+  final bool isPassive;
+  final String? investmentId;
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
@@ -27,6 +31,8 @@ class TransactionModel {
           : TransactionType.expense,
       category: json['category'] as String?,
       occurredAt: DateTime.parse(json['occurredAt'] as String),
+      isPassive: json['isPassive'] as bool? ?? false,
+      investmentId: json['investmentId'] as String?,
     );
   }
 }

@@ -81,6 +81,8 @@ class TransactionListBloc
         type: event.type,
         category: event.category,
         occurredAt: event.occurredAt,
+        isPassive: event.isPassive,
+        investmentId: event.investmentId,
       );
       final updatedList = current.transactions.map((t) {
         return t.id == event.id ? updated : t;

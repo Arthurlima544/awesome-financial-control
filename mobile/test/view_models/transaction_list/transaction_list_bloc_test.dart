@@ -28,6 +28,8 @@ class _FakeRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) async {
     final t = _transactions.firstWhere((t) => t.id == id);
     return TransactionModel(
@@ -57,6 +59,8 @@ class _FailingRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) => Future.error(Exception('update failed'));
 }
 
@@ -79,6 +83,8 @@ class _FailingDeleteRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) async => _transactions.first;
 }
 
@@ -101,6 +107,8 @@ class _FailingUpdateRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) => Future.error(Exception('update failed'));
 }
 
@@ -124,6 +132,8 @@ class _UpdateRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) async => _updated;
 }
 

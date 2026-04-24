@@ -27,6 +27,8 @@ class TransactionUpdateRequested extends TransactionListEvent {
     required this.type,
     this.category,
     required this.occurredAt,
+    this.isPassive = false,
+    this.investmentId,
   });
 
   final String id;
@@ -35,6 +37,8 @@ class TransactionUpdateRequested extends TransactionListEvent {
   final String type;
   final String? category;
   final DateTime occurredAt;
+  final bool isPassive;
+  final String? investmentId;
 
   @override
   List<Object?> get props => [
@@ -44,5 +48,7 @@ class TransactionUpdateRequested extends TransactionListEvent {
     type,
     category,
     occurredAt,
+    isPassive,
+    investmentId,
   ];
 }

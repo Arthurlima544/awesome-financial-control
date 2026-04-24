@@ -103,7 +103,7 @@ class _TooltipInternalState extends State<_TooltipInternal> {
     }
 
     return OverlayEntry(
-      builder: (context) => Positioned(
+      builder: (overlayContext) => Positioned(
         width: width,
         child: CompositedTransformFollower(
           link: _layerLink,

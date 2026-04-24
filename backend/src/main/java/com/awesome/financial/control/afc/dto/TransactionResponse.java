@@ -13,4 +13,6 @@ public record TransactionResponse(
         BigDecimal amount,
         TransactionType type,
         String category,
-        Instant occurredAt) {}
+        Instant occurredAt,
+        boolean isPassive,
+        UUID investmentId) {}

@@ -33,7 +33,20 @@ import 'package:afc/view_models/bills/bill_bloc.dart';
 import 'package:afc/views/bills_screen.dart';
 import 'package:afc/views/settings_screen.dart';
 import 'package:afc/views/planning_screen.dart';
+import 'package:afc/views/fire_calculator_screen.dart';
+import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
+import 'package:afc/views/compound_interest_screen.dart';
+import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
+import 'package:afc/views/investment_goal_screen.dart';
+import 'package:afc/view_models/investment_goal/investment_goal_bloc.dart';
 
+import 'package:afc/views/investment_dashboard_screen.dart';
+import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
+import 'package:afc/views/passive_income_screen.dart';
+import 'package:afc/view_models/passive_income/passive_income_bloc.dart';
+import 'package:afc/views/net_worth_screen.dart';
+import 'package:afc/view_models/net_worth/net_worth_bloc.dart';
+import 'package:afc/repositories/stats_repository.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
@@ -142,11 +155,59 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
           create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
           child: const InvestmentsScreen(),
         ),
+        routes: [
+          GoRoute(
+            path: 'dashboard',
+            builder: (_, _) => BlocProvider(
+              create: (_) =>
+                  sl<InvestmentDashboardBloc>()..add(LoadInvestmentDashboard()),
+              child: const InvestmentDashboardScreen(),
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/passive-income',
+        builder: (_, _) => BlocProvider(
+          create: (_) =>
+              sl<PassiveIncomeBloc>()..add(LoadPassiveIncomeDashboard()),
+          child: const PassiveIncomeScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/net-worth',
+        builder: (_, _) => BlocProvider(
+          create: (_) =>
+              NetWorthBloc(repository: sl<StatsRepository>())
+                ..add(LoadNetWorthEvolution()),
+          child: const NetWorthScreen(),
+        ),
       ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
       GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
       GoRoute(path: '/limits', builder: (_, _) => const LimitScreen()),
       GoRoute(path: '/goals', builder: (_, _) => const GoalsScreen()),
+      GoRoute(
+        path: '/fire-calculadora',
+        builder: (_, _) => BlocProvider(
+          create: (_) => sl<FireCalculatorBloc>(),
+          child: const FireCalculatorScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/juros-compostos',
+        builder: (_, _) => BlocProvider(
+          create: (_) => sl<CompoundInterestBloc>(),
+          child: const CompoundInterestScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/meta-investimento',
+        builder: (_, _) => BlocProvider(
+          create: (_) => sl<InvestmentGoalBloc>(),
+          child: const InvestmentGoalScreen(),
+        ),
+      ),
       GoRoute(
         path: '/bills',
         builder: (_, _) => BlocProvider(
@@ -159,16 +220,10 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
         builder: (_, _) => const RecurringListScreen(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
-          create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),
-          child: Builder(
-            builder: (innerContext) => ScaffoldShell(
-              navigationShell: navigationShell,
-              onHomeTabReactivated: () => innerContext.read<HomeBloc>().add(
-                const HomeDashboardLoaded(),
-              ),
-            ),
-          ),
+        builder: (context, state, navigationShell) => ScaffoldShell(
+          navigationShell: navigationShell,
+          onHomeTabReactivated: () =>
+              context.read<HomeBloc>().add(const HomeDashboardLoaded()),
         ),
         branches: [
           StatefulShellBranch(

@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
@@ -29,11 +30,17 @@ import 'package:afc/repositories/bill_repository.dart';
 import 'package:afc/repositories/health_score_repository.dart';
 import 'package:afc/repositories/goal_repository.dart';
 import 'package:afc/view_models/goals/goal_bloc.dart';
+import 'package:afc/view_models/passive_income/passive_income_bloc.dart';
+import 'package:afc/repositories/passive_income_repository.dart';
 import 'package:afc/repositories/investment_repository.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/repositories/calculator_repository.dart';
+import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
+import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
+import 'package:afc/view_models/investment_goal/investment_goal_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -59,6 +66,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => InvestmentRepository());
   sl.registerLazySingleton(() => BillRepository());
   sl.registerLazySingleton(() => HealthScoreRepository());
+  sl.registerLazySingleton(() => CalculatorRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -80,4 +88,10 @@ Future<void> init() async {
   sl.registerFactory(() => SettingsBloc());
   sl.registerLazySingleton(() => ThemeCubit());
   sl.registerFactory(() => OnboardingCubit());
+  sl.registerFactory(() => FireCalculatorBloc(repository: sl()));
+  sl.registerFactory(() => CompoundInterestBloc(repository: sl()));
+  sl.registerFactory(() => InvestmentGoalBloc(repository: sl()));
+  sl.registerFactory(() => InvestmentDashboardBloc(repository: sl()));
+  sl.registerLazySingleton(() => PassiveIncomeRepository());
+  sl.registerFactory(() => PassiveIncomeBloc(repository: sl()));
 }

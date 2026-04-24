@@ -22,6 +22,8 @@ class _FakeRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) async {
     return TransactionModel(
       id: 'new-id',
@@ -42,6 +44,8 @@ class _FailingRepository extends TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) {
     return Future.error(Exception('create failed'));
   }

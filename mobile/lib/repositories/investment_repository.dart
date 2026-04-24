@@ -22,4 +22,7 @@ class InvestmentRepository {
 
   Future<InvestmentModel> updatePrice(String id, double price) =>
       _service.updatePrice(id, price);
+
+  Future<Map<String, dynamic>> getDashboardData() =>
+      _service.getDashboardData();
 }

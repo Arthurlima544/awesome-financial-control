@@ -7,6 +7,7 @@ import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/view_models/transaction_list/transaction_edit_cubit.dart';
+import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
 
 class TransactionEditScreen extends StatelessWidget {
@@ -88,6 +89,8 @@ class _TransactionEditFormState extends State<TransactionEditForm> {
         type: cubit.state.type.name,
         category: cubit.state.parsedCategory,
         occurredAt: cubit.state.occurredAt ?? DateTime.now(),
+        isPassive: cubit.state.isPassive,
+        investmentId: cubit.state.investmentId,
       ),
     );
 
@@ -174,7 +177,6 @@ class _TransactionEditFormState extends State<TransactionEditForm> {
                     );
                   },
                 ),
-                const SizedBox(height: AppSpacing.md),
                 TextFormField(
                   controller: _categoryController,
                   decoration: InputDecoration(
@@ -184,6 +186,49 @@ class _TransactionEditFormState extends State<TransactionEditForm> {
                   onChanged: (v) =>
                       context.read<TransactionEditCubit>().categoryChanged(v),
                   textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                BlocBuilder<TransactionEditCubit, TransactionEditState>(
+                  buildWhen: (p, c) => p.isPassive != c.isPassive,
+                  builder: (context, state) => SwitchListTile(
+                    title: const Text('Renda Passiva'),
+                    subtitle: const Text('Marcar como dividendos ou juros'),
+                    value: state.isPassive,
+                    onChanged: (v) => context
+                        .read<TransactionEditCubit>()
+                        .isPassiveChanged(v),
+                  ),
+                ),
+                BlocBuilder<TransactionEditCubit, TransactionEditState>(
+                  builder: (context, state) {
+                    if (!state.isPassive) return const SizedBox.shrink();
+                    return BlocBuilder<InvestmentBloc, InvestmentState>(
+                      builder: (context, invState) {
+                        return DropdownButtonFormField<String>(
+                          initialValue: state.investmentId,
+                          decoration: const InputDecoration(
+                            labelText: 'Vincular Investimento',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: [
+                            const DropdownMenuItem(
+                              value: null,
+                              child: Text('Nenhum'),
+                            ),
+                            ...invState.investments.map(
+                              (inv) => DropdownMenuItem(
+                                value: inv.id,
+                                child: Text('${inv.ticker} - ${inv.name}'),
+                              ),
+                            ),
+                          ],
+                          onChanged: (v) => context
+                              .read<TransactionEditCubit>()
+                              .investmentIdChanged(v),
+                        );
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 SizedBox(

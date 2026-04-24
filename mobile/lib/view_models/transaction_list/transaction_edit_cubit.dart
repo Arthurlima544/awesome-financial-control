@@ -11,6 +11,8 @@ class TransactionEditState extends Equatable {
     this.type = TransactionType.expense,
     this.category = '',
     this.occurredAt,
+    this.isPassive = false,
+    this.investmentId,
     this.status = TransactionEditStatus.initial,
     this.errorMessage,
   });
@@ -20,6 +22,8 @@ class TransactionEditState extends Equatable {
   final TransactionType type;
   final String category;
   final DateTime? occurredAt;
+  final bool isPassive;
+  final String? investmentId;
   final TransactionEditStatus status;
   final String? errorMessage;
 
@@ -29,6 +33,8 @@ class TransactionEditState extends Equatable {
     TransactionType? type,
     String? category,
     DateTime? occurredAt,
+    bool? isPassive,
+    String? investmentId,
     TransactionEditStatus? status,
     String? errorMessage,
   }) {
@@ -38,6 +44,8 @@ class TransactionEditState extends Equatable {
       type: type ?? this.type,
       category: category ?? this.category,
       occurredAt: occurredAt ?? this.occurredAt,
+      isPassive: isPassive ?? this.isPassive,
+      investmentId: investmentId ?? this.investmentId,
       status: status ?? this.status,
       errorMessage: errorMessage,
     );
@@ -50,6 +58,8 @@ class TransactionEditState extends Equatable {
     type,
     category,
     occurredAt,
+    isPassive,
+    investmentId,
     status,
     errorMessage,
   ];
@@ -79,6 +89,8 @@ class TransactionEditCubit extends Cubit<TransactionEditState> {
           type: initialTransaction?.type ?? TransactionType.expense,
           category: initialTransaction?.category ?? '',
           occurredAt: initialTransaction?.occurredAt ?? DateTime.now(),
+          isPassive: initialTransaction?.isPassive ?? false,
+          investmentId: initialTransaction?.investmentId,
         ),
       );
 
@@ -93,6 +105,11 @@ class TransactionEditCubit extends Cubit<TransactionEditState> {
 
   void occurredAtChanged(DateTime value) =>
       emit(state.copyWith(occurredAt: value));
+
+  void isPassiveChanged(bool value) => emit(state.copyWith(isPassive: value));
+
+  void investmentIdChanged(String? value) =>
+      emit(state.copyWith(investmentId: value));
 
   void saved() => emit(state.copyWith(status: TransactionEditStatus.success));
 }

@@ -18,6 +18,8 @@ class TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) => _service.update(
     id,
     description: description,
@@ -25,6 +27,8 @@ class TransactionListRepository {
     type: type,
     category: category,
     occurredAt: occurredAt,
+    isPassive: isPassive,
+    investmentId: investmentId,
   );
 
   Future<TransactionModel> create({
@@ -33,12 +37,16 @@ class TransactionListRepository {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) => _service.create(
     description: description,
     amount: amount,
     type: type,
     category: category,
     occurredAt: occurredAt,
+    isPassive: isPassive,
+    investmentId: investmentId,
   );
 
   Future<List<TransactionModel>> createBulk(List<Map<String, dynamic>> data) =>
