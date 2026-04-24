@@ -8,10 +8,10 @@ Feature: Net Worth Evolution
 
   Scenario: Calculate net worth evolution with transactions and investments
     Given a category "Salário" exists
-    And a transaction "Salário" of 5000.00 type "INCOME" occurred at "2024-01-15T10:00:00Z"
-    And a transaction "Aluguel" of 2000.00 type "EXPENSE" occurred at "2024-01-20T10:00:00Z"
-    And an investment "Petrobras" ticker "PETR4" type "STOCK" quantity "10" avgCost "30.00" price "35.00" created at "2024-02-10T10:00:00Z"
+    And a transaction "Salário" of 5000.00 type "INCOME" occurred at "2026-03-15T10:00:00Z"
+    And a transaction "Aluguel" of 2000.00 type "EXPENSE" occurred at "2026-03-20T10:00:00Z"
+    And an investment "Petrobras" ticker "PETR4" type "STOCK" quantity "10" avgCost "30.00" price "35.00" created at "2026-04-10T10:00:00Z"
     When I request the net worth evolution
     Then I should receive 12 data points
-    And the point for "2024-01" should have assets 3000.00
-    And the point for "2024-02" should have assets 3350.00
+    And the point for "2026-03" should have assets 3000.00
+    And the point for "2026-04" should have assets 3350.00

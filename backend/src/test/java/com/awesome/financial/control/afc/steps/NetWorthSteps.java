@@ -3,10 +3,12 @@ package com.awesome.financial.control.afc.steps;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.awesome.financial.control.afc.dto.NetWorthPoint;
+import com.awesome.financial.control.afc.model.Category;
 import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.InvestmentType;
 import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
+import com.awesome.financial.control.afc.repository.CategoryRepository;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import io.cucumber.java.en.And;
@@ -29,6 +31,21 @@ public class NetWorthSteps {
     private final ScenarioContext context;
     private final TransactionRepository transactionRepository;
     private final InvestmentRepository investmentRepository;
+    private final CategoryRepository categoryRepository;
+
+    @Given("the database is empty")
+    public void theDatabaseIsEmpty() {
+        transactionRepository.deleteAll();
+        investmentRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
+
+    @Given("a category {string} exists")
+    public void aCategoryExists(String name) {
+        Category c = new Category();
+        c.setName(name);
+        categoryRepository.save(c);
+    }
 
     @Given("a transaction {string} of {double} type {string} occurred at {string}")
     public void aTransactionOfTypeOccurredAt(
