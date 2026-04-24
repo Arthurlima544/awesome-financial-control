@@ -9,4 +9,5 @@ public record CompoundInterestRequest(
         @NotNull @DecimalMin("0.00") BigDecimal initialAmount,
         @NotNull @DecimalMin("0.00") BigDecimal monthlyContribution,
         @NotNull @Min(1) int years,
-        @NotNull @DecimalMin("0.00") BigDecimal annualInterestRate) {}
+        @NotNull @DecimalMin("0.00") BigDecimal annualInterestRate,
+        boolean adjustForInflation) {}

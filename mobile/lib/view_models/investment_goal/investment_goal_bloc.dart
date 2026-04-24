@@ -28,6 +28,7 @@ class InvestmentGoalBloc
         targetDate: event.targetDate,
         annualReturnRate: event.annualReturnRate,
         initialAmount: event.initialAmount,
+        adjustForInflation: event.adjustForInflation,
       );
 
       final response = InvestmentGoalResponse.fromJson(data);

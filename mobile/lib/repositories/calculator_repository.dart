@@ -42,6 +42,7 @@ class CalculatorRepository {
     required double monthlyContribution,
     required int years,
     required double annualInterestRate,
+    bool adjustForInflation = false,
   }) async {
     try {
       final response = await _dio.post(
@@ -51,6 +52,7 @@ class CalculatorRepository {
           'monthlyContribution': monthlyContribution,
           'years': years,
           'annualInterestRate': annualInterestRate,
+          'adjustForInflation': adjustForInflation,
         },
       );
 
@@ -71,6 +73,7 @@ class CalculatorRepository {
     required DateTime targetDate,
     required double annualReturnRate,
     required double initialAmount,
+    bool adjustForInflation = false,
   }) async {
     try {
       final response = await _dio.post(
@@ -80,6 +83,7 @@ class CalculatorRepository {
           'targetDate': targetDate.toIso8601String().split('T')[0],
           'annualReturnRate': annualReturnRate,
           'initialAmount': initialAmount,
+          'adjustForInflation': adjustForInflation,
         },
       );
 

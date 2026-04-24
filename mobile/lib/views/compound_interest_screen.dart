@@ -14,6 +14,9 @@ import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
+import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
+
 class CompoundInterestScreen extends StatefulWidget {
   const CompoundInterestScreen({super.key});
 
@@ -26,6 +29,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
   final _contributionController = TextEditingController();
   final _yearsController = TextEditingController(text: '10');
   final _rateController = TextEditingController(text: '10');
+  bool _adjustForInflation = false;
 
   @override
   void initState() {
@@ -70,6 +74,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
           monthlyContribution: contribution,
           years: years,
           annualInterestRate: rate,
+          adjustForInflation: _adjustForInflation,
         ),
       );
     }
@@ -189,12 +194,61 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.lg),
+        _buildInflationToggle(),
         const SizedBox(height: AppSpacing.xl),
         BlocProvider(
           create: (_) => AdaptiveButtonCubit(),
           child: AdaptiveButton(text: 'Simular', onPressed: _calculate),
         ),
       ],
+    );
+  }
+
+  Widget _buildInflationToggle() {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ajuste de Inflação',
+                    style: AppTextStyles.labelLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Valores em poder de compra de hoje',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            BlocProvider(
+              create: (_) =>
+                  AdaptiveSwitchCubit(initialValue: _adjustForInflation),
+              child: AdaptiveSwitch(
+                semanticLabel: 'Ajuste de Inflação',
+                onChanged: (value) {
+                  setState(() => _adjustForInflation = value);
+                  _calculate();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

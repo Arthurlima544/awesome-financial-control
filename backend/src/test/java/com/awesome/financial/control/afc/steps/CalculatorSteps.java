@@ -64,7 +64,8 @@ public class CalculatorSteps {
                         new BigDecimal(data.get("initialAmount")),
                         new BigDecimal(data.get("monthlyContribution")),
                         Integer.parseInt(data.get("years")),
-                        new BigDecimal(data.get("annualInterestRate")));
+                        new BigDecimal(data.get("annualInterestRate")),
+                        Boolean.parseBoolean(data.getOrDefault("adjustForInflation", "false")));
         ResponseEntity<CompoundInterestResponse> response =
                 restTemplate.postForEntity(
                         "/api/v1/calculators/compound-interest",
@@ -110,7 +111,8 @@ public class CalculatorSteps {
                         new BigDecimal(data.get("targetAmount")),
                         java.time.LocalDate.parse(data.get("targetDate")),
                         new BigDecimal(data.get("annualReturnRate")),
-                        new BigDecimal(data.get("initialAmount")));
+                        new BigDecimal(data.get("initialAmount")),
+                        Boolean.parseBoolean(data.getOrDefault("adjustForInflation", "false")));
         ResponseEntity<InvestmentGoalResponse> response =
                 restTemplate.postForEntity(
                         "/api/v1/calculators/investment-goal",

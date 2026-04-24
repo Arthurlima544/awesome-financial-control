@@ -12,12 +12,14 @@ class CalculateInvestmentGoalRequested extends InvestmentGoalEvent {
   final DateTime targetDate;
   final double annualReturnRate;
   final double initialAmount;
+  final bool adjustForInflation;
 
   const CalculateInvestmentGoalRequested({
     required this.targetAmount,
     required this.targetDate,
     required this.annualReturnRate,
     required this.initialAmount,
+    this.adjustForInflation = false,
   });
 
   @override
@@ -26,5 +28,6 @@ class CalculateInvestmentGoalRequested extends InvestmentGoalEvent {
     targetDate,
     annualReturnRate,
     initialAmount,
+    adjustForInflation,
   ];
 }

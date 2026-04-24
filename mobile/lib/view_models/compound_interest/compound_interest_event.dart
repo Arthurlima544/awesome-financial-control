@@ -12,12 +12,14 @@ class CalculateCompoundInterestRequested extends CompoundInterestEvent {
   final double monthlyContribution;
   final int years;
   final double annualInterestRate;
+  final bool adjustForInflation;
 
   const CalculateCompoundInterestRequested({
     required this.initialAmount,
     required this.monthlyContribution,
     required this.years,
     required this.annualInterestRate,
+    this.adjustForInflation = false,
   });
 
   @override
@@ -26,5 +28,6 @@ class CalculateCompoundInterestRequested extends CompoundInterestEvent {
     monthlyContribution,
     years,
     annualInterestRate,
+    adjustForInflation,
   ];
 }

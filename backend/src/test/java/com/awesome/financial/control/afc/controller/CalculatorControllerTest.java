@@ -31,7 +31,8 @@ class CalculatorControllerTest {
                         BigDecimal.valueOf(1000),
                         LocalDate.now().plusYears(1),
                         BigDecimal.valueOf(0.1),
-                        BigDecimal.ZERO);
+                        BigDecimal.ZERO,
+                        false);
 
         mockMvc.perform(
                         post("/api/v1/calculators/investment-goal")

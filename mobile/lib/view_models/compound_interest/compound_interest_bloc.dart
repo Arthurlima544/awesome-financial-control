@@ -28,6 +28,7 @@ class CompoundInterestBloc
         monthlyContribution: event.monthlyContribution,
         years: event.years,
         annualInterestRate: event.annualInterestRate,
+        adjustForInflation: event.adjustForInflation,
       );
       emit(
         state.copyWith(status: CompoundInterestStatus.success, result: result),

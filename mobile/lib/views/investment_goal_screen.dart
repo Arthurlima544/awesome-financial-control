@@ -14,6 +14,9 @@ import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
 
+import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
+import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
+
 class InvestmentGoalScreen extends StatefulWidget {
   const InvestmentGoalScreen({super.key});
 
@@ -26,6 +29,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   final _initialAmountController = TextEditingController(text: '0');
   final _returnController = TextEditingController(text: '10');
   DateTime _targetDate = DateTime.now().plusYears(20);
+  bool _adjustForInflation = false;
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
           targetDate: _targetDate,
           annualReturnRate: annualReturn,
           initialAmount: initialAmount,
+          adjustForInflation: _adjustForInflation,
         ),
       );
     }
@@ -187,12 +192,61 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
             ),
           ),
         ),
+        const SizedBox(height: AppSpacing.lg),
+        _buildInflationToggle(),
         const SizedBox(height: AppSpacing.xl),
         BlocProvider(
           create: (_) => AdaptiveButtonCubit(),
           child: AdaptiveButton(text: 'Calcular', onPressed: _calculate),
         ),
       ],
+    );
+  }
+
+  Widget _buildInflationToggle() {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Ajuste de Inflação',
+                    style: AppTextStyles.labelLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Valores em poder de compra de hoje',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            BlocProvider(
+              create: (_) =>
+                  AdaptiveSwitchCubit(initialValue: _adjustForInflation),
+              child: AdaptiveSwitch(
+                semanticLabel: 'Ajuste de Inflação',
+                onChanged: (value) {
+                  setState(() => _adjustForInflation = value);
+                  _calculate();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -419,16 +473,18 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               showTitles: true,
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
-                if (value == 0)
+                if (value == 0) {
                   return const Text(
                     'R\$ 0',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
-                if (value >= 1000000)
+                }
+                if (value >= 1000000) {
                   return Text(
                     'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
+                }
                 return Text(
                   'R\$ ${(value / 1000).toStringAsFixed(0)}k',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
@@ -440,16 +496,18 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value == 0)
+                if (value == 0) {
                   return const Text(
                     'Hoje',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
-                if (value % 5 == 0)
+                }
+                if (value % 5 == 0) {
                   return Text(
                     'A${value.toInt()}',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
+                }
                 return const SizedBox.shrink();
               },
             ),

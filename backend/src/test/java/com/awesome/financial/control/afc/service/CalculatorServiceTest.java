@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class CalculatorServiceTest {
 
-    private final CalculatorService calculatorService = new CalculatorService();
+    private final InflationService inflationService = new InflationService();
+    private final CalculatorService calculatorService = new CalculatorService(inflationService);
 
     @Test
     void shouldCalculateInvestmentGoalWithZeroInterest() {
@@ -19,7 +20,8 @@ class CalculatorServiceTest {
                         BigDecimal.valueOf(100000),
                         LocalDate.now().plusMonths(100),
                         BigDecimal.ZERO,
-                        BigDecimal.ZERO);
+                        BigDecimal.ZERO,
+                        false);
 
         InvestmentGoalResponse response = calculatorService.calculateInvestmentGoal(request);
 
@@ -30,16 +32,13 @@ class CalculatorServiceTest {
 
     @Test
     void shouldCalculateInvestmentGoalWithInterest() {
-        // Target: 1.000.000 in 10 years (120 months) at 10% annual
-        // PV = 0
-        // r = (1.10)^(1/12) - 1 approx 0.00797414
-        // PMT = 1.000.000 * r / ((1+r)^120 - 1) approx 5.200 - 5.500
         InvestmentGoalRequest request =
                 new InvestmentGoalRequest(
                         BigDecimal.valueOf(1000000),
                         LocalDate.now().plusYears(10),
                         BigDecimal.valueOf(0.10),
-                        BigDecimal.ZERO);
+                        BigDecimal.ZERO,
+                        false);
 
         InvestmentGoalResponse response = calculatorService.calculateInvestmentGoal(request);
 
@@ -55,10 +54,41 @@ class CalculatorServiceTest {
                         BigDecimal.valueOf(10000),
                         LocalDate.now().plusYears(1),
                         BigDecimal.valueOf(0.10),
-                        BigDecimal.valueOf(20000));
+                        BigDecimal.valueOf(20000),
+                        false);
 
         InvestmentGoalResponse response = calculatorService.calculateInvestmentGoal(request);
 
         assertThat(response.requiredMonthlyContribution()).isEqualByComparingTo("0.00");
+    }
+
+    @Test
+    void shouldCalculateInflationAdjustedGoal() {
+        // Without inflation adjustment
+        InvestmentGoalRequest nominalRequest =
+                new InvestmentGoalRequest(
+                        BigDecimal.valueOf(1000000),
+                        LocalDate.now().plusYears(10),
+                        BigDecimal.valueOf(0.10),
+                        BigDecimal.ZERO,
+                        false);
+        InvestmentGoalResponse nominalResponse =
+                calculatorService.calculateInvestmentGoal(nominalRequest);
+
+        // With inflation adjustment
+        InvestmentGoalRequest realRequest =
+                new InvestmentGoalRequest(
+                        BigDecimal.valueOf(1000000),
+                        LocalDate.now().plusYears(10),
+                        BigDecimal.valueOf(0.10),
+                        BigDecimal.ZERO,
+                        true);
+        InvestmentGoalResponse realResponse =
+                calculatorService.calculateInvestmentGoal(realRequest);
+
+        // Required contribution should be HIGHER because real return is LOWER (10% nominal - 4.5%
+        // inflation approx)
+        assertThat(realResponse.requiredMonthlyContribution())
+                .isGreaterThan(nominalResponse.requiredMonthlyContribution());
     }
 }
