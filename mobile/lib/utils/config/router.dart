@@ -42,6 +42,9 @@ import 'package:afc/views/investment_dashboard_screen.dart';
 import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
 import 'package:afc/views/passive_income_screen.dart';
 import 'package:afc/view_models/passive_income/passive_income_bloc.dart';
+import 'package:afc/views/net_worth_screen.dart';
+import 'package:afc/view_models/net_worth/net_worth_bloc.dart';
+import 'package:afc/repositories/stats_repository.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
@@ -167,6 +170,15 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
           create: (_) =>
               sl<PassiveIncomeBloc>()..add(LoadPassiveIncomeDashboard()),
           child: const PassiveIncomeScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/net-worth',
+        builder: (_, _) => BlocProvider(
+          create: (_) =>
+              NetWorthBloc(repository: sl<StatsRepository>())
+                ..add(LoadNetWorthEvolution()),
+          child: const NetWorthScreen(),
         ),
       ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),

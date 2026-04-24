@@ -23,4 +23,10 @@ public class StatsController {
     public List<MonthlyStatsResponse> getMonthlyStats() {
         return statsService.getMonthlyStats();
     }
+
+    @GetMapping("/stats/net-worth")
+    @Operation(summary = "Net worth evolution for the last 12 months")
+    public List<com.awesome.financial.control.afc.dto.NetWorthPoint> getNetWorthEvolution() {
+        return statsService.getNetWorthEvolution();
+    }
 }

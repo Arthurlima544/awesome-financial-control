@@ -60,6 +60,11 @@ class PlanningScreen extends StatelessWidget {
             leadingIcon: Icons.monetization_on_outlined,
             onTap: () => context.push('/passive-income'),
           ),
+          CustomListTile(
+            title: 'Evolução do Patrimônio',
+            leadingIcon: Icons.show_chart_outlined,
+            onTap: () => context.push('/net-worth'),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

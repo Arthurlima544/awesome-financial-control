@@ -28,4 +28,9 @@ class StatsService {
         .map((e) => MonthlyStatModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  Future<List<dynamic>> fetchNetWorthEvolution() async {
+    final response = await _dio.get<List<dynamic>>('/api/v1/stats/net-worth');
+    return response.data!;
+  }
 }
