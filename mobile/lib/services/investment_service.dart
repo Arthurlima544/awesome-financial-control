@@ -53,4 +53,9 @@ class InvestmentService {
     );
     return InvestmentModel.fromJson(response.data as Map<String, dynamic>);
   }
+
+  Future<Map<String, dynamic>> getDashboardData() async {
+    final response = await _dio.get('/api/v1/investments/dashboard');
+    return response.data as Map<String, dynamic>;
+  }
 }

@@ -387,6 +387,12 @@ class _NetWorthCard extends StatelessWidget {
                           ],
                         ),
                       ),
+                      IconButton(
+                        icon: const Icon(Icons.analytics_outlined),
+                        onPressed: () => context.push('/investments/dashboard'),
+                        color: AppColors.primary,
+                        tooltip: 'Ver Análise',
+                      ),
                       const Icon(
                         Icons.chevron_right,
                         color: AppColors.neutral500,

@@ -1,5 +1,6 @@
 package com.awesome.financial.control.afc.controller;
 
+import com.awesome.financial.control.afc.dto.InvestmentDashboardResponse;
 import com.awesome.financial.control.afc.dto.InvestmentRequest;
 import com.awesome.financial.control.afc.dto.InvestmentResponse;
 import com.awesome.financial.control.afc.service.InvestmentService;
@@ -23,6 +24,12 @@ import org.springframework.web.bind.annotation.*;
 public class InvestmentController {
 
     private final InvestmentService investmentService;
+
+    @GetMapping("/dashboard")
+    @Operation(summary = "Get investment dashboard data")
+    public InvestmentDashboardResponse getDashboardData() {
+        return investmentService.getDashboardData();
+    }
 
     @GetMapping
     @Operation(summary = "List all investments")

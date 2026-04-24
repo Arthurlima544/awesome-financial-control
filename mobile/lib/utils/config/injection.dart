@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
@@ -86,4 +87,5 @@ Future<void> init() async {
   sl.registerFactory(() => OnboardingCubit());
   sl.registerFactory(() => FireCalculatorBloc(repository: sl()));
   sl.registerFactory(() => CompoundInterestBloc(repository: sl()));
+  sl.registerFactory(() => InvestmentDashboardBloc(repository: sl()));
 }

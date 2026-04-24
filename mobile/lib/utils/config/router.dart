@@ -38,6 +38,8 @@ import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
 import 'package:afc/views/compound_interest_screen.dart';
 import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
 
+import 'package:afc/views/investment_dashboard_screen.dart';
+import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
@@ -146,6 +148,16 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
           create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
           child: const InvestmentsScreen(),
         ),
+        routes: [
+          GoRoute(
+            path: 'dashboard',
+            builder: (_, _) => BlocProvider(
+              create: (_) =>
+                  sl<InvestmentDashboardBloc>()..add(LoadInvestmentDashboard()),
+              child: const InvestmentDashboardScreen(),
+            ),
+          ),
+        ],
       ),
       GoRoute(path: '/import', builder: (_, _) => const ImportScreen()),
       GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),

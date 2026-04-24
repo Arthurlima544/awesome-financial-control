@@ -2,16 +2,21 @@ package com.awesome.financial.control.afc.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.awesome.financial.control.afc.dto.InvestmentDashboardResponse;
 import com.awesome.financial.control.afc.dto.InvestmentRequest;
 import com.awesome.financial.control.afc.dto.InvestmentResponse;
 import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.InvestmentType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpMethod;
@@ -27,6 +32,59 @@ public class InvestmentSteps {
     @After
     public void cleanUp() {
         investmentRepository.deleteAll();
+    }
+
+    @Given("I have the following investments:")
+    public void iHaveTheFollowingInvestments(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        for (Map<String, String> row : rows) {
+            Investment investment = new Investment();
+            investment.setName(row.get("name"));
+            investment.setTicker(row.get("ticker"));
+            investment.setType(InvestmentType.valueOf(row.get("type")));
+            investment.setQuantity(new BigDecimal(row.get("quantity")));
+            investment.setAvgCost(new BigDecimal(row.get("avgCost")));
+            investment.setCurrentPrice(new BigDecimal(row.get("currentPrice")));
+            investmentRepository.save(investment);
+        }
+    }
+
+    @When("I get the investment dashboard")
+    public void iGetTheInvestmentDashboard() {
+        context.response =
+                restTemplate.getForEntity(
+                        "/api/v1/investments/dashboard", InvestmentDashboardResponse.class);
+    }
+
+    @Then("the dashboard total invested should be {double}")
+    public void theTotalInvestedShouldBe(double expected) {
+        InvestmentDashboardResponse body = (InvestmentDashboardResponse) context.response.getBody();
+        assertThat(body.totalInvested()).isEqualByComparingTo(BigDecimal.valueOf(expected));
+    }
+
+    @And("the current total value should be {double}")
+    public void theCurrentTotalValueShouldBe(double expected) {
+        InvestmentDashboardResponse body = (InvestmentDashboardResponse) context.response.getBody();
+        assertThat(body.currentTotalValue()).isEqualByComparingTo(BigDecimal.valueOf(expected));
+    }
+
+    @And("the total profit should be {double}")
+    public void theTotalProfitShouldBe(double expected) {
+        InvestmentDashboardResponse body = (InvestmentDashboardResponse) context.response.getBody();
+        assertThat(body.totalProfitLoss()).isEqualByComparingTo(BigDecimal.valueOf(expected));
+    }
+
+    @And("the allocation for {string} should be {double}")
+    public void theAllocationForShouldBe(String type, double expected) {
+        InvestmentDashboardResponse body = (InvestmentDashboardResponse) context.response.getBody();
+        BigDecimal allocation = body.allocationByType().get(InvestmentType.valueOf(type));
+        assertThat(allocation).isEqualByComparingTo(BigDecimal.valueOf(expected));
+    }
+
+    @And("the performance list should have {int} assets")
+    public void thePerformanceListShouldHaveAssets(int count) {
+        InvestmentDashboardResponse body = (InvestmentDashboardResponse) context.response.getBody();
+        assertThat(body.assetPerformance()).hasSize(count);
     }
 
     @When(

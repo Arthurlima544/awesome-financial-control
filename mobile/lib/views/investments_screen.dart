@@ -35,6 +35,13 @@ class InvestmentsScreen extends StatelessWidget {
             pinned: true,
             backgroundColor: AppColors.surface,
             elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.analytics_outlined),
+                onPressed: () => context.push('/investments/dashboard'),
+                tooltip: 'Análise do Portfólio',
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 l10n.investmentsTitle,

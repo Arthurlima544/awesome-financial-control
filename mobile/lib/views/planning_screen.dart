@@ -50,6 +50,11 @@ class PlanningScreen extends StatelessWidget {
             leadingIcon: Icons.trending_up,
             onTap: () => context.push('/juros-compostos'),
           ),
+          CustomListTile(
+            title: 'Análise de Investimentos',
+            leadingIcon: Icons.analytics_outlined,
+            onTap: () => context.push('/investments/dashboard'),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
