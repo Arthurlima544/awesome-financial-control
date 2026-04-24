@@ -34,6 +34,8 @@ import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:afc/view_models/onboarding/onboarding_cubit.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/repositories/calculator_repository.dart';
+import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -59,6 +61,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => InvestmentRepository());
   sl.registerLazySingleton(() => BillRepository());
   sl.registerLazySingleton(() => HealthScoreRepository());
+  sl.registerLazySingleton(() => CalculatorRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -80,4 +83,5 @@ Future<void> init() async {
   sl.registerFactory(() => SettingsBloc());
   sl.registerLazySingleton(() => ThemeCubit());
   sl.registerFactory(() => OnboardingCubit());
+  sl.registerFactory(() => FireCalculatorBloc(repository: sl()));
 }

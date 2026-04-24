@@ -33,6 +33,8 @@ import 'package:afc/view_models/bills/bill_bloc.dart';
 import 'package:afc/views/bills_screen.dart';
 import 'package:afc/views/settings_screen.dart';
 import 'package:afc/views/planning_screen.dart';
+import 'package:afc/views/fire_calculator_screen.dart';
+import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
 
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
@@ -148,6 +150,13 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
       GoRoute(path: '/limits', builder: (_, _) => const LimitScreen()),
       GoRoute(path: '/goals', builder: (_, _) => const GoalsScreen()),
       GoRoute(
+        path: '/fire-calculadora',
+        builder: (_, _) => BlocProvider(
+          create: (_) => sl<FireCalculatorBloc>(),
+          child: const FireCalculatorScreen(),
+        ),
+      ),
+      GoRoute(
         path: '/bills',
         builder: (_, _) => BlocProvider(
           create: (_) => sl<BillBloc>()..add(const LoadBills()),
@@ -159,16 +168,10 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
         builder: (_, _) => const RecurringListScreen(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => BlocProvider<HomeBloc>(
-          create: (_) => HomeBloc()..add(const HomeDashboardLoaded()),
-          child: Builder(
-            builder: (innerContext) => ScaffoldShell(
-              navigationShell: navigationShell,
-              onHomeTabReactivated: () => innerContext.read<HomeBloc>().add(
-                const HomeDashboardLoaded(),
-              ),
-            ),
-          ),
+        builder: (context, state, navigationShell) => ScaffoldShell(
+          navigationShell: navigationShell,
+          onHomeTabReactivated: () =>
+              context.read<HomeBloc>().add(const HomeDashboardLoaded()),
         ),
         branches: [
           StatefulShellBranch(
