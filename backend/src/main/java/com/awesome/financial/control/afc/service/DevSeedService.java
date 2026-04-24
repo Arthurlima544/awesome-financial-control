@@ -19,6 +19,7 @@ import com.awesome.financial.control.afc.repository.RecurringTransactionReposito
 import com.awesome.financial.control.afc.repository.TemplateRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -41,6 +42,7 @@ public class DevSeedService {
     private final InvestmentRepository investmentRepository;
     private final BillRepository billRepository;
     private final TemplateRepository templateRepository;
+    private final SecureRandom random = new SecureRandom();
 
     @Transactional
     public void seed() {
@@ -97,7 +99,7 @@ public class DevSeedService {
                     monthDate.plus(5, ChronoUnit.DAYS));
             saveTransaction(
                     "Conta de Luz",
-                    String.format(Locale.US, "%.2f", 180.0 + (Math.random() * 100)),
+                    String.format(Locale.US, "%.2f", 180.0 + (random.nextDouble() * 100)),
                     TransactionType.EXPENSE,
                     moradia.getName(),
                     monthDate.plus(20, ChronoUnit.DAYS));
@@ -111,19 +113,19 @@ public class DevSeedService {
             // Variable Expenses
             saveTransaction(
                     "Compras do Mês",
-                    String.format(Locale.US, "%.2f", 600.0 + (Math.random() * 300)),
+                    String.format(Locale.US, "%.2f", 600.0 + (random.nextDouble() * 300)),
                     TransactionType.EXPENSE,
                     alimentacao.getName(),
                     monthDate.plus(7, ChronoUnit.DAYS));
             saveTransaction(
                     "Restaurante/Ifood",
-                    String.format(Locale.US, "%.2f", 150.0 + (Math.random() * 250)),
+                    String.format(Locale.US, "%.2f", 150.0 + (random.nextDouble() * 250)),
                     TransactionType.EXPENSE,
                     alimentacao.getName(),
                     monthDate.plus(15, ChronoUnit.DAYS));
             saveTransaction(
                     "Uber/Mobilidade",
-                    String.format(Locale.US, "%.2f", 100.0 + (Math.random() * 150)),
+                    String.format(Locale.US, "%.2f", 100.0 + (random.nextDouble() * 150)),
                     TransactionType.EXPENSE,
                     transporte.getName(),
                     monthDate.plus(12, ChronoUnit.DAYS));
