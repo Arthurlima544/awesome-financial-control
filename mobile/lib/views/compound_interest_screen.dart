@@ -383,11 +383,12 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               showTitles: true,
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
-                if (value == 0)
+                if (value == 0) {
                   return const Text(
                     'R\$ 0',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
+                }
                 if (value >= 1000000) {
                   return Text(
                     'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
@@ -405,11 +406,12 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value == 0)
+                if (value == 0) {
                   return const Text(
                     'Hoje',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
+                }
                 return Text(
                   'A${value.toInt()}',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
