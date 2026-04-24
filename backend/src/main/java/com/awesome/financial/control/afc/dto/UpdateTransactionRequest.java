@@ -12,4 +12,6 @@ public record UpdateTransactionRequest(
         @NotNull @DecimalMin("0.01") BigDecimal amount,
         @NotNull TransactionType type,
         String category,
-        @NotNull Instant occurredAt) {}
+        @NotNull Instant occurredAt,
+        boolean isPassive,
+        java.util.UUID investmentId) {}

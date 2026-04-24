@@ -40,6 +40,8 @@ class TransactionListService {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) async {
     final response = await _dio.put<Map<String, dynamic>>(
       '/api/v1/transactions/$id',
@@ -49,6 +51,8 @@ class TransactionListService {
         'type': type.toUpperCase(),
         'category': category,
         'occurredAt': occurredAt.toUtc().toIso8601String(),
+        'isPassive': isPassive,
+        'investmentId': investmentId,
       },
     );
     return TransactionModel.fromJson(response.data!);
@@ -60,6 +64,8 @@ class TransactionListService {
     required String type,
     String? category,
     required DateTime occurredAt,
+    bool isPassive = false,
+    String? investmentId,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
       '/api/v1/transactions',
@@ -69,6 +75,8 @@ class TransactionListService {
         'type': type.toUpperCase(),
         'category': category,
         'occurredAt': occurredAt.toUtc().toIso8601String(),
+        'isPassive': isPassive,
+        'investmentId': investmentId,
       },
     );
     return TransactionModel.fromJson(response.data!);

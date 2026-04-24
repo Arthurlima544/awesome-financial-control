@@ -100,6 +100,24 @@ public class DevSeedService {
         saveBill("Condomínio", "550.00", 5);
         saveBill("Internet", "120.00", 15);
         saveBill("Energia", "250.00", 22);
+
+        // Passive Income Seeds
+        Investment petr4 =
+                saveInvestment("Petrobras", "PETR4", InvestmentType.STOCK, "100", "34.20", "36.80");
+        Investment vale3 =
+                saveInvestment("Vale", "VALE3", InvestmentType.STOCK, "50", "72.50", "75.20");
+
+        savePassiveTransaction("Dividendos PETR4", "250.00", petr4, today);
+        savePassiveTransaction("Rendimentos CDB", "45.00", null, today);
+        savePassiveTransaction(
+                "Dividendos VALE3", "180.00", vale3, today.minus(2, ChronoUnit.DAYS));
+
+        savePassiveTransaction("Dividendos PETR4", "210.00", petr4, lastMonth);
+        savePassiveTransaction("JCP Bradesco", "35.00", null, lastMonth.minus(5, ChronoUnit.DAYS));
+
+        savePassiveTransaction("Rendimentos FII", "150.00", null, today.minus(65, ChronoUnit.DAYS));
+        savePassiveTransaction(
+                "Dividendos Antigos", "120.00", petr4, today.minus(95, ChronoUnit.DAYS));
     }
 
     @Transactional
@@ -132,13 +150,38 @@ public class DevSeedService {
             TransactionType type,
             String category,
             Instant occurredAt) {
+        saveTransaction(description, amount, type, category, occurredAt, false, null);
+    }
+
+    private void saveTransaction(
+            String description,
+            String amount,
+            TransactionType type,
+            String category,
+            Instant occurredAt,
+            boolean isPassive,
+            java.util.UUID investmentId) {
         Transaction t = new Transaction();
         t.setDescription(description);
         t.setAmount(new BigDecimal(amount));
         t.setType(type);
         t.setCategory(category);
         t.setOccurredAt(occurredAt);
+        t.setPassive(isPassive);
+        t.setInvestmentId(investmentId);
         transactionRepository.save(t);
+    }
+
+    private void savePassiveTransaction(
+            String description, String amount, Investment investment, Instant occurredAt) {
+        saveTransaction(
+                description,
+                amount,
+                TransactionType.INCOME,
+                "Dividendos",
+                occurredAt,
+                true,
+                investment != null ? investment.getId() : null);
     }
 
     private void saveGoal(String name, String target, String current, Instant deadline) {
@@ -167,7 +210,7 @@ public class DevSeedService {
         recurringTransactionRepository.save(rt);
     }
 
-    private void saveInvestment(
+    private Investment saveInvestment(
             String name,
             String ticker,
             InvestmentType type,
@@ -181,7 +224,7 @@ public class DevSeedService {
         i.setQuantity(new BigDecimal(quantity));
         i.setAvgCost(new BigDecimal(avgCost));
         i.setCurrentPrice(new BigDecimal(currentPrice));
-        investmentRepository.save(i);
+        return investmentRepository.save(i);
     }
 
     private void saveBill(String name, String amount, int dueDay) {

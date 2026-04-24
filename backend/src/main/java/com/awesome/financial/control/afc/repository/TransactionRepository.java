@@ -39,4 +39,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             @Param("type") TransactionType type,
             @Param("from") Instant from,
             @Param("to") Instant to);
+
+    @Query(
+            "SELECT SUM(t.amount) FROM Transaction t WHERE t.isPassive = true AND t.occurredAt >= :from AND t.occurredAt < :to")
+    Optional<BigDecimal> sumPassiveIncomeByOccurredAtBetween(
+            @Param("from") Instant from, @Param("to") Instant to);
+
+    @Query(
+            "SELECT t.investmentId, SUM(t.amount) FROM Transaction t WHERE t.isPassive = true AND t.occurredAt >= :from AND t.occurredAt < :to GROUP BY t.investmentId")
+    List<Object[]> sumPassiveIncomeGroupByInvestmentAndOccurredAtBetween(
+            @Param("from") Instant from, @Param("to") Instant to);
 }

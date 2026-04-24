@@ -30,6 +30,12 @@ public abstract class AbstractTransaction {
 
     private String category;
 
+    @Column(name = "is_passive", nullable = false)
+    private boolean isPassive = false;
+
+    @Column(name = "investment_id")
+    private UUID investmentId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 }

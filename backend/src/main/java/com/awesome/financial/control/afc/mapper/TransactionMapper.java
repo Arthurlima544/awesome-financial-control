@@ -15,6 +15,8 @@ public class TransactionMapper {
                 .type(transaction.getType())
                 .category(transaction.getCategory())
                 .occurredAt(transaction.getOccurredAt())
+                .isPassive(transaction.isPassive())
+                .investmentId(transaction.getInvestmentId())
                 .build();
     }
 }

@@ -64,9 +64,7 @@ class InvestmentsScreen extends StatelessWidget {
                   return Column(
                     children: [
                       FadeInAnimation(
-                        trigger: StatefulNavigationShell.of(
-                          context,
-                        ).currentIndex,
+                        trigger: null,
                         child: _PortfolioSummaryCard(
                           totalInvested: state.totalInvested,
                           totalCurrentValue: state.totalCurrentValue,
@@ -113,9 +111,7 @@ class InvestmentsScreen extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.md),
                       child: FadeInAnimation(
-                        trigger: StatefulNavigationShell.of(
-                          context,
-                        ).currentIndex,
+                        trigger: null,
                         delay: Duration(milliseconds: 100 + (index * 50)),
                         child: _InvestmentCard(
                           investment: investment,

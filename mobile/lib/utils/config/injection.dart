@@ -30,6 +30,8 @@ import 'package:afc/repositories/bill_repository.dart';
 import 'package:afc/repositories/health_score_repository.dart';
 import 'package:afc/repositories/goal_repository.dart';
 import 'package:afc/view_models/goals/goal_bloc.dart';
+import 'package:afc/view_models/passive_income/passive_income_bloc.dart';
+import 'package:afc/repositories/passive_income_repository.dart';
 import 'package:afc/repositories/investment_repository.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
@@ -88,4 +90,6 @@ Future<void> init() async {
   sl.registerFactory(() => FireCalculatorBloc(repository: sl()));
   sl.registerFactory(() => CompoundInterestBloc(repository: sl()));
   sl.registerFactory(() => InvestmentDashboardBloc(repository: sl()));
+  sl.registerLazySingleton(() => PassiveIncomeRepository());
+  sl.registerFactory(() => PassiveIncomeBloc(repository: sl()));
 }

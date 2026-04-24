@@ -55,6 +55,11 @@ class PlanningScreen extends StatelessWidget {
             leadingIcon: Icons.analytics_outlined,
             onTap: () => context.push('/investments/dashboard'),
           ),
+          CustomListTile(
+            title: 'Renda Passiva',
+            leadingIcon: Icons.monetization_on_outlined,
+            onTap: () => context.push('/passive-income'),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
