@@ -16,11 +16,13 @@ import com.awesome.financial.control.afc.repository.GoalRepository;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
 import com.awesome.financial.control.afc.repository.LimitRepository;
 import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
+import com.awesome.financial.control.afc.repository.TemplateRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -38,95 +40,214 @@ public class DevSeedService {
     private final RecurringTransactionRepository recurringTransactionRepository;
     private final InvestmentRepository investmentRepository;
     private final BillRepository billRepository;
+    private final TemplateRepository templateRepository;
 
     @Transactional
     public void seed() {
+        // 1. Categories
         Category alimentacao = saveCategory("Alimentação");
         Category transporte = saveCategory("Transporte");
         Category moradia = saveCategory("Moradia");
         Category lazer = saveCategory("Lazer");
         Category saude = saveCategory("Saúde");
+        Category educacao = saveCategory("Educação");
+        Category investimentosCat = saveCategory("Investimentos");
         saveCategory("Salário");
+        saveCategory("Freelance");
+        saveCategory("Presentes");
 
-        saveLimit(alimentacao, "1000.00");
-        saveLimit(transporte, "300.00");
-        saveLimit(lazer, "500.00");
+        // 2. Limits
+        saveLimit(alimentacao, "1500.00");
+        saveLimit(transporte, "500.00");
+        saveLimit(lazer, "800.00");
+        saveLimit(saude, "400.00");
+        saveLimit(educacao, "1000.00");
 
-        Instant today = Instant.now();
-        Instant lastMonth = today.minus(35, ChronoUnit.DAYS);
+        Instant now = Instant.now();
+        Instant oneYearAgo = now.minus(365, ChronoUnit.DAYS);
 
-        saveTransaction("Salário", "5000.00", TransactionType.INCOME, null, today);
-        saveTransaction("Freelance", "1500.00", TransactionType.INCOME, null, today);
-        saveTransaction(
-                "Supermercado", "350.00", TransactionType.EXPENSE, alimentacao.getName(), today);
-        saveTransaction("Uber", "45.00", TransactionType.EXPENSE, transporte.getName(), today);
-        saveTransaction("Netflix", "35.00", TransactionType.EXPENSE, lazer.getName(), today);
-        saveTransaction("Aluguel", "1800.00", TransactionType.EXPENSE, moradia.getName(), today);
-        saveTransaction("Farmácia", "120.00", TransactionType.EXPENSE, saude.getName(), today);
-        saveTransaction("Academia", "100.00", TransactionType.EXPENSE, saude.getName(), lastMonth);
-        saveTransaction(
-                "Restaurante", "80.00", TransactionType.EXPENSE, alimentacao.getName(), lastMonth);
-        saveTransaction(
-                "Combustível", "200.00", TransactionType.EXPENSE, transporte.getName(), lastMonth);
+        // 3. Historical Data (Last 12 months)
+        for (int i = 11; i >= 0; i--) {
+            Instant monthDate = now.minus(i * 30L, ChronoUnit.DAYS);
 
-        saveGoal("Viagem Japão", "15000.00", "2000.00", today.plus(365, ChronoUnit.DAYS));
-        saveGoal("Reserva de Emergência", "20000.00", "5000.00", today.plus(730, ChronoUnit.DAYS));
+            // Income
+            saveTransaction(
+                    "Salário Mensal", "6200.00", TransactionType.INCOME, "Salário", monthDate);
+            if (i % 4 == 0) {
+                saveTransaction(
+                        "Projeto Extra",
+                        "2500.00",
+                        TransactionType.INCOME,
+                        "Freelance",
+                        monthDate.plus(10, ChronoUnit.DAYS));
+            }
 
+            // Fixed Expenses
+            saveTransaction(
+                    "Aluguel Apartamento",
+                    "2200.00",
+                    TransactionType.EXPENSE,
+                    moradia.getName(),
+                    monthDate.plus(5, ChronoUnit.DAYS));
+            saveTransaction(
+                    "Internet Fibra",
+                    "149.90",
+                    TransactionType.EXPENSE,
+                    moradia.getName(),
+                    monthDate.plus(5, ChronoUnit.DAYS));
+            saveTransaction(
+                    "Conta de Luz",
+                    String.format(Locale.US, "%.2f", 180.0 + (Math.random() * 100)),
+                    TransactionType.EXPENSE,
+                    moradia.getName(),
+                    monthDate.plus(20, ChronoUnit.DAYS));
+            saveTransaction(
+                    "Plano de Saúde",
+                    "450.00",
+                    TransactionType.EXPENSE,
+                    saude.getName(),
+                    monthDate.plus(1, ChronoUnit.DAYS));
+
+            // Variable Expenses
+            saveTransaction(
+                    "Compras do Mês",
+                    String.format(Locale.US, "%.2f", 600.0 + (Math.random() * 300)),
+                    TransactionType.EXPENSE,
+                    alimentacao.getName(),
+                    monthDate.plus(7, ChronoUnit.DAYS));
+            saveTransaction(
+                    "Restaurante/Ifood",
+                    String.format(Locale.US, "%.2f", 150.0 + (Math.random() * 250)),
+                    TransactionType.EXPENSE,
+                    alimentacao.getName(),
+                    monthDate.plus(15, ChronoUnit.DAYS));
+            saveTransaction(
+                    "Uber/Mobilidade",
+                    String.format(Locale.US, "%.2f", 100.0 + (Math.random() * 150)),
+                    TransactionType.EXPENSE,
+                    transporte.getName(),
+                    monthDate.plus(12, ChronoUnit.DAYS));
+
+            if (i % 2 == 0) {
+                saveTransaction(
+                        "Cinema/Teatro",
+                        "120.00",
+                        TransactionType.EXPENSE,
+                        lazer.getName(),
+                        monthDate.plus(25, ChronoUnit.DAYS));
+            }
+
+            // Regular Investment Contributions
+            saveTransaction(
+                    "Aporte Mensal Ações",
+                    "1000.00",
+                    TransactionType.EXPENSE,
+                    investimentosCat.getName(),
+                    monthDate.plus(2, ChronoUnit.DAYS));
+        }
+
+        // 4. Investments (Created at different times)
+        Investment petr4 =
+                saveInvestment(
+                        "Petrobras",
+                        "PETR4",
+                        InvestmentType.STOCK,
+                        "150",
+                        "28.50",
+                        "38.20",
+                        now.minus(320, ChronoUnit.DAYS));
+        Investment vale3 =
+                saveInvestment(
+                        "Vale",
+                        "VALE3",
+                        InvestmentType.STOCK,
+                        "80",
+                        "65.00",
+                        "72.50",
+                        now.minus(240, ChronoUnit.DAYS));
+        Investment btc =
+                saveInvestment(
+                        "Bitcoin",
+                        "BTC",
+                        InvestmentType.CRYPTO,
+                        "0.035",
+                        "210000.00",
+                        "435000.00",
+                        now.minus(365, ChronoUnit.DAYS));
+        Investment cdb =
+                saveInvestment(
+                        "CDB Liquidez Diária",
+                        "",
+                        InvestmentType.FIXED_INCOME,
+                        "1",
+                        "15000.00",
+                        "16850.00",
+                        now.minus(365, ChronoUnit.DAYS));
+        Investment ivvb11 =
+                saveInvestment(
+                        "S&P 500 ETF",
+                        "IVVB11",
+                        InvestmentType.STOCK,
+                        "40",
+                        "210.00",
+                        "285.00",
+                        now.minus(180, ChronoUnit.DAYS));
+
+        // 5. Passive Income (Dividends related to investments)
+        for (int i = 10; i >= 0; i--) {
+            Instant monthDate = now.minus(i * 30L, ChronoUnit.DAYS);
+            if (i >= 0) { // All months for PETR4
+                savePassiveTransaction("Dividendos PETR4", "185.50", petr4, monthDate);
+            }
+            if (i % 3 == 0) {
+                savePassiveTransaction("Dividendos VALE3", "110.20", vale3, monthDate);
+            }
+            savePassiveTransaction("Rendimentos CDB", "145.00", cdb, monthDate);
+        }
+
+        // 6. Goals
+        saveGoal("Reserva de Emergência", "50000.00", "22500.00", now.plus(365, ChronoUnit.DAYS));
+        saveGoal("Intercâmbio Canadá", "35000.00", "12400.00", now.plus(540, ChronoUnit.DAYS));
+        saveGoal("Apartamento Próprio", "250000.00", "45000.00", now.plus(1800, ChronoUnit.DAYS));
+
+        // 7. Bills (Future/Pending)
+        saveBill("IPVA Corolla", "3200.00", 15);
+        saveBill("Seguro Residencial", "850.00", 28);
+        saveBill("Condomínio", "680.00", 10);
+        saveBill("Assinatura Adobe", "125.00", 22);
+
+        // 8. Recurring Transactions
         saveRecurringTransaction(
-                "Internet",
-                "120.00",
-                TransactionType.EXPENSE,
-                moradia.getName(),
-                RecurrenceFrequency.MONTHLY,
-                today.plus(15, ChronoUnit.DAYS));
-        saveRecurringTransaction(
-                "Spotify",
-                "21.90",
+                "Netflix Premium",
+                "55.90",
                 TransactionType.EXPENSE,
                 lazer.getName(),
                 RecurrenceFrequency.MONTHLY,
-                today.plus(5, ChronoUnit.DAYS));
-
-        saveInvestment("Vale", "VALE3", InvestmentType.STOCK, "50", "72.50", "75.20");
-        saveInvestment("Petrobras", "PETR4", InvestmentType.STOCK, "100", "34.20", "36.80");
-        saveInvestment("Bitcoin", "BTC", InvestmentType.CRYPTO, "0.05", "380000.00", "420000.00");
-        saveInvestment("Ethereum", "ETH", InvestmentType.CRYPTO, "1.5", "12000.00", "14500.00");
-        saveInvestment("CDB Inter", "", InvestmentType.FIXED_INCOME, "1", "5000.00", "5150.00");
-        saveInvestment(
-                "Tesouro Selic", "", InvestmentType.FIXED_INCOME, "1", "10000.00", "10250.00");
-        saveInvestment("S&P 500 ETF", "IVVB11", InvestmentType.OTHER, "20", "240.00", "275.00");
-
-        saveBill("Aluguel", "1800.00", 10);
-        saveBill("Condomínio", "550.00", 5);
-        saveBill("Internet", "120.00", 15);
-        saveBill("Energia", "250.00", 22);
-
-        // Passive Income Seeds
-        Investment petr4 =
-                saveInvestment("Petrobras", "PETR4", InvestmentType.STOCK, "100", "34.20", "36.80");
-        Investment vale3 =
-                saveInvestment("Vale", "VALE3", InvestmentType.STOCK, "50", "72.50", "75.20");
-
-        savePassiveTransaction("Dividendos PETR4", "250.00", petr4, today);
-        savePassiveTransaction("Rendimentos CDB", "45.00", null, today);
-        savePassiveTransaction(
-                "Dividendos VALE3", "180.00", vale3, today.minus(2, ChronoUnit.DAYS));
-
-        savePassiveTransaction("Dividendos PETR4", "210.00", petr4, lastMonth);
-        savePassiveTransaction("JCP Bradesco", "35.00", null, lastMonth.minus(5, ChronoUnit.DAYS));
-
-        savePassiveTransaction("Rendimentos FII", "150.00", null, today.minus(65, ChronoUnit.DAYS));
-        savePassiveTransaction(
-                "Dividendos Antigos", "120.00", petr4, today.minus(95, ChronoUnit.DAYS));
+                now.plus(12, ChronoUnit.DAYS));
+        saveRecurringTransaction(
+                "Academia",
+                "110.00",
+                TransactionType.EXPENSE,
+                saude.getName(),
+                RecurrenceFrequency.MONTHLY,
+                now.plus(5, ChronoUnit.DAYS));
+        saveRecurringTransaction(
+                "Curso de Inglês",
+                "350.00",
+                TransactionType.EXPENSE,
+                educacao.getName(),
+                RecurrenceFrequency.MONTHLY,
+                now.plus(15, ChronoUnit.DAYS));
     }
 
     @Transactional
     public void reset() {
+        recurringTransactionRepository.deleteAll();
+        transactionRepository.deleteAll();
+        templateRepository.deleteAll();
         billRepository.deleteAll();
         investmentRepository.deleteAll();
-        recurringTransactionRepository.deleteAll();
         goalRepository.deleteAll();
-        transactionRepository.deleteAll();
         limitRepository.deleteAll();
         categoryRepository.deleteAll();
     }
@@ -217,6 +338,17 @@ public class DevSeedService {
             String quantity,
             String avgCost,
             String currentPrice) {
+        return saveInvestment(name, ticker, type, quantity, avgCost, currentPrice, Instant.now());
+    }
+
+    private Investment saveInvestment(
+            String name,
+            String ticker,
+            InvestmentType type,
+            String quantity,
+            String avgCost,
+            String currentPrice,
+            Instant createdAt) {
         Investment i = new Investment();
         i.setName(name);
         i.setTicker(ticker);
@@ -224,6 +356,7 @@ public class DevSeedService {
         i.setQuantity(new BigDecimal(quantity));
         i.setAvgCost(new BigDecimal(avgCost));
         i.setCurrentPrice(new BigDecimal(currentPrice));
+        i.setCreatedAt(createdAt);
         return investmentRepository.save(i);
     }
 
