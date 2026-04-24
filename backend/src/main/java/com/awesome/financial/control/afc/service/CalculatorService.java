@@ -98,4 +98,60 @@ public class CalculatorService {
                 currentAccumulated.subtract(currentInvested).setScale(2, RoundingMode.HALF_UP),
                 timeline);
     }
+
+    public com.awesome.financial.control.afc.dto.InvestmentGoalResponse calculateInvestmentGoal(
+            com.awesome.financial.control.afc.dto.InvestmentGoalRequest request) {
+        LocalDate now = LocalDate.now();
+        long totalMonths =
+                java.time.temporal.ChronoUnit.MONTHS.between(
+                        now.withDayOfMonth(1), request.targetDate().withDayOfMonth(1));
+
+        if (totalMonths <= 0) totalMonths = 1;
+
+        double monthlyRate =
+                Math.pow(1.0 + request.annualReturnRate().doubleValue(), 1.0 / 12.0) - 1.0;
+        BigDecimal fv = request.targetAmount();
+        BigDecimal pv = request.initialAmount();
+
+        BigDecimal pmt;
+        if (monthlyRate == 0) {
+            pmt = fv.subtract(pv).divide(BigDecimal.valueOf(totalMonths), 2, RoundingMode.HALF_UP);
+        } else {
+            double ratePowN = Math.pow(1.0 + monthlyRate, totalMonths);
+            double numerator = (fv.doubleValue() - pv.doubleValue() * ratePowN) * monthlyRate;
+            double denominator = ratePowN - 1.0;
+            pmt = BigDecimal.valueOf(numerator / denominator).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        if (pmt.compareTo(BigDecimal.ZERO) < 0) pmt = BigDecimal.ZERO;
+
+        BigDecimal currentAccumulated = pv;
+        BigDecimal currentInvested = pv;
+        List<com.awesome.financial.control.afc.dto.InvestmentGoalResponse.TimelineEntry> timeline =
+                new ArrayList<>();
+        timeline.add(
+                new com.awesome.financial.control.afc.dto.InvestmentGoalResponse.TimelineEntry(
+                        0, currentInvested, currentAccumulated));
+
+        for (int m = 1; m <= totalMonths; m++) {
+            currentAccumulated =
+                    currentAccumulated.multiply(BigDecimal.valueOf(1.0 + monthlyRate)).add(pmt);
+            currentInvested = currentInvested.add(pmt);
+
+            if (m % 12 == 0 || m == totalMonths) {
+                timeline.add(
+                        new com.awesome.financial.control.afc.dto.InvestmentGoalResponse
+                                .TimelineEntry(
+                                m / 12.0,
+                                currentInvested.setScale(2, RoundingMode.HALF_UP),
+                                currentAccumulated.setScale(2, RoundingMode.HALF_UP)));
+            }
+        }
+
+        return new com.awesome.financial.control.afc.dto.InvestmentGoalResponse(
+                pmt,
+                currentInvested.setScale(2, RoundingMode.HALF_UP),
+                currentAccumulated.subtract(currentInvested).setScale(2, RoundingMode.HALF_UP),
+                timeline);
+    }
 }

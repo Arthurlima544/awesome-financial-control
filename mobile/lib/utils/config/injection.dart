@@ -40,6 +40,7 @@ import 'package:afc/view_models/settings/settings_bloc.dart';
 import 'package:afc/repositories/calculator_repository.dart';
 import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
 import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
+import 'package:afc/view_models/investment_goal/investment_goal_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -89,6 +90,7 @@ Future<void> init() async {
   sl.registerFactory(() => OnboardingCubit());
   sl.registerFactory(() => FireCalculatorBloc(repository: sl()));
   sl.registerFactory(() => CompoundInterestBloc(repository: sl()));
+  sl.registerFactory(() => InvestmentGoalBloc(repository: sl()));
   sl.registerFactory(() => InvestmentDashboardBloc(repository: sl()));
   sl.registerLazySingleton(() => PassiveIncomeRepository());
   sl.registerFactory(() => PassiveIncomeBloc(repository: sl()));

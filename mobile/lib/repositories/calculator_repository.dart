@@ -65,4 +65,33 @@ class CalculatorRepository {
       throw Exception('Failed to calculate compound interest: $e');
     }
   }
+
+  Future<Map<String, dynamic>> calculateInvestmentGoal({
+    required double targetAmount,
+    required DateTime targetDate,
+    required double annualReturnRate,
+    required double initialAmount,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${AppConfig.apiBaseUrl}/api/v1/calculators/investment-goal',
+        data: {
+          'targetAmount': targetAmount,
+          'targetDate': targetDate.toIso8601String().split('T')[0],
+          'annualReturnRate': annualReturnRate,
+          'initialAmount': initialAmount,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      } else {
+        throw Exception(
+          'Failed to calculate investment goal: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Failed to calculate investment goal: $e');
+    }
+  }
 }

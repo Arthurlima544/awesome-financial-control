@@ -51,6 +51,11 @@ class PlanningScreen extends StatelessWidget {
             onTap: () => context.push('/juros-compostos'),
           ),
           CustomListTile(
+            title: 'Meta de Investimento',
+            leadingIcon: Icons.stars,
+            onTap: () => context.push('/meta-investimento'),
+          ),
+          CustomListTile(
             title: 'Análise de Investimentos',
             leadingIcon: Icons.analytics_outlined,
             onTap: () => context.push('/investments/dashboard'),

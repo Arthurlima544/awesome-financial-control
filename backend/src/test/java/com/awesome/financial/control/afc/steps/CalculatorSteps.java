@@ -6,6 +6,8 @@ import com.awesome.financial.control.afc.dto.CompoundInterestRequest;
 import com.awesome.financial.control.afc.dto.CompoundInterestResponse;
 import com.awesome.financial.control.afc.dto.FireCalculationRequest;
 import com.awesome.financial.control.afc.dto.FireCalculationResponse;
+import com.awesome.financial.control.afc.dto.InvestmentGoalRequest;
+import com.awesome.financial.control.afc.dto.InvestmentGoalResponse;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -99,5 +101,39 @@ public class CalculatorSteps {
     public void theCompoundInterestTimelineShouldHaveEntries(int expected) {
         CompoundInterestResponse body = (CompoundInterestResponse) context.response.getBody();
         assertThat(body.timeline()).hasSize(expected);
+    }
+
+    @When("I request an investment goal calculation with:")
+    public void iRequestAnInvestmentGoalCalculation(Map<String, String> data) {
+        InvestmentGoalRequest request =
+                new InvestmentGoalRequest(
+                        new BigDecimal(data.get("targetAmount")),
+                        java.time.LocalDate.parse(data.get("targetDate")),
+                        new BigDecimal(data.get("annualReturnRate")),
+                        new BigDecimal(data.get("initialAmount")));
+        ResponseEntity<InvestmentGoalResponse> response =
+                restTemplate.postForEntity(
+                        "/api/v1/calculators/investment-goal",
+                        request,
+                        InvestmentGoalResponse.class);
+        context.response = response;
+    }
+
+    @And("the required monthly contribution is greater than {int}")
+    public void theRequiredMonthlyContributionIsGreaterThan(int min) {
+        InvestmentGoalResponse body = (InvestmentGoalResponse) context.response.getBody();
+        assertThat(body.requiredMonthlyContribution()).isGreaterThan(BigDecimal.valueOf(min));
+    }
+
+    @And("the total contributed is less than {int}")
+    public void theTotalContributedIsLessThan(int max) {
+        InvestmentGoalResponse body = (InvestmentGoalResponse) context.response.getBody();
+        assertThat(body.totalContributed()).isLessThan(BigDecimal.valueOf(max));
+    }
+
+    @And("the timeline has entries")
+    public void theTimelineHasEntries() {
+        InvestmentGoalResponse body = (InvestmentGoalResponse) context.response.getBody();
+        assertThat(body.timeline()).isNotEmpty();
     }
 }

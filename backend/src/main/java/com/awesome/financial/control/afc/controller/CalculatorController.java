@@ -4,6 +4,8 @@ import com.awesome.financial.control.afc.dto.CompoundInterestRequest;
 import com.awesome.financial.control.afc.dto.CompoundInterestResponse;
 import com.awesome.financial.control.afc.dto.FireCalculationRequest;
 import com.awesome.financial.control.afc.dto.FireCalculationResponse;
+import com.awesome.financial.control.afc.dto.InvestmentGoalRequest;
+import com.awesome.financial.control.afc.dto.InvestmentGoalResponse;
 import com.awesome.financial.control.afc.service.CalculatorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,5 +38,12 @@ public class CalculatorController {
     public CompoundInterestResponse calculateCompoundInterest(
             @RequestBody @Valid CompoundInterestRequest request) {
         return calculatorService.calculateCompoundInterest(request);
+    }
+
+    @Operation(summary = "Calculate required monthly investment for a target goal")
+    @PostMapping("/investment-goal")
+    public InvestmentGoalResponse calculateInvestmentGoal(
+            @RequestBody @Valid InvestmentGoalRequest request) {
+        return calculatorService.calculateInvestmentGoal(request);
     }
 }
