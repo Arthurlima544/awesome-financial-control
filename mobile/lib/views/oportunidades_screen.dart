@@ -29,31 +29,43 @@ class OportunidadesScreen extends StatelessWidget {
             );
           }
 
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            children: [
-              if (state.opportunities.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: Text(
-                    'Última atualização: ${DateFormat('dd/MM/yyyy HH:mm').format(state.opportunities.first.lastUpdated.toLocal())}',
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: Colors.grey,
+          return RefreshIndicator(
+            onRefresh: () async {
+              final bloc = context.read<MarketOpportunityBloc>();
+              bloc.add(RefreshMarketOpportunities());
+              // Wait for completion
+              await bloc.stream.firstWhere(
+                (state) =>
+                    state.status == MarketOpportunityStatus.success ||
+                    state.status == MarketOpportunityStatus.failure,
+              );
+            },
+            child: ListView(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              children: [
+                if (state.opportunities.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                    child: Text(
+                      'Última atualização: ${DateFormat('dd/MM/yyyy HH:mm').format(state.opportunities.first.lastUpdated.toLocal())}',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
+                if (state.benchmarks != null)
+                  _buildBenchmarkBanner(state.benchmarks!),
+                const SizedBox(height: AppSpacing.lg),
+                _buildFilters(context, state),
+                const SizedBox(height: AppSpacing.md),
+                _buildSortOptions(context, state),
+                const SizedBox(height: AppSpacing.lg),
+                ...state.filteredOpportunities.map(
+                  (o) => _buildOpportunityCard(o),
                 ),
-              if (state.benchmarks != null)
-                _buildBenchmarkBanner(state.benchmarks!),
-              const SizedBox(height: AppSpacing.lg),
-              _buildFilters(context, state),
-              const SizedBox(height: AppSpacing.md),
-              _buildSortOptions(context, state),
-              const SizedBox(height: AppSpacing.lg),
-              ...state.filteredOpportunities.map(
-                (o) => _buildOpportunityCard(o),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

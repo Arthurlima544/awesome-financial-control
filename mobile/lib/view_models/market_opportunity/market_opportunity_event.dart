@@ -13,3 +13,5 @@ class MarketSortChanged extends MarketOpportunityEvent {
   final MarketSort sort;
   MarketSortChanged(this.sort);
 }
+
+class RefreshMarketOpportunities extends MarketOpportunityEvent {}

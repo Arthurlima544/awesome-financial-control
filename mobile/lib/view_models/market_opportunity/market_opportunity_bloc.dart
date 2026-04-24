@@ -12,8 +12,41 @@ class MarketOpportunityBloc
     : _marketRepository = marketRepository,
       super(MarketOpportunityState()) {
     on<FetchMarketOpportunities>(_onFetchMarketOpportunities);
+    on<RefreshMarketOpportunities>(_onRefreshMarketOpportunities);
     on<MarketFilterChanged>(_onFilterChanged);
     on<MarketSortChanged>(_onSortChanged);
+  }
+
+  Future<void> _onRefreshMarketOpportunities(
+    RefreshMarketOpportunities event,
+    Emitter<MarketOpportunityState> emit,
+  ) async {
+    try {
+      final opportunities = await _marketRepository.getOpportunities();
+      final benchmarks = await _marketRepository.getBenchmarks();
+
+      final filtered = _applyFilterAndSort(
+        opportunities,
+        state.filter,
+        state.sort,
+      );
+
+      emit(
+        state.copyWith(
+          status: MarketOpportunityStatus.success,
+          opportunities: opportunities,
+          filteredOpportunities: filtered,
+          benchmarks: benchmarks,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: MarketOpportunityStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> _onFetchMarketOpportunities(
