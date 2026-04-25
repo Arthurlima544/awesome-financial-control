@@ -14,9 +14,13 @@ public class CommonSteps {
     private com.awesome.financial.control.afc.repository.TransactionRepository
             transactionRepository;
 
+    @Autowired
+    private com.awesome.financial.control.afc.repository.FeedbackRepository feedbackRepository;
+
     @io.cucumber.java.en.Given("the database is clean")
     public void theDatabaseIsClean() {
         transactionRepository.deleteAll();
+        feedbackRepository.deleteAll();
     }
 
     @Then("the response status is {int}")
