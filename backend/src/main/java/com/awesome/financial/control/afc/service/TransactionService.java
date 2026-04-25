@@ -74,6 +74,7 @@ public class TransactionService {
         transaction.setPassive(request.isPassive());
         transaction.setInvestmentId(request.investmentId());
         Transaction saved = transactionRepository.save(transaction);
+        matchRecurringTransaction(saved);
         return transactionMapper.toResponse(saved);
     }
 

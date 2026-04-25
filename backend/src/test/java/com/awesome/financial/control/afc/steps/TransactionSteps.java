@@ -266,4 +266,52 @@ public class TransactionSteps {
 
         ctx.lastTransactionId = transactionRepository.save(transaction).getId();
     }
+
+    @When("I create the following transactions in bulk:")
+    public void iCreateTheFollowingTransactionsInBulk(io.cucumber.datatable.DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        String body =
+                "["
+                        + rows.stream()
+                                .map(
+                                        row ->
+                                                String.format(
+                                                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"category\":\"%s\",\"occurredAt\":\"%s\"}",
+                                                        row.get("description"),
+                                                        row.get("amount"),
+                                                        row.get("type"),
+                                                        row.get("category"),
+                                                        Instant.now().toString()))
+                                .collect(Collectors.joining(","))
+                        + "]";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions/bulk", new HttpEntity<>(body, headers), String.class);
+    }
+
+    @When("I request the current month summary")
+    public void iRequestTheCurrentMonthSummary() {
+        ctx.response = restTemplate.getForEntity("/api/v1/transactions/summary", String.class);
+    }
+
+    @And("the summary total income is {bigdecimal}")
+    public void theSummaryTotalIncomeIs(BigDecimal expected) {
+        assertThat((String) ctx.response.getBody())
+                .contains("\"totalIncome\":" + expected.stripTrailingZeros().toPlainString());
+    }
+
+    @And("the summary total expenses is {bigdecimal}")
+    public void theSummaryTotalExpensesIs(BigDecimal expected) {
+        assertThat((String) ctx.response.getBody())
+                .contains("\"totalExpenses\":" + expected.stripTrailingZeros().toPlainString());
+    }
+
+    @And("the summary balance is {bigdecimal}")
+    public void theSummaryBalanceIs(BigDecimal expected) {
+        assertThat((String) ctx.response.getBody())
+                .contains("\"balance\":" + expected.stripTrailingZeros().toPlainString());
+    }
 }

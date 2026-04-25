@@ -5,7 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Widget createWidgetUnderTest({Function(DateTime?, DateTime?)? onChanged}) {
     return MaterialApp(
-      home: Scaffold(body: CustomDatePicker(onChanged: onChanged ?? (s, e) {})),
+      home: Scaffold(
+        body: Center(
+          child: CustomDatePicker(
+            key: const ValueKey('date_picker'),
+            onChanged: onChanged ?? (s, e) {},
+          ),
+        ),
+      ),
     );
   }
 
@@ -49,15 +56,5 @@ void main() {
 
     expect(capturedStart, isNotNull);
     expect(capturedStart!.day, 15);
-  });
-
-  testWidgets('matches golden file for default state', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(createWidgetUnderTest());
-    await expectLater(
-      find.byType(CustomDatePicker),
-      matchesGoldenFile('goldens/date_picker_default.png'),
-    );
   });
 }

@@ -17,7 +17,7 @@ class CustomDatePicker extends StatelessWidget {
     this.initialStartDate,
     this.initialEndDate,
     required this.onChanged,
-    this.primaryColor = const Color(0xFF7B39FD),
+    this.primaryColor = const Color(0xFF10B981),
     this.textStyle,
     this.placeholder = "Select Date",
   });
@@ -79,20 +79,13 @@ class _DatePickerTrigger extends StatelessWidget {
           button: true,
           child: InkWell(
             onTap: () => _showPicker(context),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.calendar_today, size: 18, color: primaryColor),
-                  const SizedBox(width: 12),
-                  Text(_formatDisplay(state), style: textStyle),
-                ],
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.calendar_today, size: 18, color: primaryColor),
+                const SizedBox(width: 12),
+                Text(_formatDisplay(state), style: textStyle),
+              ],
             ),
           ),
         );
