@@ -278,10 +278,15 @@ class InvestmentDashboardScreen extends StatelessWidget {
             ),
             child: ListTile(
               title: Text(
-                p['ticker'] ?? p['name'],
+                (p['ticker'] != null && p['ticker'].toString().isNotEmpty)
+                    ? p['ticker']
+                    : p['name'],
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(p['name']),
+              subtitle:
+                  (p['ticker'] != null && p['ticker'].toString().isNotEmpty)
+                  ? Text(p['name'])
+                  : null,
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,

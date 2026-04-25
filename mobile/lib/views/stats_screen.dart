@@ -435,7 +435,22 @@ class _BarChart extends StatelessWidget {
                 drawVerticalLine: false,
               ),
               borderData: FlBorderData(show: false),
-              barTouchData: BarTouchData(enabled: true),
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipColor: (_) =>
+                      Colors.blueGrey.withValues(alpha: 0.8),
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final currencyFormat = NumberFormat.simpleCurrency(
+                      locale: 'pt_BR',
+                    );
+                    return BarTooltipItem(
+                      currencyFormat.format(rod.toY),
+                      const TextStyle(color: Colors.white, fontSize: 10),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         );

@@ -456,6 +456,20 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
 
     return LineChart(
       LineChartData(
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map((spot) {
+                final format = NumberFormat.simpleCurrency(locale: 'pt_BR');
+                return LineTooltipItem(
+                  format.format(spot.y),
+                  const TextStyle(color: Colors.white, fontSize: 10),
+                );
+              }).toList();
+            },
+          ),
+        ),
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
