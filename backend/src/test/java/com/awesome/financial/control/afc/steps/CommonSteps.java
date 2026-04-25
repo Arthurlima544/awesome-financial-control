@@ -28,8 +28,16 @@ public class CommonSteps {
         assertThat(ctx.response.getStatusCode().value()).isEqualTo(status);
     }
 
+    @Then("the response should contain {string}")
     @And("the response contains {string}")
-    public void theResponseContains(String content) {
-        assertThat((String) ctx.response.getBody()).contains(content);
+    public void theResponseShouldContain(String content) {
+        Object body = ctx.response.getBody();
+        if (body instanceof String) {
+            assertThat((String) body).contains(content);
+        } else if (body != null) {
+            assertThat(body.toString()).contains(content);
+        } else {
+            throw new AssertionError("Response body is null");
+        }
     }
 }
