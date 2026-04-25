@@ -123,6 +123,25 @@ public class TransactionSteps {
                         "/api/v1/transactions", new HttpEntity<>(body, headers), String.class);
     }
 
+    @When(
+            "I create a transaction with description {string} amount {double} type {word} category {string} occurred today")
+    public void iCreateATransactionWithCategory(
+            String description, Double amount, String type, String category) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"category\":\"%s\",\"occurredAt\":\"%s\"}",
+                        description,
+                        BigDecimal.valueOf(amount).toPlainString(),
+                        type,
+                        category,
+                        Instant.now().toString());
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions", new HttpEntity<>(body, headers), String.class);
+    }
+
     @When("I delete the last created transaction")
     public void iDeleteTheLastCreatedTransaction() {
         ctx.response =
@@ -294,7 +313,7 @@ public class TransactionSteps {
 
     @When("I request the current month summary")
     public void iRequestTheCurrentMonthSummary() {
-        ctx.response = restTemplate.getForEntity("/api/v1/transactions/summary", String.class);
+        ctx.response = restTemplate.getForEntity("/api/v1/summary", String.class);
     }
 
     @And("the summary total income is {bigdecimal}")
