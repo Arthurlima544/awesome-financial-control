@@ -459,6 +459,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get feedbackSuccess => 'Obrigado pelo seu feedback!';
 
   @override
+  String get filterAll => 'Todas';
+
+  @override
+  String get filterIncome => 'Receitas';
+
+  @override
+  String get filterExpense => 'Despesas';
+
+  @override
+  String get filterDate => 'Data';
+
+  @override
+  String get filterClear => 'Limpar Filtros';
+
+  @override
+  String get transactionSearchHint => 'Buscar transações...';
+
+  @override
   String get reportTitle => 'Relatório Mensal';
 
   @override
@@ -511,6 +529,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get investmentsNoInvestments => 'Nenhum investimento cadastrado';
+
+  @override
+  String get tooltipFIRETitle => 'Número FIRE';
+
+  @override
+  String get tooltipFIREDesc =>
+      'O montante necessário para viver apenas de seus investimentos (Independência Financeira, Aposentadoria Antecipada). Geralmente 25x seus gastos anuais.';
+
+  @override
+  String get tooltipFIScoreTitle => 'FI Score';
+
+  @override
+  String get tooltipFIScoreDesc =>
+      'Mede o quão próximo você está da Independência Financeira. 100% significa que você atingiu seu número FIRE.';
+
+  @override
+  String get tooltipSavingsRateTitle => 'Taxa de Poupança';
+
+  @override
+  String get tooltipSavingsRateDesc =>
+      'A porcentagem de sua renda que sobra após todas as despesas. Quanto maior, mais rápido você atinge a Independência Financeira.';
+
+  @override
+  String get tooltipNetWorthTitle => 'Patrimônio Líquido';
+
+  @override
+  String get tooltipNetWorthDesc =>
+      'A soma de todos os seus ativos (contas, investimentos) menos seus passivos (dívidas). É sua verdadeira riqueza.';
+
+  @override
+  String get tooltipCDITitle => 'CDI';
+
+  @override
+  String get tooltipCDIDesc =>
+      'Certificado de Depósito Interbancário. É a principal taxa de referência para investimentos de renda fixa no Brasil.';
 
   @override
   String get investmentName => 'Nome do Ativo';

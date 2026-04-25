@@ -91,4 +91,23 @@ class CalculatorServiceTest {
         assertThat(realResponse.requiredMonthlyContribution())
                 .isGreaterThan(nominalResponse.requiredMonthlyContribution());
     }
+
+    @Test
+    void shouldCalculateFireScore() {
+        com.awesome.financial.control.afc.dto.FireCalculationRequest request =
+                new com.awesome.financial.control.afc.dto.FireCalculationRequest(
+                        BigDecimal.valueOf(
+                                4000), // 4000 expenses -> 48k/year -> 1.2M fire number (at 4%)
+                        BigDecimal.valueOf(600000), // 600k current -> 50% progress
+                        BigDecimal.valueOf(2000),
+                        BigDecimal.valueOf(0.10),
+                        BigDecimal.valueOf(0.04),
+                        false);
+
+        com.awesome.financial.control.afc.dto.FireCalculationResponse response =
+                calculatorService.calculateFire(request);
+
+        assertThat(response.fireNumber()).isEqualByComparingTo("1200000.00");
+        assertThat(response.fiScore()).isEqualTo(50.0);
+    }
 }

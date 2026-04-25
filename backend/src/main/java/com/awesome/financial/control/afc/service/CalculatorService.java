@@ -60,11 +60,17 @@ public class CalculatorService {
         }
 
         LocalDate retirementDate = LocalDate.now().plusMonths(totalMonths);
+        double fiScore =
+                request.currentPortfolio()
+                        .divide(fireNumber, 4, RoundingMode.HALF_UP)
+                        .multiply(BigDecimal.valueOf(100))
+                        .doubleValue();
 
         return new FireCalculationResponse(
                 fireNumber.setScale(2, RoundingMode.HALF_UP),
                 totalMonths,
                 retirementDate,
+                fiScore,
                 timeline);
     }
 

@@ -29,6 +29,7 @@ import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
+import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -395,11 +396,20 @@ class _NetWorthCard extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              l10n.totalNetWorth,
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.neutral700,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  l10n.totalNetWorth,
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: AppColors.neutral700,
+                                  ),
+                                ),
+                                AppTooltipIcon(
+                                  title: l10n.tooltipNetWorthTitle,
+                                  description: l10n.tooltipNetWorthDesc,
+                                  iconSize: 14,
+                                ),
+                              ],
                             ),
                             PrivacyText(
                               currencyFormat.format(totalNetWorth),

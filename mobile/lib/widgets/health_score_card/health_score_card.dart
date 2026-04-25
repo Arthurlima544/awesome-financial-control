@@ -3,7 +3,7 @@ import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
-import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
+import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -54,16 +54,11 @@ class HealthScoreCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              CustomTooltip(
+              AppTooltipIcon(
                 title: l10n.healthScoreTitle,
                 description: l10n.healthScoreTooltip,
                 position: TooltipPosition.bottom,
-                backgroundColor: AppColors.neutral800,
-                child: const Icon(
-                  Icons.info_outline,
-                  size: AppSpacing.iconSm,
-                  color: AppColors.neutral500,
-                ),
+                iconSize: AppSpacing.iconSm,
               ),
             ],
           ),

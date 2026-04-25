@@ -946,6 +946,42 @@ abstract class AppLocalizations {
   /// **'Obrigado pelo seu feedback!'**
   String get feedbackSuccess;
 
+  /// No description provided for @filterAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas'**
+  String get filterAll;
+
+  /// No description provided for @filterIncome.
+  ///
+  /// In pt, this message translates to:
+  /// **'Receitas'**
+  String get filterIncome;
+
+  /// No description provided for @filterExpense.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesas'**
+  String get filterExpense;
+
+  /// No description provided for @filterDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data'**
+  String get filterDate;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar Filtros'**
+  String get filterClear;
+
+  /// No description provided for @transactionSearchHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar transações...'**
+  String get transactionSearchHint;
+
   /// Report screen title
   ///
   /// In pt, this message translates to:
@@ -1053,6 +1089,66 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nenhum investimento cadastrado'**
   String get investmentsNoInvestments;
+
+  /// No description provided for @tooltipFIRETitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Número FIRE'**
+  String get tooltipFIRETitle;
+
+  /// No description provided for @tooltipFIREDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'O montante necessário para viver apenas de seus investimentos (Independência Financeira, Aposentadoria Antecipada). Geralmente 25x seus gastos anuais.'**
+  String get tooltipFIREDesc;
+
+  /// No description provided for @tooltipFIScoreTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'FI Score'**
+  String get tooltipFIScoreTitle;
+
+  /// No description provided for @tooltipFIScoreDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mede o quão próximo você está da Independência Financeira. 100% significa que você atingiu seu número FIRE.'**
+  String get tooltipFIScoreDesc;
+
+  /// No description provided for @tooltipSavingsRateTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa de Poupança'**
+  String get tooltipSavingsRateTitle;
+
+  /// No description provided for @tooltipSavingsRateDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'A porcentagem de sua renda que sobra após todas as despesas. Quanto maior, mais rápido você atinge a Independência Financeira.'**
+  String get tooltipSavingsRateDesc;
+
+  /// No description provided for @tooltipNetWorthTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Patrimônio Líquido'**
+  String get tooltipNetWorthTitle;
+
+  /// No description provided for @tooltipNetWorthDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'A soma de todos os seus ativos (contas, investimentos) menos seus passivos (dívidas). É sua verdadeira riqueza.'**
+  String get tooltipNetWorthDesc;
+
+  /// No description provided for @tooltipCDITitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'CDI'**
+  String get tooltipCDITitle;
+
+  /// No description provided for @tooltipCDIDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Certificado de Depósito Interbancário. É a principal taxa de referência para investimentos de renda fixa no Brasil.'**
+  String get tooltipCDIDesc;
 
   /// Label for investment name field
   ///
