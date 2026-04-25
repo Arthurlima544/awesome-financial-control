@@ -44,6 +44,8 @@ import 'package:afc/view_models/investment_goal/investment_goal_bloc.dart';
 import 'package:afc/repositories/market_repository.dart';
 import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
+import 'package:afc/repositories/feedback_repository.dart';
+import 'package:afc/view_models/feedback/feedback_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -71,6 +73,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => HealthScoreRepository());
   sl.registerLazySingleton(() => CalculatorRepository());
   sl.registerLazySingleton(() => MarketRepository());
+  sl.registerLazySingleton(() => FeedbackRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
@@ -100,4 +103,5 @@ Future<void> init() async {
   sl.registerLazySingleton(() => PassiveIncomeRepository());
   sl.registerFactory(() => PassiveIncomeBloc(repository: sl()));
   sl.registerLazySingleton(() => PrivacyCubit());
+  sl.registerFactory(() => FeedbackCubit(repository: sl()));
 }

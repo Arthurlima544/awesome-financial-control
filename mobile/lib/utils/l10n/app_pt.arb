@@ -384,6 +384,12 @@
   "importConfidenceReview": "Revisar",
   "importConfidenceManual": "Manual",
 
+  "feedbackTitle": "Enviar Feedback",
+  "feedbackLabel": "Como está sendo sua experiência com o AFC?",
+  "feedbackMessageHint": "Conte-nos mais (opcional)",
+  "feedbackSubmit": "Enviar",
+  "feedbackSuccess": "Obrigado pelo seu feedback!",
+
   "reportTitle": "Relatório Mensal",
   "@reportTitle": { "description": "Report screen title" },
 

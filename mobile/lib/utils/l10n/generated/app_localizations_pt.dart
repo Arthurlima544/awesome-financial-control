@@ -444,6 +444,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get importConfidenceManual => 'Manual';
 
   @override
+  String get feedbackTitle => 'Enviar Feedback';
+
+  @override
+  String get feedbackLabel => 'Como está sendo sua experiência com o AFC?';
+
+  @override
+  String get feedbackMessageHint => 'Conte-nos mais (opcional)';
+
+  @override
+  String get feedbackSubmit => 'Enviar';
+
+  @override
+  String get feedbackSuccess => 'Obrigado pelo seu feedback!';
+
+  @override
   String get reportTitle => 'Relatório Mensal';
 
   @override

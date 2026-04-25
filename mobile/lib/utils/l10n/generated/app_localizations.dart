@@ -916,6 +916,36 @@ abstract class AppLocalizations {
   /// **'Manual'**
   String get importConfidenceManual;
 
+  /// No description provided for @feedbackTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar Feedback'**
+  String get feedbackTitle;
+
+  /// No description provided for @feedbackLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como está sendo sua experiência com o AFC?'**
+  String get feedbackLabel;
+
+  /// No description provided for @feedbackMessageHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conte-nos mais (opcional)'**
+  String get feedbackMessageHint;
+
+  /// No description provided for @feedbackSubmit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviar'**
+  String get feedbackSubmit;
+
+  /// No description provided for @feedbackSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Obrigado pelo seu feedback!'**
+  String get feedbackSuccess;
+
   /// Report screen title
   ///
   /// In pt, this message translates to:
