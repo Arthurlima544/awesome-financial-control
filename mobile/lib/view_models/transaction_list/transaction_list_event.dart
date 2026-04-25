@@ -52,3 +52,7 @@ class TransactionUpdateRequested extends TransactionListEvent {
     investmentId,
   ];
 }
+
+class TransactionListToggleGrouping extends TransactionListEvent {
+  const TransactionListToggleGrouping();
+}

@@ -139,6 +139,16 @@
   "transactionDeleteConfirmMessage": "Deseja excluir esta transação? Esta ação não pode ser desfeita.",
   "@transactionDeleteConfirmMessage": { "description": "Body of delete transaction confirmation dialog" },
 
+  "transactionListByDate": "Por data",
+  "transactionListByGroup": "Por grupo",
+  "transactionGroupPix": "Transferências PIX",
+  "transactionGroupBank": "Transferências bancárias",
+  "transactionGroupTransport": "Transporte por app",
+  "transactionGroupDelivery": "Delivery",
+  "transactionGroupMarket": "Supermercado",
+  "transactionGroupSubscription": "Assinaturas",
+  "transactionGroupOther": "Outros",
+
   "navHome": "Início",
   "@navHome": { "description": "Bottom nav bar home tab label" },
 
