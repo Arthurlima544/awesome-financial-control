@@ -380,6 +380,10 @@
   "importSuccess": "Transações importadas com sucesso!",
   "@importSuccess": { "description": "Success message for import" },
 
+  "importConfidenceAuto": "Auto",
+  "importConfidenceReview": "Revisar",
+  "importConfidenceManual": "Manual",
+
   "reportTitle": "Relatório Mensal",
   "@reportTitle": { "description": "Report screen title" },
 

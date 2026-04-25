@@ -9,6 +9,7 @@ class ImportCandidateModel extends Equatable {
   final String? category;
   final bool isSelected;
   final bool isDuplicate;
+  final double categoryConfidence;
 
   const ImportCandidateModel({
     required this.description,
@@ -18,6 +19,7 @@ class ImportCandidateModel extends Equatable {
     this.category,
     this.isSelected = true,
     this.isDuplicate = false,
+    this.categoryConfidence = 0.0,
   });
 
   ImportCandidateModel copyWith({
@@ -28,6 +30,7 @@ class ImportCandidateModel extends Equatable {
     String? category,
     bool? isSelected,
     bool? isDuplicate,
+    double? categoryConfidence,
   }) {
     return ImportCandidateModel(
       description: description ?? this.description,
@@ -37,6 +40,7 @@ class ImportCandidateModel extends Equatable {
       category: category ?? this.category,
       isSelected: isSelected ?? this.isSelected,
       isDuplicate: isDuplicate ?? this.isDuplicate,
+      categoryConfidence: categoryConfidence ?? this.categoryConfidence,
     );
   }
 
@@ -49,5 +53,6 @@ class ImportCandidateModel extends Equatable {
     category,
     isSelected,
     isDuplicate,
+    categoryConfidence,
   ];
 }

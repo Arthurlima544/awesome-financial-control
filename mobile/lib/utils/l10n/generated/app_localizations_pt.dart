@@ -435,6 +435,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get importSuccess => 'Transações importadas com sucesso!';
 
   @override
+  String get importConfidenceAuto => 'Auto';
+
+  @override
+  String get importConfidenceReview => 'Revisar';
+
+  @override
+  String get importConfidenceManual => 'Manual';
+
+  @override
   String get reportTitle => 'Relatório Mensal';
 
   @override

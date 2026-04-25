@@ -898,6 +898,24 @@ abstract class AppLocalizations {
   /// **'Transações importadas com sucesso!'**
   String get importSuccess;
 
+  /// No description provided for @importConfidenceAuto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Auto'**
+  String get importConfidenceAuto;
+
+  /// No description provided for @importConfidenceReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar'**
+  String get importConfidenceReview;
+
+  /// No description provided for @importConfidenceManual.
+  ///
+  /// In pt, this message translates to:
+  /// **'Manual'**
+  String get importConfidenceManual;
+
   /// Report screen title
   ///
   /// In pt, this message translates to:

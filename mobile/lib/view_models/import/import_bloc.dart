@@ -3,21 +3,30 @@ import 'package:afc/services/import_parser_service.dart';
 import 'package:afc/repositories/transaction_list_repository.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/models/import_candidate_model.dart';
+import 'package:afc/services/categorization_matcher.dart';
+import 'package:afc/repositories/category_repository.dart';
+import 'package:afc/utils/config/injection.dart';
 import 'import_event.dart';
 import 'import_state.dart';
 
 class ImportBloc extends Bloc<ImportEvent, ImportState> {
   final ImportParserService _parserService;
   final TransactionListRepository _repository;
+  final CategoryRepository _categoryRepository;
+  final CategorizationMatcher _matcher;
   final AppRefreshBloc _refreshBloc;
 
   ImportBloc({
     ImportParserService? parserService,
     required TransactionListRepository repository,
     required AppRefreshBloc refreshBloc,
+    CategoryRepository? categoryRepository,
+    CategorizationMatcher? matcher,
   }) : _parserService = parserService ?? ImportParserService(),
        _repository = repository,
        _refreshBloc = refreshBloc,
+       _categoryRepository = categoryRepository ?? sl<CategoryRepository>(),
+       _matcher = matcher ?? CategorizationMatcher(),
        super(const ImportState()) {
     on<ImportBankSelected>(_onBankSelected);
     on<ImportTypeSelected>(_onTypeSelected);
@@ -49,6 +58,7 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
 
       // Basic Duplicate Check against current transactions (within last 90 days usually enough)
       final currentTransactions = await _repository.getAll();
+      final categories = await _categoryRepository.getAll();
 
       final markedCandidates = candidates.map((c) {
         final isDuplicate = currentTransactions.any(
@@ -59,7 +69,15 @@ class ImportBloc extends Bloc<ImportEvent, ImportState> {
               t.occurredAt.month == c.occurredAt.month &&
               t.occurredAt.day == c.occurredAt.day,
         );
-        return c.copyWith(isDuplicate: isDuplicate, isSelected: !isDuplicate);
+
+        final catResult = _matcher.match(c.description, categories);
+
+        return c.copyWith(
+          isDuplicate: isDuplicate,
+          isSelected: !isDuplicate,
+          category: catResult.categoryId,
+          categoryConfidence: catResult.confidence,
+        );
       }).toList();
 
       if (markedCandidates.isEmpty) {
