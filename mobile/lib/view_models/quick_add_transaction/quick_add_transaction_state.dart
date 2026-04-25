@@ -24,6 +24,7 @@ class QuickAddTransactionState extends Equatable {
     this.selectedTemplate,
     this.saveAsTemplate = false,
     this.templates = const [],
+    this.occurredAt,
   });
 
   final QuickAddTransactionStatus status;
@@ -37,6 +38,7 @@ class QuickAddTransactionState extends Equatable {
   final String? selectedTemplate;
   final bool saveAsTemplate;
   final List<TemplateModel> templates;
+  final DateTime? occurredAt;
 
   double? get parsedAmount => double.tryParse(amount.replaceAll(',', '.'));
   bool get isAmountValid => parsedAmount != null && parsedAmount! > 0;
@@ -57,6 +59,7 @@ class QuickAddTransactionState extends Equatable {
     Object? selectedTemplate = const Object(),
     bool? saveAsTemplate,
     List<TemplateModel>? templates,
+    DateTime? occurredAt,
   }) {
     return QuickAddTransactionState(
       status: status ?? this.status,
@@ -74,6 +77,7 @@ class QuickAddTransactionState extends Equatable {
           : selectedTemplate as String?,
       saveAsTemplate: saveAsTemplate ?? this.saveAsTemplate,
       templates: templates ?? this.templates,
+      occurredAt: occurredAt ?? this.occurredAt,
     );
   }
 
@@ -90,5 +94,6 @@ class QuickAddTransactionState extends Equatable {
     selectedTemplate,
     saveAsTemplate,
     templates,
+    occurredAt,
   ];
 }

@@ -34,6 +34,7 @@ public class RecurringTransactionMapper {
                 .category(entity.getCategory())
                 .frequency(entity.getFrequency())
                 .nextDueAt(entity.getNextDueAt())
+                .lastPaidAt(entity.getLastPaidAt())
                 .active(entity.isActive())
                 .build();
     }

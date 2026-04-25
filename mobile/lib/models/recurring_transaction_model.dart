@@ -11,6 +11,7 @@ class RecurringTransactionModel {
   final RecurrenceFrequency frequency;
   final DateTime nextDueAt;
   final bool active;
+  final DateTime? lastPaidAt;
 
   RecurringTransactionModel({
     required this.id,
@@ -21,6 +22,7 @@ class RecurringTransactionModel {
     required this.frequency,
     required this.nextDueAt,
     required this.active,
+    this.lastPaidAt,
   });
 
   factory RecurringTransactionModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,9 @@ class RecurringTransactionModel {
       ),
       nextDueAt: DateTime.parse(json['nextDueAt']).toLocal(),
       active: json['active'],
+      lastPaidAt: json['lastPaidAt'] != null
+          ? DateTime.parse(json['lastPaidAt']).toLocal()
+          : null,
     );
   }
 
@@ -50,6 +55,8 @@ class RecurringTransactionModel {
       'frequency': frequency.name.toUpperCase(),
       'nextDueAt': nextDueAt.toUtc().toIso8601String(),
       'active': active,
+      if (lastPaidAt != null)
+        'lastPaidAt': lastPaidAt!.toUtc().toIso8601String(),
     };
   }
 
@@ -62,6 +69,7 @@ class RecurringTransactionModel {
     RecurrenceFrequency? frequency,
     DateTime? nextDueAt,
     bool? active,
+    DateTime? lastPaidAt,
   }) {
     return RecurringTransactionModel(
       id: id ?? this.id,
@@ -72,6 +80,13 @@ class RecurringTransactionModel {
       frequency: frequency ?? this.frequency,
       nextDueAt: nextDueAt ?? this.nextDueAt,
       active: active ?? this.active,
+      lastPaidAt: lastPaidAt ?? this.lastPaidAt,
     );
+  }
+
+  bool get isPaidThisMonth {
+    if (lastPaidAt == null) return false;
+    final now = DateTime.now();
+    return lastPaidAt!.year == now.year && lastPaidAt!.month == now.month;
   }
 }

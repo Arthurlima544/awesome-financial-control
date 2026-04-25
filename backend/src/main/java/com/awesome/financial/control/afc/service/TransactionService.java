@@ -5,8 +5,10 @@ import com.awesome.financial.control.afc.dto.TransactionResponse;
 import com.awesome.financial.control.afc.dto.UpdateTransactionRequest;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.TransactionMapper;
+import com.awesome.financial.control.afc.model.RecurringTransaction;
 import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
+import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -25,6 +27,7 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
+    private final RecurringTransactionRepository recurringTransactionRepository;
 
     @Transactional(readOnly = true)
     public List<TransactionResponse> getAllTransactions() {
@@ -55,6 +58,7 @@ public class TransactionService {
         transaction.setPassive(request.isPassive());
         transaction.setInvestmentId(request.investmentId());
         Transaction saved = transactionRepository.save(transaction);
+        matchRecurringTransaction(saved);
         return transactionMapper.toResponse(saved);
     }
 
@@ -93,6 +97,7 @@ public class TransactionService {
                         .toList();
 
         List<Transaction> saved = transactionRepository.saveAll(transactions);
+        saved.forEach(this::matchRecurringTransaction);
         return saved.stream().map(transactionMapper::toResponse).toList();
     }
 
@@ -126,5 +131,33 @@ public class TransactionService {
                 .totalExpenses(totalExpenses)
                 .balance(balance)
                 .build();
+    }
+
+    private void matchRecurringTransaction(Transaction transaction) {
+        if (transaction.getCategory() == null) return;
+
+        List<RecurringTransaction> activeRules =
+                recurringTransactionRepository.findAllByActiveTrue();
+        for (RecurringTransaction rule : activeRules) {
+            if (rule.getCategory() != null
+                    && rule.getCategory().equalsIgnoreCase(transaction.getCategory())
+                    && rule.getType() == transaction.getType()) {
+
+                // Check if amount is similar (within 10%)
+                BigDecimal diff = rule.getAmount().subtract(transaction.getAmount()).abs();
+                BigDecimal threshold = rule.getAmount().multiply(new BigDecimal("0.1"));
+
+                if (diff.compareTo(threshold) <= 0) {
+                    // Update only if this transaction is newer than current lastPaidAt or if
+                    // lastPaidAt is null
+                    if (rule.getLastPaidAt() == null
+                            || transaction.getOccurredAt().isAfter(rule.getLastPaidAt())) {
+                        rule.setLastPaidAt(transaction.getOccurredAt());
+                        recurringTransactionRepository.save(rule);
+                    }
+                    break;
+                }
+            }
+        }
     }
 }

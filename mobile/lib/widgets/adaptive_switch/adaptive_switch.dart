@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_switch_cubit.dart';
 
-class AdaptiveSwitch extends StatelessWidget {
+class AdaptiveSwitch extends StatefulWidget {
   final ValueChanged<bool>? onChanged;
   final String semanticLabel;
   final Color? activeTrackColor;
@@ -27,6 +27,23 @@ class AdaptiveSwitch extends StatelessWidget {
   });
 
   @override
+  State<AdaptiveSwitch> createState() => _AdaptiveSwitchState();
+}
+
+class _AdaptiveSwitchState extends State<AdaptiveSwitch> {
+  FocusNode? _internalFocusNode;
+
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ??
+      (_internalFocusNode ??= FocusNode(canRequestFocus: false));
+
+  @override
+  void dispose() {
+    _internalFocusNode?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Relative sizing based on screen width
     final screenWidth = MediaQuery.of(context).size.width;
@@ -34,7 +51,7 @@ class AdaptiveSwitch extends StatelessWidget {
     return BlocBuilder<AdaptiveSwitchCubit, AdaptiveSwitchState>(
       builder: (context, state) {
         final bool isEffectivelyDisabled =
-            state.isDisabled || onChanged == null;
+            state.isDisabled || widget.onChanged == null;
 
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -46,10 +63,11 @@ class AdaptiveSwitch extends StatelessWidget {
             final double thumbSize = switchHeight - (padding * 2);
 
             // Theme fallback colors matching the provided design
-            final baseActiveColor = activeTrackColor ?? const Color(0xFF624BFF);
+            final baseActiveColor =
+                widget.activeTrackColor ?? const Color(0xFF624BFF);
             final baseInactiveColor =
-                inactiveTrackColor ?? const Color(0xFFE0E0E0);
-            final baseThumbColor = thumbColor ?? Colors.white;
+                widget.inactiveTrackColor ?? const Color(0xFFE0E0E0);
+            final baseThumbColor = widget.thumbColor ?? Colors.white;
 
             // Determine visual colors based on state
             Color currentTrackColor;
@@ -57,8 +75,10 @@ class AdaptiveSwitch extends StatelessWidget {
             Color borderColor = Colors.transparent;
 
             if (isEffectivelyDisabled) {
-              currentTrackColor = disabledTrackColor ?? const Color(0xFFF0F0F0);
-              currentThumbColor = disabledThumbColor ?? const Color(0xFFE8E8E8);
+              currentTrackColor =
+                  widget.disabledTrackColor ?? const Color(0xFFF0F0F0);
+              currentThumbColor =
+                  widget.disabledThumbColor ?? const Color(0xFFE8E8E8);
               if (!state.isOn) {
                 borderColor = const Color(
                   0xFFE0E0E0,
@@ -75,13 +95,13 @@ class AdaptiveSwitch extends StatelessWidget {
             }
 
             return Padding(
-              padding: customPadding ?? EdgeInsets.zero,
+              padding: widget.customPadding ?? EdgeInsets.zero,
               child: Semantics(
                 toggled: state.isOn,
                 enabled: !isEffectivelyDisabled,
-                label: semanticLabel,
+                label: widget.semanticLabel,
                 child: Focus(
-                  focusNode: focusNode,
+                  focusNode: _effectiveFocusNode,
                   onFocusChange: (hasFocus) {
                     context.read<AdaptiveSwitchCubit>().setFocus(hasFocus);
                   },
@@ -93,7 +113,7 @@ class AdaptiveSwitch extends StatelessWidget {
                         final newState = context
                             .read<AdaptiveSwitchCubit>()
                             .state;
-                        onChanged?.call(newState.isOn);
+                        widget.onChanged?.call(newState.isOn);
                       }
                     },
                     child: AnimatedContainer(

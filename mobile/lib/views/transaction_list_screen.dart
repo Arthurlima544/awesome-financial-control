@@ -22,6 +22,9 @@ import 'package:afc/models/transaction_group.dart';
 import 'package:afc/widgets/adaptive_search_bar/adaptive_search_bar.dart';
 import 'package:afc/widgets/adaptive_search_bar/adaptive_search_bar_cubit.dart';
 import 'package:afc/widgets/adaptive_chip/adaptive_chip.dart';
+import 'package:afc/widgets/custom_date_picker/custom_date_picker.dart';
+import 'package:afc/widgets/custom_date_picker/custom_date_picker_cubit.dart'
+    as picker;
 import 'package:intl/intl.dart';
 
 class TransactionListScreen extends StatelessWidget {
@@ -122,47 +125,21 @@ class _DateFilterChip extends StatelessWidget {
     final state = context.watch<TransactionListBloc>().state;
     if (state is! TransactionListData) return const SizedBox.shrink();
 
-    final hasDateFilter = state.dateRange != null;
-    final dateFormat = DateFormat('dd/MM');
-
-    String label = l10n.filterDate;
-    if (hasDateFilter) {
-      label =
-          '${dateFormat.format(state.dateRange!.start)} - ${dateFormat.format(state.dateRange!.end)}';
-    }
-
-    return BlocProvider(
-      create: (_) => AdaptiveChipCubit(initialSelected: hasDateFilter),
-      child: AdaptiveChip(
-        label: label,
-        isSelected: hasDateFilter,
-        icon: Icons.calendar_today,
-        iconPosition: AdaptiveChipIconPosition.leading,
-        onPressed: () async {
-          final range = await showDateRangePicker(
-            context: context,
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2100),
-            initialDateRange: state.dateRange,
-            builder: (context, child) {
-              return Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: Theme.of(context).colorScheme.copyWith(
-                    primary: AppColors.primary,
-                    onPrimary: Colors.white,
-                  ),
-                ),
-                child: child!,
-              );
-            },
-          );
-          if (context.mounted) {
-            context.read<TransactionListBloc>().add(
-              TransactionListDateRangeChanged(range),
-            );
-          }
-        },
-      ),
+    return CustomDatePicker(
+      mode: picker.DatePickerMode.range,
+      initialStartDate: state.dateRange?.start,
+      initialEndDate: state.dateRange?.end,
+      placeholder: l10n.filterDate,
+      primaryColor: AppColors.primary,
+      onChanged: (start, end) {
+        DateTimeRange? range;
+        if (start != null) {
+          range = DateTimeRange(start: start, end: end ?? start);
+        }
+        context.read<TransactionListBloc>().add(
+          TransactionListDateRangeChanged(range),
+        );
+      },
     );
   }
 }
