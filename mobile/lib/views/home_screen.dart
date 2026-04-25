@@ -26,6 +26,7 @@ import 'package:afc/widgets/health_score_card/health_score_card.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -42,6 +43,10 @@ class HomeScreen extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => sl<HealthScoreBloc>()..add(const LoadHealthScore()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              sl<MarketOpportunityBloc>()..add(FetchMarketOpportunities()),
         ),
       ],
       child: const _HomeView(),
@@ -222,6 +227,14 @@ class _HomeViewState extends State<_HomeView> {
                         ).currentIndex,
                         delay: const Duration(milliseconds: 275),
                         child: const _CompoundInterestCard(),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: const Duration(milliseconds: 290),
+                        child: const _MarketOpportunitiesCard(),
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
@@ -506,6 +519,61 @@ class _CompoundInterestCard extends StatelessWidget {
                     ),
                     Text(
                       'Veja o poder do tempo sobre seus investimentos.',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MarketOpportunitiesCard extends StatelessWidget {
+  const _MarketOpportunitiesCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      elevation: 0,
+      child: InkWell(
+        onTap: () => context.push('/oportunidades'),
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.show_chart, color: Colors.blue),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Oportunidades de Mercado',
+                      style: AppTextStyles.labelLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Melhores Dividendos e FIIs da Bolsa.',
                       style: AppTextStyles.labelSmall.copyWith(
                         color: Colors.grey,
                       ),

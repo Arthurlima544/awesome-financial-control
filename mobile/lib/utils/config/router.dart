@@ -39,6 +39,8 @@ import 'package:afc/views/compound_interest_screen.dart';
 import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
 import 'package:afc/views/investment_goal_screen.dart';
 import 'package:afc/view_models/investment_goal/investment_goal_bloc.dart';
+import 'package:afc/views/oportunidades_screen.dart';
+import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
 
 import 'package:afc/views/investment_dashboard_screen.dart';
 import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
@@ -218,6 +220,14 @@ GoRouter createRouter(AuthBloc authBloc, OnboardingCubit onboardingCubit) {
       GoRoute(
         path: '/recurring',
         builder: (_, _) => const RecurringListScreen(),
+      ),
+      GoRoute(
+        path: '/oportunidades',
+        builder: (_, _) => BlocProvider(
+          create: (_) =>
+              sl<MarketOpportunityBloc>()..add(FetchMarketOpportunities()),
+          child: const OportunidadesScreen(),
+        ),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => ScaffoldShell(

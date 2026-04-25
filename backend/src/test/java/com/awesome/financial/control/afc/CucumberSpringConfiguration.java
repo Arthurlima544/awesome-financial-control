@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @CucumberContextConfiguration
@@ -25,4 +26,8 @@ public class CucumberSpringConfiguration {
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
     }
+
+    @MockitoBean private com.awesome.financial.control.afc.service.BrapiService brapiService;
+
+    @MockitoBean private java.time.Clock clock;
 }
