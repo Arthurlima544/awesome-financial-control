@@ -86,7 +86,7 @@ class _TransactionEditFormState extends State<TransactionEditForm> {
         id: widget.transactionId,
         description: cubit.state.description.trim(),
         amount: cubit.state.parsedAmount!,
-        type: cubit.state.type.name,
+        type: cubit.state.type,
         category: cubit.state.parsedCategory,
         occurredAt: cubit.state.occurredAt ?? DateTime.now(),
         isPassive: cubit.state.isPassive,

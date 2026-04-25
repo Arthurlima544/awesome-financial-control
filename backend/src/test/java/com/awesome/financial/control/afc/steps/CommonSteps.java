@@ -14,9 +14,13 @@ public class CommonSteps {
     private com.awesome.financial.control.afc.repository.TransactionRepository
             transactionRepository;
 
+    @Autowired
+    private com.awesome.financial.control.afc.repository.FeedbackRepository feedbackRepository;
+
     @io.cucumber.java.en.Given("the database is clean")
     public void theDatabaseIsClean() {
         transactionRepository.deleteAll();
+        feedbackRepository.deleteAll();
     }
 
     @Then("the response status is {int}")
@@ -24,8 +28,16 @@ public class CommonSteps {
         assertThat(ctx.response.getStatusCode().value()).isEqualTo(status);
     }
 
+    @Then("the response should contain {string}")
     @And("the response contains {string}")
-    public void theResponseContains(String content) {
-        assertThat((String) ctx.response.getBody()).contains(content);
+    public void theResponseShouldContain(String content) {
+        Object body = ctx.response.getBody();
+        if (body instanceof String) {
+            assertThat((String) body).contains(content);
+        } else if (body != null) {
+            assertThat(body.toString()).contains(content);
+        } else {
+            throw new AssertionError("Response body is null");
+        }
     }
 }

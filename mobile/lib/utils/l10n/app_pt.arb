@@ -384,6 +384,19 @@
   "importConfidenceReview": "Revisar",
   "importConfidenceManual": "Manual",
 
+  "feedbackTitle": "Enviar Feedback",
+  "feedbackLabel": "Como está sendo sua experiência com o AFC?",
+  "feedbackMessageHint": "Conte-nos mais (opcional)",
+  "feedbackSubmit": "Enviar",
+  "feedbackSuccess": "Obrigado pelo seu feedback!",
+
+  "filterAll": "Todas",
+  "filterIncome": "Receitas",
+  "filterExpense": "Despesas",
+  "filterDate": "Data",
+  "filterClear": "Limpar Filtros",
+  "transactionSearchHint": "Buscar transações...",
+
   "reportTitle": "Relatório Mensal",
   "@reportTitle": { "description": "Report screen title" },
 
@@ -435,6 +448,17 @@
 
   "investmentsNoInvestments": "Nenhum investimento cadastrado",
   "@investmentsNoInvestments": { "description": "Empty state for investments list" },
+
+  "tooltipFIRETitle": "Número FIRE",
+  "tooltipFIREDesc": "O montante necessário para viver apenas de seus investimentos (Independência Financeira, Aposentadoria Antecipada). Geralmente 25x seus gastos anuais.",
+  "tooltipFIScoreTitle": "FI Score",
+  "tooltipFIScoreDesc": "Mede o quão próximo você está da Independência Financeira. 100% significa que você atingiu seu número FIRE.",
+  "tooltipSavingsRateTitle": "Taxa de Poupança",
+  "tooltipSavingsRateDesc": "A porcentagem de sua renda que sobra após todas as despesas. Quanto maior, mais rápido você atinge a Independência Financeira.",
+  "tooltipNetWorthTitle": "Patrimônio Líquido",
+  "tooltipNetWorthDesc": "A soma de todos os seus ativos (contas, investimentos) menos seus passivos (dívidas). É sua verdadeira riqueza.",
+  "tooltipCDITitle": "CDI",
+  "tooltipCDIDesc": "Certificado de Depósito Interbancário. É a principal taxa de referência para investimentos de renda fixa no Brasil.",
 
   "investmentName": "Nome do Ativo",
   "@investmentName": { "description": "Label for investment name field" },

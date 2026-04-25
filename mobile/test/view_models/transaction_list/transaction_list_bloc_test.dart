@@ -219,7 +219,10 @@ void main() {
         repository: _FakeRepository([t1, t2]),
         refreshBloc: refreshBloc,
       ),
-      seed: () => TransactionListData([t1, t2]),
+      seed: () => TransactionListData(
+        transactions: [t1, t2],
+        filteredTransactions: [t1, t2],
+      ),
       act: (bloc) => bloc.add(const TransactionDeleteRequested('id-1')),
       expect: () => [isA<TransactionListData>()],
       verify: (bloc) {
@@ -235,7 +238,10 @@ void main() {
         repository: _FailingDeleteRepository([t1, t2]),
         refreshBloc: refreshBloc,
       ),
-      seed: () => TransactionListData([t1, t2]),
+      seed: () => TransactionListData(
+        transactions: [t1, t2],
+        filteredTransactions: [t1, t2],
+      ),
       act: (bloc) => bloc.add(const TransactionDeleteRequested('id-1')),
       expect: () => [isA<TransactionListError>()],
     );
@@ -255,13 +261,16 @@ void main() {
           refreshBloc: refreshBloc,
         );
       },
-      seed: () => TransactionListData([t1, t2]),
+      seed: () => TransactionListData(
+        transactions: [t1, t2],
+        filteredTransactions: [t1, t2],
+      ),
       act: (bloc) => bloc.add(
         TransactionUpdateRequested(
           id: 'id-1',
           description: 'Updated Salary',
           amount: 6000.0,
-          type: 'income',
+          type: TransactionType.income,
           occurredAt: DateTime(2026, 4, 1),
         ),
       ),
@@ -281,13 +290,16 @@ void main() {
         repository: _FailingUpdateRepository([t1, t2]),
         refreshBloc: refreshBloc,
       ),
-      seed: () => TransactionListData([t1, t2]),
+      seed: () => TransactionListData(
+        transactions: [t1, t2],
+        filteredTransactions: [t1, t2],
+      ),
       act: (bloc) => bloc.add(
         TransactionUpdateRequested(
           id: 'id-1',
           description: 'Updated',
           amount: 100.0,
-          type: 'expense',
+          type: TransactionType.expense,
           occurredAt: DateTime(2026, 4, 1),
         ),
       ),
@@ -305,7 +317,7 @@ void main() {
           id: 'id-1',
           description: 'Updated',
           amount: 100.0,
-          type: 'expense',
+          type: TransactionType.expense,
           occurredAt: DateTime(2026, 4, 1),
         ),
       ),

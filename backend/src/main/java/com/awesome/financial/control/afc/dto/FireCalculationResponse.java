@@ -8,6 +8,7 @@ public record FireCalculationResponse(
         BigDecimal fireNumber,
         int monthsToFire,
         LocalDate retirementDate,
+        double fiScore,
         List<FireTimelineEntry> yearlyTimeline) {
     public record FireTimelineEntry(double year, BigDecimal portfolioValue) {}
 }

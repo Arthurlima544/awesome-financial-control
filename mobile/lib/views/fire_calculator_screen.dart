@@ -12,13 +12,14 @@ import 'package:afc/widgets/adaptive_chip/adaptive_chip.dart';
 import 'package:afc/widgets/adaptive_chip/adaptive_chip_cubit.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
-import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 class FireCalculatorScreen extends StatefulWidget {
   const FireCalculatorScreen({super.key});
@@ -253,14 +254,10 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               ),
             ),
             const SizedBox(width: 4),
-            CustomTooltip(
+            AppTooltipIcon(
               title: tooltipTitle,
               description: tooltipDesc,
-              child: Icon(
-                Icons.info_outline,
-                size: 16,
-                color: Colors.grey.shade400,
-              ),
+              iconSize: 16,
             ),
           ],
         ),
@@ -370,6 +367,14 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                   'Data estimada',
                   DateFormat('MM/yyyy').format(retirementDate),
                 ),
+                const SizedBox(height: AppSpacing.md),
+                _buildResultRow(
+                  AppLocalizations.of(context)!.tooltipFIScoreTitle,
+                  '${((result['fiScore'] ?? 0.0) as num).toDouble().toStringAsFixed(1)}%',
+                  isBold: true,
+                  hasInfo: true,
+                  tooltipDesc: AppLocalizations.of(context)!.tooltipFIScoreDesc,
+                ),
               ],
             ),
           ),
@@ -416,6 +421,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     bool isBold = false,
     bool hasInfo = false,
     bool isPrivate = false,
+    String? tooltipDesc,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -430,7 +436,15 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
             ),
             if (hasInfo) ...[
               const SizedBox(width: 4),
-              Icon(Icons.info_outline, size: 16, color: Colors.grey.shade400),
+              AppTooltipIcon(
+                title: label,
+                description:
+                    tooltipDesc ??
+                    (label == 'Número FIRE'
+                        ? AppLocalizations.of(context)!.tooltipFIREDesc
+                        : ''),
+                iconSize: 14,
+              ),
             ],
           ],
         ),

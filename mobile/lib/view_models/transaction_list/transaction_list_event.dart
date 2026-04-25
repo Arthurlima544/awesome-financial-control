@@ -2,6 +2,7 @@ part of 'transaction_list_bloc.dart';
 
 abstract class TransactionListEvent extends Equatable {
   const TransactionListEvent();
+
   @override
   List<Object?> get props => [];
 }
@@ -12,7 +13,6 @@ class TransactionListFetchRequested extends TransactionListEvent {
 
 class TransactionDeleteRequested extends TransactionListEvent {
   const TransactionDeleteRequested(this.id);
-
   final String id;
 
   @override
@@ -34,7 +34,7 @@ class TransactionUpdateRequested extends TransactionListEvent {
   final String id;
   final String description;
   final double amount;
-  final String type;
+  final TransactionType type;
   final String? category;
   final DateTime occurredAt;
   final bool isPassive;
@@ -55,4 +55,32 @@ class TransactionUpdateRequested extends TransactionListEvent {
 
 class TransactionListToggleGrouping extends TransactionListEvent {
   const TransactionListToggleGrouping();
+}
+
+class TransactionListSearchChanged extends TransactionListEvent {
+  const TransactionListSearchChanged(this.query);
+  final String query;
+
+  @override
+  List<Object?> get props => [query];
+}
+
+class TransactionListDateRangeChanged extends TransactionListEvent {
+  const TransactionListDateRangeChanged(this.range);
+  final DateTimeRange? range;
+
+  @override
+  List<Object?> get props => [range];
+}
+
+class TransactionListTypeFilterChanged extends TransactionListEvent {
+  const TransactionListTypeFilterChanged(this.type);
+  final TransactionType? type;
+
+  @override
+  List<Object?> get props => [type];
+}
+
+class TransactionListClearFilters extends TransactionListEvent {
+  const TransactionListClearFilters();
 }

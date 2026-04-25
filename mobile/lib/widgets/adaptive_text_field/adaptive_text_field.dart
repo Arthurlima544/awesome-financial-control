@@ -17,6 +17,7 @@ class AdaptiveTextField extends StatelessWidget {
   final TextStyle? customTextStyle;
   final String? semanticLabel;
   final TextInputType? keyboardType;
+  final int? maxLines;
 
   const AdaptiveTextField({
     super.key,
@@ -34,6 +35,7 @@ class AdaptiveTextField extends StatelessWidget {
     this.customTextStyle,
     this.semanticLabel,
     this.keyboardType,
+    this.maxLines = 1,
   });
 
   @override
@@ -113,6 +115,7 @@ class AdaptiveTextField extends StatelessWidget {
                           enabled: !state.isDisabled,
                           obscureText: obscureText,
                           keyboardType: keyboardType,
+                          maxLines: maxLines,
                           onChanged: (val) {
                             context.read<AdaptiveTextFieldCubit>().textChanged(
                               val,

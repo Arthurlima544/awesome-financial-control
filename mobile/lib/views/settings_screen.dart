@@ -6,6 +6,7 @@ import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
+import 'package:afc/widgets/feedback_sheet/feedback_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -131,6 +132,13 @@ class _SettingsView extends StatelessWidget {
                 backgroundColor: AppColors.surface,
                 titleColor: AppColors.onSurface,
                 onTap: () {},
+              ),
+              CustomListTile(
+                title: l10n.feedbackTitle,
+                leadingIcon: Icons.feedback_outlined,
+                backgroundColor: AppColors.surface,
+                titleColor: AppColors.onSurface,
+                onTap: () => FeedbackSheet.show(context),
               ),
               const SizedBox(height: AppSpacing.xl),
               Padding(

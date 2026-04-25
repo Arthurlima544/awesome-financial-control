@@ -12,12 +12,16 @@ import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/transaction_list_item/transaction_list_item.dart';
 
 import 'package:afc/utils/config/injection.dart';
+import 'package:afc/widgets/adaptive_chip/adaptive_chip_cubit.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/services/transaction_grouper.dart';
 import 'package:afc/models/transaction_group.dart';
+import 'package:afc/widgets/adaptive_search_bar/adaptive_search_bar.dart';
+import 'package:afc/widgets/adaptive_search_bar/adaptive_search_bar_cubit.dart';
+import 'package:afc/widgets/adaptive_chip/adaptive_chip.dart';
 import 'package:intl/intl.dart';
 
 class TransactionListScreen extends StatelessWidget {
@@ -29,6 +33,189 @@ class TransactionListScreen extends StatelessWidget {
       create: (_) =>
           sl<TransactionListBloc>()..add(const TransactionListFetchRequested()),
       child: const _TransactionListView(),
+    );
+  }
+}
+
+class _FilterBar extends StatefulWidget {
+  const _FilterBar();
+
+  @override
+  State<_FilterBar> createState() => _FilterBarState();
+}
+
+class _FilterBarState extends State<_FilterBar> {
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return BlocBuilder<TransactionListBloc, TransactionListState>(
+      builder: (context, state) {
+        if (state is! TransactionListData) return const SizedBox.shrink();
+
+        return Container(
+          color: AppColors.surface,
+          child: Column(
+            children: [
+              BlocProvider(
+                create: (_) => AdaptiveSearchBarCubit(),
+                child: AdaptiveSearchBar(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  hintText: l10n.transactionSearchHint,
+                  onChanged: (val) => context.read<TransactionListBloc>().add(
+                    TransactionListSearchChanged(val),
+                  ),
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    const _DateFilterChip(),
+                    const SizedBox(width: 8),
+                    const _TypeFilterChips(),
+                    if (state.hasFilters) ...[
+                      const SizedBox(width: 16),
+                      TextButton(
+                        onPressed: () {
+                          _searchController.clear();
+                          context.read<TransactionListBloc>().add(
+                            const TransactionListClearFilters(),
+                          );
+                        },
+                        child: Text(l10n.filterClear),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _DateFilterChip extends StatelessWidget {
+  const _DateFilterChip();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final state = context.watch<TransactionListBloc>().state;
+    if (state is! TransactionListData) return const SizedBox.shrink();
+
+    final hasDateFilter = state.dateRange != null;
+    final dateFormat = DateFormat('dd/MM');
+
+    String label = l10n.filterDate;
+    if (hasDateFilter) {
+      label =
+          '${dateFormat.format(state.dateRange!.start)} - ${dateFormat.format(state.dateRange!.end)}';
+    }
+
+    return BlocProvider(
+      create: (_) => AdaptiveChipCubit(initialSelected: hasDateFilter),
+      child: AdaptiveChip(
+        label: label,
+        isSelected: hasDateFilter,
+        icon: Icons.calendar_today,
+        iconPosition: AdaptiveChipIconPosition.leading,
+        onPressed: () async {
+          final range = await showDateRangePicker(
+            context: context,
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+            initialDateRange: state.dateRange,
+            builder: (context, child) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: Theme.of(context).colorScheme.copyWith(
+                    primary: AppColors.primary,
+                    onPrimary: Colors.white,
+                  ),
+                ),
+                child: child!,
+              );
+            },
+          );
+          if (context.mounted) {
+            context.read<TransactionListBloc>().add(
+              TransactionListDateRangeChanged(range),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class _TypeFilterChips extends StatelessWidget {
+  const _TypeFilterChips();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final state = context.watch<TransactionListBloc>().state;
+    if (state is! TransactionListData) return const SizedBox.shrink();
+
+    return Row(
+      children: [
+        BlocProvider(
+          create: (_) =>
+              AdaptiveChipCubit(initialSelected: state.selectedType == null),
+          child: AdaptiveChip(
+            label: l10n.filterAll,
+            isSelected: state.selectedType == null,
+            onPressed: () => context.read<TransactionListBloc>().add(
+              const TransactionListTypeFilterChanged(null),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        BlocProvider(
+          create: (_) => AdaptiveChipCubit(
+            initialSelected: state.selectedType == TransactionType.income,
+          ),
+          child: AdaptiveChip(
+            label: l10n.filterIncome,
+            isSelected: state.selectedType == TransactionType.income,
+            onPressed: () => context.read<TransactionListBloc>().add(
+              const TransactionListTypeFilterChanged(TransactionType.income),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        BlocProvider(
+          create: (_) => AdaptiveChipCubit(
+            initialSelected: state.selectedType == TransactionType.expense,
+          ),
+          child: AdaptiveChip(
+            label: l10n.filterExpense,
+            isSelected: state.selectedType == TransactionType.expense,
+            onPressed: () => context.read<TransactionListBloc>().add(
+              const TransactionListTypeFilterChanged(TransactionType.expense),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -80,84 +267,99 @@ class _TransactionListView extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<TransactionListBloc, TransactionListState>(
-        builder: (context, state) {
-          if (state is TransactionListLoading ||
-              state is TransactionListInitial) {
-            return const SkeletonList(itemCount: 8);
-          }
-          if (state is TransactionListError) {
-            return Center(
-              child: ErrorState(
-                message: l10n.transactionListError,
-                onRetry: () => context.read<TransactionListBloc>().add(
-                  const TransactionListFetchRequested(),
-                ),
-              ),
-            );
-          }
-          if (state is TransactionListData) {
-            if (state.transactions.isEmpty) {
-              return Center(
-                child: EmptyState(
-                  icon: Icons.receipt_long_outlined,
-                  title: l10n.transactionListEmpty,
-                ),
-              );
-            }
-
-            if (state.groupByType) {
-              final grouper = TransactionGrouper();
-              final groups = grouper.group(state.transactions, {
-                'pix': l10n.transactionGroupPix,
-                'bank': l10n.transactionGroupBank,
-                'transport': l10n.transactionGroupTransport,
-                'delivery': l10n.transactionGroupDelivery,
-                'market': l10n.transactionGroupMarket,
-                'subscription': l10n.transactionGroupSubscription,
-                'other': l10n.transactionGroupOther,
-              });
-
-              return RefreshIndicator(
-                onRefresh: () async => context.read<TransactionListBloc>().add(
-                  const TransactionListFetchRequested(),
-                ),
-                child: ListView.builder(
-                  itemCount: groups.length,
-                  itemBuilder: (context, index) {
-                    final group = groups[index];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _GroupHeader(
-                          group: group,
-                          currencyFormat: currencyFormat,
-                        ),
-                        ...group.transactions.map(
-                          (t) => _DismissibleItem(transaction: t, l10n: l10n),
-                        ),
-                      ],
+      body: Column(
+        children: [
+          const _FilterBar(),
+          Expanded(
+            child: BlocBuilder<TransactionListBloc, TransactionListState>(
+              builder: (context, state) {
+                if (state is TransactionListLoading ||
+                    state is TransactionListInitial) {
+                  return const SkeletonList(itemCount: 8);
+                }
+                if (state is TransactionListError) {
+                  return Center(
+                    child: ErrorState(
+                      message: l10n.transactionListError,
+                      onRetry: () => context.read<TransactionListBloc>().add(
+                        const TransactionListFetchRequested(),
+                      ),
+                    ),
+                  );
+                }
+                if (state is TransactionListData) {
+                  if (state.filteredTransactions.isEmpty) {
+                    return Center(
+                      child: EmptyState(
+                        icon: state.hasFilters
+                            ? Icons.search_off
+                            : Icons.receipt_long_outlined,
+                        title: state.hasFilters
+                            ? l10n
+                                  .transactionSearchHint // Or something like "No results"
+                            : l10n.transactionListEmpty,
+                      ),
                     );
-                  },
-                ),
-              );
-            }
+                  }
 
-            return RefreshIndicator(
-              onRefresh: () async => context.read<TransactionListBloc>().add(
-                const TransactionListFetchRequested(),
-              ),
-              child: ListView.builder(
-                itemCount: state.transactions.length,
-                itemBuilder: (context, index) {
-                  final t = state.transactions[index];
-                  return _DismissibleItem(transaction: t, l10n: l10n);
-                },
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
+                  if (state.groupByType) {
+                    final grouper = TransactionGrouper();
+                    final groups = grouper.group(state.filteredTransactions, {
+                      'pix': l10n.transactionGroupPix,
+                      'bank': l10n.transactionGroupBank,
+                      'transport': l10n.transactionGroupTransport,
+                      'delivery': l10n.transactionGroupDelivery,
+                      'market': l10n.transactionGroupMarket,
+                      'subscription': l10n.transactionGroupSubscription,
+                      'other': l10n.transactionGroupOther,
+                    });
+
+                    return RefreshIndicator(
+                      onRefresh: () async => context
+                          .read<TransactionListBloc>()
+                          .add(const TransactionListFetchRequested()),
+                      child: ListView.builder(
+                        itemCount: groups.length,
+                        itemBuilder: (context, index) {
+                          final group = groups[index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _GroupHeader(
+                                group: group,
+                                currencyFormat: currencyFormat,
+                              ),
+                              ...group.transactions.map(
+                                (t) => _DismissibleItem(
+                                  transaction: t,
+                                  l10n: l10n,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async => context
+                        .read<TransactionListBloc>()
+                        .add(const TransactionListFetchRequested()),
+                    child: ListView.builder(
+                      itemCount: state.filteredTransactions.length,
+                      itemBuilder: (context, index) {
+                        final t = state.filteredTransactions[index];
+                        return _DismissibleItem(transaction: t, l10n: l10n);
+                      },
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

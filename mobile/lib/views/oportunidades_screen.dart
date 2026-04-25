@@ -7,6 +7,8 @@ import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 class OportunidadesScreen extends StatelessWidget {
   const OportunidadesScreen({super.key});
@@ -56,7 +58,7 @@ class OportunidadesScreen extends StatelessWidget {
                     ),
                   ),
                 if (state.benchmarks != null)
-                  _buildBenchmarkBanner(state.benchmarks!),
+                  _buildBenchmarkBanner(context, state.benchmarks!),
                 const SizedBox(height: AppSpacing.lg),
                 _buildFilters(context, state),
                 const SizedBox(height: AppSpacing.md),
@@ -73,7 +75,10 @@ class OportunidadesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBenchmarkBanner(MarketBenchmarks benchmarks) {
+  Widget _buildBenchmarkBanner(
+    BuildContext context,
+    MarketBenchmarks benchmarks,
+  ) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -95,14 +100,17 @@ class OportunidadesScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildBenchmarkItem(
+                context,
                 'CDI',
                 '${benchmarks.cdiRate.toStringAsFixed(2)}%',
+                hasInfo: true,
               ),
               _buildBenchmarkItem(
+                context,
                 'Selic',
                 '${benchmarks.selicRate.toStringAsFixed(2)}%',
               ),
-              _buildBenchmarkItem('IPCA (est.)', '4.50%'),
+              _buildBenchmarkItem(context, 'IPCA (est.)', '4.50%'),
             ],
           ),
         ],
@@ -110,10 +118,26 @@ class OportunidadesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBenchmarkItem(String label, String value) {
+  Widget _buildBenchmarkItem(
+    BuildContext context,
+    String label,
+    String value, {
+    bool hasInfo = false,
+  }) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
-        Text(label, style: AppTextStyles.labelSmall),
+        Row(
+          children: [
+            Text(label, style: AppTextStyles.labelSmall),
+            if (hasInfo)
+              AppTooltipIcon(
+                title: label,
+                description: l10n.tooltipCDIDesc,
+                iconSize: 12,
+              ),
+          ],
+        ),
         PrivacyText(
           value,
           style: AppTextStyles.titleMedium.copyWith(

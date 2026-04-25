@@ -11,21 +11,50 @@ class TransactionListInitial extends TransactionListState {}
 class TransactionListLoading extends TransactionListState {}
 
 class TransactionListData extends TransactionListState {
-  const TransactionListData(this.transactions, {this.groupByType = false});
+  const TransactionListData({
+    required this.transactions,
+    required this.filteredTransactions,
+    this.groupByType = false,
+    this.searchQuery = '',
+    this.dateRange,
+    this.selectedType,
+  });
 
-  final List<TransactionModel> transactions;
+  final List<TransactionModel> transactions; // Original list
+  final List<TransactionModel> filteredTransactions; // Computed list
   final bool groupByType;
+  final String searchQuery;
+  final DateTimeRange? dateRange;
+  final TransactionType? selectedType;
+
+  bool get hasFilters =>
+      searchQuery.isNotEmpty || dateRange != null || selectedType != null;
 
   @override
-  List<Object?> get props => [transactions, groupByType];
+  List<Object?> get props => [
+    transactions,
+    filteredTransactions,
+    groupByType,
+    searchQuery,
+    dateRange,
+    selectedType,
+  ];
 
   TransactionListData copyWith({
     List<TransactionModel>? transactions,
+    List<TransactionModel>? filteredTransactions,
     bool? groupByType,
+    String? searchQuery,
+    DateTimeRange? Function()? dateRange,
+    TransactionType? Function()? selectedType,
   }) {
     return TransactionListData(
-      transactions ?? this.transactions,
+      transactions: transactions ?? this.transactions,
+      filteredTransactions: filteredTransactions ?? this.filteredTransactions,
       groupByType: groupByType ?? this.groupByType,
+      searchQuery: searchQuery ?? this.searchQuery,
+      dateRange: dateRange != null ? dateRange() : this.dateRange,
+      selectedType: selectedType != null ? selectedType() : this.selectedType,
     );
   }
 }
