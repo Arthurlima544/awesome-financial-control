@@ -3,6 +3,7 @@ package com.awesome.financial.control.afc.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import com.awesome.financial.control.afc.dto.BrapiPrimeRateResponse;
@@ -59,6 +60,16 @@ public class BrapiServiceTest {
     }
 
     @Test
+    void testFetchQuotesWithError() {
+        mockServer
+                .expect(requestTo(org.hamcrest.Matchers.containsString("/api/quote/")))
+                .andRespond(withServerError());
+
+        BrapiQuoteResponse response = brapiService.fetchQuotes(List.of("FAIL.SA"));
+        assertThat(response).isNull();
+    }
+
+    @Test
     void testFetchPrimeRates() {
         String responseJson =
                 """
@@ -83,5 +94,14 @@ public class BrapiServiceTest {
         assertThat(response.countryPrimeRate()).hasSize(1);
         assertThat(response.countryPrimeRate().get(0).name()).isEqualTo("Selic");
         mockServer.verify();
+    }
+
+    @Test
+    void testMaskToken() {
+        // Triggered via logging in fetchPrimeRates
+        mockServer
+                .expect(requestTo(org.hamcrest.Matchers.any(String.class)))
+                .andRespond(withSuccess("{}", MediaType.APPLICATION_JSON));
+        brapiService.fetchPrimeRates();
     }
 }
