@@ -15,6 +15,7 @@ import 'package:afc/view_models/stats/stats_bloc.dart';
 import 'package:afc/models/monthly_stat_model.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:afc/widgets/insight_card/insight_card.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:intl/intl.dart';
 
 class StatsScreen extends StatelessWidget {
@@ -114,6 +115,7 @@ class _StatsDashboard extends StatelessWidget {
                       value: '${state.averageSavingsRate.toStringAsFixed(0)}%',
                       color: AppColors.primary,
                       icon: Icons.savings_outlined,
+                      isPrivate: true,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
@@ -123,6 +125,7 @@ class _StatsDashboard extends StatelessWidget {
                       value: state.bestMonth?.monthAbbreviation ?? '-',
                       color: AppColors.secondary,
                       icon: Icons.star_outline,
+                      isPrivate: false,
                     ),
                   ),
                 ],
@@ -215,6 +218,7 @@ class _MetricCard extends StatelessWidget {
     required this.color,
     required this.icon,
     this.isPrimary = false,
+    this.isPrivate = true,
   });
 
   final String label;
@@ -222,6 +226,7 @@ class _MetricCard extends StatelessWidget {
   final Color color;
   final IconData icon;
   final bool isPrimary;
+  final bool isPrivate;
 
   @override
   Widget build(BuildContext context) {
@@ -260,13 +265,21 @@ class _MetricCard extends StatelessWidget {
                 ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(
-                    value,
-                    style: AppTextStyles.headlineMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
-                  ),
+                  child: isPrivate
+                      ? PrivacyText(
+                          value,
+                          style: AppTextStyles.headlineMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                          ),
+                        )
+                      : Text(
+                          value,
+                          style: AppTextStyles.headlineMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                          ),
+                        ),
                 ),
               ],
             ),
@@ -291,13 +304,21 @@ class _MetricCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(
-              value,
-              style: AppTextStyles.titleLarge.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
+            child: isPrivate
+                ? PrivacyText(
+                    value,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  )
+                : Text(
+                    value,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
           ),
           Text(
             label,
@@ -376,7 +397,7 @@ class _BarChart extends StatelessWidget {
                     showTitles: true,
                     reservedSize: 56,
                     interval: state.yInterval,
-                    getTitlesWidget: (value, meta) => Text(
+                    getTitlesWidget: (value, meta) => PrivacyText(
                       state.formatYLabel(value),
                       style: Theme.of(context).textTheme.labelSmall,
                       textAlign: TextAlign.right,

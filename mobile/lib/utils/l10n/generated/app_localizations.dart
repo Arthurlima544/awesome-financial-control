@@ -1341,6 +1341,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Deseja realmente sair da conta?'**
   String get settingsLogoutConfirm;
+
+  /// No description provided for @privacyMode.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modo Privacidade (Ocultar valores)'**
+  String get privacyMode;
 }
 
 class _AppLocalizationsDelegate

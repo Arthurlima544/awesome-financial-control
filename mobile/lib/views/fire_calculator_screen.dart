@@ -18,6 +18,7 @@ import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class FireCalculatorScreen extends StatefulWidget {
   const FireCalculatorScreen({super.key});
@@ -356,6 +357,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                   currencyFormat.format(fireNumber),
                   isTeal: true,
                   hasInfo: true,
+                  isPrivate: true,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
@@ -413,6 +415,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     bool isTeal = false,
     bool isBold = false,
     bool hasInfo = false,
+    bool isPrivate = false,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -431,13 +434,25 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
             ],
           ],
         ),
-        Text(
-          value,
-          style: AppTextStyles.labelLarge.copyWith(
-            fontWeight: isBold || isTeal ? FontWeight.bold : FontWeight.normal,
-            color: isTeal ? const Color(0xFF00BFA5) : Colors.black87,
-          ),
-        ),
+        isPrivate
+            ? PrivacyText(
+                value,
+                style: AppTextStyles.labelLarge.copyWith(
+                  fontWeight: isBold || isTeal
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                  color: isTeal ? const Color(0xFF00BFA5) : Colors.black87,
+                ),
+              )
+            : Text(
+                value,
+                style: AppTextStyles.labelLarge.copyWith(
+                  fontWeight: isBold || isTeal
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                  color: isTeal ? const Color(0xFF00BFA5) : Colors.black87,
+                ),
+              ),
       ],
     );
   }
@@ -474,18 +489,18 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
                 if (value == 0) {
-                  return const Text(
+                  return const PrivacyText(
                     'R\$ 0',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value >= 1000000) {
-                  return Text(
+                  return PrivacyText(
                     'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
-                return Text(
+                return PrivacyText(
                   'R\$ ${(value / 1000).toStringAsFixed(0)}k',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 );

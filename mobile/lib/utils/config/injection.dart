@@ -43,6 +43,7 @@ import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
 import 'package:afc/view_models/investment_goal/investment_goal_bloc.dart';
 import 'package:afc/repositories/market_repository.dart';
 import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -98,4 +99,5 @@ Future<void> init() async {
   sl.registerFactory(() => InvestmentDashboardBloc(repository: sl()));
   sl.registerLazySingleton(() => PassiveIncomeRepository());
   sl.registerFactory(() => PassiveIncomeBloc(repository: sl()));
+  sl.registerLazySingleton(() => PrivacyCubit());
 }

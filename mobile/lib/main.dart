@@ -12,6 +12,7 @@ import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 
 import 'package:afc/utils/config/injection.dart' as di;
 import 'package:afc/utils/config/injection.dart';
@@ -67,6 +68,7 @@ class _AfcAppState extends State<AfcApp> {
         BlocProvider(
           create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
         ),
+        BlocProvider.value(value: sl<PrivacyCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/goals/goal_bloc.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:afc/models/goal_model.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
@@ -14,6 +15,7 @@ import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/goal_form_sheet/goal_form_sheet.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:intl/intl.dart';
 
 class GoalsScreen extends StatelessWidget {
@@ -129,7 +131,7 @@ class _GoalCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(
+                      PrivacyText(
                         'Meta: ${currencyFormat.format(goal.targetAmount)}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
@@ -151,18 +153,24 @@ class _GoalCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            LinearProgressIndicator(
-              value: goal.progressPercentage / 100,
-              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-              valueColor: AlwaysStoppedAnimation(AppColors.primary),
-              borderRadius: BorderRadius.circular(4),
-              minHeight: 8,
+            BlocBuilder<PrivacyCubit, PrivacyState>(
+              builder: (context, privacyState) {
+                return LinearProgressIndicator(
+                  value: privacyState.isPrivate
+                      ? 0.0
+                      : goal.progressPercentage / 100,
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                  valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                  borderRadius: BorderRadius.circular(4),
+                  minHeight: 8,
+                );
+              },
             ),
             const SizedBox(height: AppSpacing.sm),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                PrivacyText(
                   '${goal.progressPercentage.toStringAsFixed(1)}%',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: AppColors.primary,

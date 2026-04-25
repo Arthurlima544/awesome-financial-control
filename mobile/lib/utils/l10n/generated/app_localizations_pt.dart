@@ -659,4 +659,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsLogoutConfirm => 'Deseja realmente sair da conta?';
+
+  @override
+  String get privacyMode => 'Modo Privacidade (Ocultar valores)';
 }

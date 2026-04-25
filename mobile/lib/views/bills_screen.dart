@@ -13,6 +13,7 @@ import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class BillsScreen extends StatelessWidget {
   const BillsScreen({super.key});
@@ -207,7 +208,7 @@ class _BillCard extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
+            PrivacyText(
               currencyFormat.format(bill.amount),
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,

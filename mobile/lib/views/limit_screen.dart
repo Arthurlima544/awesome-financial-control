@@ -12,6 +12,7 @@ import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/card_skeleton.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
 import 'package:afc/models/limit_progress_model.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class LimitScreen extends StatelessWidget {
   const LimitScreen({super.key});
@@ -109,7 +110,7 @@ class _LimitCard extends StatelessWidget {
                   limit.categoryName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text(
+                PrivacyText(
                   limit.percentageFormatted,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: barColor,
@@ -129,11 +130,11 @@ class _LimitCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                PrivacyText(
                   l10n.limitSpent(limit.spentFormatted),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                Text(
+                PrivacyText(
                   l10n.limitOf(limit.limitAmountFormatted),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),

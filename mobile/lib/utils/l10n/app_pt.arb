@@ -546,5 +546,6 @@
   "settingsAboutTerms": "Termos de uso",
   "settingsAboutPrivacy": "Política de privacidade",
   "settingsLogout": "Sair da conta",
-  "settingsLogoutConfirm": "Deseja realmente sair da conta?"
+  "settingsLogoutConfirm": "Deseja realmente sair da conta?",
+  "privacyMode": "Modo Privacidade (Ocultar valores)"
 }
