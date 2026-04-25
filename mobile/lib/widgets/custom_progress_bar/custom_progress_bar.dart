@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
 import 'custom_progress_bar_cubit.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 
 class CustomProgressBar extends StatelessWidget {
   final double initialProgress;
@@ -94,39 +95,46 @@ class _CustomProgressBarView extends StatelessWidget {
                   label: steps != null
                       ? l10n.progressBarSteppedLabel
                       : l10n.progressBarLabel,
-                  child: Focus(
-                    focusNode: focusNode,
-                    child: GestureDetector(
-                      onTapDown: (details) => _handleTap(
-                        context,
-                        details.localPosition.dx,
-                        maxWidth,
-                      ),
-                      onPanUpdate: (details) => _handleTap(
-                        context,
-                        details.localPosition.dx,
-                        maxWidth,
-                      ),
-                      child: Container(
-                        width: maxWidth,
-                        height: barHeight,
-                        color: Colors
-                            .transparent, // Ensures the gesture detector captures the full area
-                        child: steps == null
-                            ? _buildContinuousBar(
-                                state.progress,
-                                maxWidth,
-                                barHeight,
-                                borderRadius,
-                              )
-                            : _buildSteppedBar(
-                                state.progress,
-                                barHeight,
-                                borderRadius,
-                                maxWidth,
-                              ),
-                      ),
-                    ),
+                  child: BlocBuilder<PrivacyCubit, PrivacyState>(
+                    builder: (context, privacyState) {
+                      final displayProgress = privacyState.isPrivate
+                          ? 0.0
+                          : state.progress;
+                      return Focus(
+                        focusNode: focusNode,
+                        child: GestureDetector(
+                          onTapDown: (details) => _handleTap(
+                            context,
+                            details.localPosition.dx,
+                            maxWidth,
+                          ),
+                          onPanUpdate: (details) => _handleTap(
+                            context,
+                            details.localPosition.dx,
+                            maxWidth,
+                          ),
+                          child: Container(
+                            width: maxWidth,
+                            height: barHeight,
+                            color: Colors
+                                .transparent, // Ensures the gesture detector captures the full area
+                            child: steps == null
+                                ? _buildContinuousBar(
+                                    displayProgress,
+                                    maxWidth,
+                                    barHeight,
+                                    borderRadius,
+                                  )
+                                : _buildSteppedBar(
+                                    displayProgress,
+                                    barHeight,
+                                    borderRadius,
+                                    maxWidth,
+                                  ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 if (state.errorMessage != null)

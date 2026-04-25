@@ -6,6 +6,7 @@ import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart'
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class OportunidadesScreen extends StatelessWidget {
   const OportunidadesScreen({super.key});
@@ -113,7 +114,7 @@ class OportunidadesScreen extends StatelessWidget {
     return Column(
       children: [
         Text(label, style: AppTextStyles.labelSmall),
-        Text(
+        PrivacyText(
           value,
           style: AppTextStyles.titleMedium.copyWith(
             color: AppColors.primary,
@@ -233,11 +234,11 @@ class OportunidadesScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
+                PrivacyText(
                   currencyFormat.format(o.price),
                   style: AppTextStyles.labelLarge,
                 ),
-                Text(
+                PrivacyText(
                   '${o.changePercent > 0 ? '+' : ''}${o.changePercent.toStringAsFixed(2)}%',
                   style: TextStyle(
                     color: o.changePercent >= 0 ? Colors.green : Colors.red,
@@ -252,7 +253,7 @@ class OportunidadesScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text('DY (ano)', style: AppTextStyles.labelSmall),
-                Text(
+                PrivacyText(
                   '${o.dividendYield.toStringAsFixed(2)}%',
                   style: AppTextStyles.labelLarge.copyWith(
                     color: AppColors.primary,
@@ -260,7 +261,7 @@ class OportunidadesScreen extends StatelessWidget {
                   ),
                 ),
                 if (o.dyVsCdi > 0)
-                  Text(
+                  PrivacyText(
                     '${(o.dyVsCdi * 100).toStringAsFixed(0)}% do CDI',
                     style: AppTextStyles.labelSmall.copyWith(fontSize: 10),
                   ),

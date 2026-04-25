@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/currency_formatter.dart';
+import '../../widgets/privacy_text/privacy_text.dart';
 import 'transaction_list_item_cubit.dart';
 
 enum TransactionItemType { income, expense }
@@ -198,7 +199,7 @@ class _TransactionListItemView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: screenWidth * 0.02),
-                          Text(
+                          PrivacyText(
                             '$amountPrefix $formattedAmount',
                             style: TextStyle(
                               fontSize: amountSize,

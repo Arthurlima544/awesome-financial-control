@@ -6,6 +6,8 @@ import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 
 class NetWorthScreen extends StatelessWidget {
   const NetWorthScreen({super.key});
@@ -62,7 +64,7 @@ class NetWorthScreen extends StatelessWidget {
           children: [
             Text('Patrimônio Líquido Atual', style: AppTextStyles.titleMedium),
             const SizedBox(height: AppSpacing.sm),
-            Text(
+            PrivacyText(
               currencyFormat.format(latest.total),
               style: AppTextStyles.displaySmall.copyWith(
                 fontWeight: FontWeight.bold,
@@ -88,7 +90,7 @@ class NetWorthScreen extends StatelessWidget {
     return Column(
       children: [
         Text(label, style: AppTextStyles.labelSmall),
-        Text(
+        PrivacyText(
           currencyFormat.format(value),
           style: AppTextStyles.titleSmall.copyWith(color: color),
         ),
@@ -112,55 +114,83 @@ class NetWorthScreen extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: SizedBox(
               height: 250,
-              child: LineChart(
-                LineChartData(
-                  gridData: const FlGridData(show: false),
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index >= 0 &&
-                              index < data.length &&
-                              index % 3 == 0) {
-                            final month = data[index].month.split('-').last;
-                            return Text(
-                              month,
-                              style: const TextStyle(fontSize: 10),
+              child: BlocBuilder<PrivacyCubit, PrivacyState>(
+                builder: (context, privacyState) {
+                  return LineChart(
+                    LineChartData(
+                      gridData: const FlGridData(show: false),
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (value, meta) {
+                              final index = value.toInt();
+                              if (index >= 0 &&
+                                  index < data.length &&
+                                  index % 3 == 0) {
+                                final month = data[index].month.split('-').last;
+                                return Text(
+                                  month,
+                                  style: const TextStyle(fontSize: 10),
+                                );
+                              }
+                              return const Text('');
+                            },
+                          ),
+                        ),
+                        leftTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                      ),
+                      borderData: FlBorderData(show: false),
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: data.asMap().entries.map((e) {
+                            return FlSpot(e.key.toDouble(), e.value.total);
+                          }).toList(),
+                          isCurved: true,
+                          color: AppColors.primary,
+                          barWidth: 4,
+                          dotData: const FlDotData(show: false),
+                          belowBarData: BarAreaData(
+                            show: true,
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                          ),
+                        ),
+                      ],
+                      lineTouchData: LineTouchData(
+                        enabled: true,
+                        touchTooltipData: LineTouchTooltipData(
+                          getTooltipColor: (_) =>
+                              Colors.blueGrey.withValues(alpha: 0.8),
+                          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                            final currencyFormat = NumberFormat.simpleCurrency(
+                              locale: 'pt_BR',
                             );
-                          }
-                          return const Text('');
-                        },
+                            return touchedSpots.map((LineBarSpot touchedSpot) {
+                              final displayValue = privacyState.isPrivate
+                                  ? '•••••'
+                                  : currencyFormat.format(touchedSpot.y);
+                              return LineTooltipItem(
+                                displayValue,
+                                const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                              );
+                            }).toList();
+                          },
+                        ),
                       ),
                     ),
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: data.asMap().entries.map((e) {
-                        return FlSpot(e.key.toDouble(), e.value.total);
-                      }).toList(),
-                      isCurved: true,
-                      color: AppColors.primary,
-                      barWidth: 4,
-                      dotData: const FlDotData(show: false),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ),
@@ -184,8 +214,8 @@ class NetWorthScreen extends StatelessWidget {
               p.month,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('Ativos: ${currencyFormat.format(p.assets)}'),
-            trailing: Text(
+            subtitle: PrivacyText('Ativos: ${currencyFormat.format(p.assets)}'),
+            trailing: PrivacyText(
               currencyFormat.format(p.total),
               style: TextStyle(
                 fontWeight: FontWeight.bold,

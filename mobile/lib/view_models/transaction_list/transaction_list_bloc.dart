@@ -24,6 +24,7 @@ class TransactionListBloc
     on<TransactionListFetchRequested>(_onFetchRequested);
     on<TransactionDeleteRequested>(_onDeleteRequested);
     on<TransactionUpdateRequested>(_onUpdateRequested);
+    on<TransactionListToggleGrouping>(_onToggleGrouping);
 
     _refreshSubscription = _refreshBloc.stream.listen(
       (_) => add(const TransactionListFetchRequested()),
@@ -91,6 +92,16 @@ class TransactionListBloc
       _refreshBloc.add(DataChanged());
     } catch (e) {
       emit(TransactionListError(e.toString()));
+    }
+  }
+
+  Future<void> _onToggleGrouping(
+    TransactionListToggleGrouping event,
+    Emitter<TransactionListState> emit,
+  ) async {
+    final current = state;
+    if (current is TransactionListData) {
+      emit(current.copyWith(groupByType: !current.groupByType));
     }
   }
 }

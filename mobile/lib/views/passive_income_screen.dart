@@ -6,6 +6,8 @@ import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 
 class PassiveIncomeScreen extends StatelessWidget {
   const PassiveIncomeScreen({super.key});
@@ -73,39 +75,43 @@ class PassiveIncomeScreen extends StatelessWidget {
               style: AppTextStyles.titleMedium,
             ),
             const SizedBox(height: AppSpacing.lg),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  height: 180,
-                  width: 180,
-                  child: CircularProgressIndicator(
-                    value: index / 100,
-                    strokeWidth: 12,
-                    backgroundColor: Colors.grey.shade100,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      isComplete ? AppColors.success : AppColors.primary,
-                    ),
-                  ),
-                ),
-                Column(
+            BlocBuilder<PrivacyCubit, PrivacyState>(
+              builder: (context, privacyState) {
+                return Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Text(
-                      '${index.toStringAsFixed(1)}%',
-                      style: AppTextStyles.displaySmall.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isComplete
-                            ? AppColors.success
-                            : AppColors.onSurface,
+                    SizedBox(
+                      height: 180,
+                      width: 180,
+                      child: CircularProgressIndicator(
+                        value: privacyState.isPrivate ? 0.0 : index / 100,
+                        strokeWidth: 12,
+                        backgroundColor: Colors.grey.shade100,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isComplete ? AppColors.success : AppColors.primary,
+                        ),
                       ),
                     ),
-                    Text('da meta mensal', style: AppTextStyles.labelSmall),
+                    Column(
+                      children: [
+                        PrivacyText(
+                          '${index.toStringAsFixed(1)}%',
+                          style: AppTextStyles.displaySmall.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isComplete
+                                ? AppColors.success
+                                : AppColors.onSurface,
+                          ),
+                        ),
+                        Text('da meta mensal', style: AppTextStyles.labelSmall),
+                      ],
+                    ),
                   ],
-                ),
-              ],
+                );
+              },
             ),
             const SizedBox(height: AppSpacing.lg),
-            Text(
+            PrivacyText(
               'Recebido este mês: ${currencyFormat.format(amount)}',
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
@@ -239,7 +245,7 @@ class PassiveIncomeScreen extends StatelessWidget {
                 e.key.toString(),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              trailing: Text(
+              trailing: PrivacyText(
                 currencyFormat.format(e.value),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,

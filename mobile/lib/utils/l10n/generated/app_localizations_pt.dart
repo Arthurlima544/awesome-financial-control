@@ -180,6 +180,33 @@ class AppLocalizationsPt extends AppLocalizations {
       'Deseja excluir esta transação? Esta ação não pode ser desfeita.';
 
   @override
+  String get transactionListByDate => 'Por data';
+
+  @override
+  String get transactionListByGroup => 'Por grupo';
+
+  @override
+  String get transactionGroupPix => 'Transferências PIX';
+
+  @override
+  String get transactionGroupBank => 'Transferências bancárias';
+
+  @override
+  String get transactionGroupTransport => 'Transporte por app';
+
+  @override
+  String get transactionGroupDelivery => 'Delivery';
+
+  @override
+  String get transactionGroupMarket => 'Supermercado';
+
+  @override
+  String get transactionGroupSubscription => 'Assinaturas';
+
+  @override
+  String get transactionGroupOther => 'Outros';
+
+  @override
   String get navHome => 'Início';
 
   @override
@@ -406,6 +433,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get importSuccess => 'Transações importadas com sucesso!';
+
+  @override
+  String get importConfidenceAuto => 'Auto';
+
+  @override
+  String get importConfidenceReview => 'Revisar';
+
+  @override
+  String get importConfidenceManual => 'Manual';
 
   @override
   String get reportTitle => 'Relatório Mensal';
@@ -659,4 +695,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsLogoutConfirm => 'Deseja realmente sair da conta?';
+
+  @override
+  String get privacyMode => 'Modo Privacidade (Ocultar valores)';
 }

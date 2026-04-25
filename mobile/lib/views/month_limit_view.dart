@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/models/limit_progress_model.dart';
 
 class MonthLimitView extends StatelessWidget {
@@ -87,7 +88,7 @@ class MonthLimitView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
+                PrivacyText(
                   '${limit.spentFormatted} de ${limit.limitAmountFormatted}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF4B5563),

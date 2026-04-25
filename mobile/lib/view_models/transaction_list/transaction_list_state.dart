@@ -11,12 +11,23 @@ class TransactionListInitial extends TransactionListState {}
 class TransactionListLoading extends TransactionListState {}
 
 class TransactionListData extends TransactionListState {
-  const TransactionListData(this.transactions);
+  const TransactionListData(this.transactions, {this.groupByType = false});
 
   final List<TransactionModel> transactions;
+  final bool groupByType;
 
   @override
-  List<Object?> get props => [transactions];
+  List<Object?> get props => [transactions, groupByType];
+
+  TransactionListData copyWith({
+    List<TransactionModel>? transactions,
+    bool? groupByType,
+  }) {
+    return TransactionListData(
+      transactions ?? this.transactions,
+      groupByType: groupByType ?? this.groupByType,
+    );
+  }
 }
 
 class TransactionListError extends TransactionListState {

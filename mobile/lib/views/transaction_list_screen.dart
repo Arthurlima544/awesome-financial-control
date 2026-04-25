@@ -16,6 +16,9 @@ import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/services/navigation_service.dart';
 import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/services/transaction_grouper.dart';
+import 'package:afc/models/transaction_group.dart';
+import 'package:intl/intl.dart';
 
 class TransactionListScreen extends StatelessWidget {
   const TransactionListScreen({super.key});
@@ -36,10 +39,30 @@ class _TransactionListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.transactionListTitle),
         actions: [
+          BlocBuilder<TransactionListBloc, TransactionListState>(
+            builder: (context, state) {
+              if (state is TransactionListData) {
+                return IconButton(
+                  icon: Icon(
+                    state.groupByType ? Icons.calendar_today : Icons.grid_view,
+                  ),
+                  tooltip: state.groupByType
+                      ? l10n.transactionListByDate
+                      : l10n.transactionListByGroup,
+                  onPressed: () => context.read<TransactionListBloc>().add(
+                    const TransactionListToggleGrouping(),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.category_outlined),
             tooltip: l10n.categoryListTitle,
@@ -82,6 +105,44 @@ class _TransactionListView extends StatelessWidget {
                 ),
               );
             }
+
+            if (state.groupByType) {
+              final grouper = TransactionGrouper();
+              final groups = grouper.group(state.transactions, {
+                'pix': l10n.transactionGroupPix,
+                'bank': l10n.transactionGroupBank,
+                'transport': l10n.transactionGroupTransport,
+                'delivery': l10n.transactionGroupDelivery,
+                'market': l10n.transactionGroupMarket,
+                'subscription': l10n.transactionGroupSubscription,
+                'other': l10n.transactionGroupOther,
+              });
+
+              return RefreshIndicator(
+                onRefresh: () async => context.read<TransactionListBloc>().add(
+                  const TransactionListFetchRequested(),
+                ),
+                child: ListView.builder(
+                  itemCount: groups.length,
+                  itemBuilder: (context, index) {
+                    final group = groups[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _GroupHeader(
+                          group: group,
+                          currencyFormat: currencyFormat,
+                        ),
+                        ...group.transactions.map(
+                          (t) => _DismissibleItem(transaction: t, l10n: l10n),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              );
+            }
+
             return RefreshIndicator(
               onRefresh: () async => context.read<TransactionListBloc>().add(
                 const TransactionListFetchRequested(),
@@ -97,6 +158,60 @@ class _TransactionListView extends StatelessWidget {
           }
           return const SizedBox.shrink();
         },
+      ),
+    );
+  }
+}
+
+class _GroupHeader extends StatelessWidget {
+  const _GroupHeader({required this.group, required this.currencyFormat});
+
+  final TransactionGroup group;
+  final NumberFormat currencyFormat;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      color: AppColors.neutral100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                group.label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutral700,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.neutral200,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${group.transactions.length}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.neutral600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Text(
+            currencyFormat.format(group.total),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.neutral700,
+            ),
+          ),
+        ],
       ),
     );
   }

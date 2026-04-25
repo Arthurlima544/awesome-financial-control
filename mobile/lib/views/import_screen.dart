@@ -274,20 +274,44 @@ class _ImportView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(dateFormatter.format(c.occurredAt)),
-                    if (c.isDuplicate)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: BlocProvider(
-                          create: (_) => AdaptiveBadgeCubit(
-                            initialLabel: l10n.importDuplicate,
+                    const SizedBox(height: 4),
+                    Wrap(
+                      spacing: 8.0,
+                      children: [
+                        if (c.isDuplicate)
+                          BlocProvider(
+                            create: (_) => AdaptiveBadgeCubit(
+                              initialLabel: l10n.importDuplicate,
+                            ),
+                            child: const AdaptiveBadge(
+                              type: AdaptiveBadgeType.status,
+                              semanticLabel: 'Duplicate Warning',
+                              baseColor: AppColors.error,
+                            ),
                           ),
-                          child: const AdaptiveBadge(
+                        BlocProvider(
+                          key: ValueKey(
+                            'confidence_${c.categoryConfidence}_$index',
+                          ),
+                          create: (_) => AdaptiveBadgeCubit(
+                            initialLabel: c.categoryConfidence >= 0.8
+                                ? l10n.importConfidenceAuto
+                                : c.categoryConfidence >= 0.5
+                                ? l10n.importConfidenceReview
+                                : l10n.importConfidenceManual,
+                          ),
+                          child: AdaptiveBadge(
                             type: AdaptiveBadgeType.status,
-                            semanticLabel: 'Duplicate Warning',
-                            baseColor: AppColors.error,
+                            semanticLabel: 'Categorization Confidence',
+                            baseColor: c.categoryConfidence >= 0.8
+                                ? AppColors.success
+                                : c.categoryConfidence >= 0.5
+                                ? Colors.orange
+                                : AppColors.error,
                           ),
                         ),
-                      ),
+                      ],
+                    ),
                   ],
                 ),
                 trailing: Text(

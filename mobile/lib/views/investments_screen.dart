@@ -12,6 +12,7 @@ import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class InvestmentsScreen extends StatelessWidget {
   const InvestmentsScreen({super.key});
@@ -198,7 +199,7 @@ class _PortfolioSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(
+            PrivacyText(
               currencyFormat.format(totalCurrentValue),
               style: AppTextStyles.displaySmall.copyWith(
                 fontWeight: FontWeight.bold,
@@ -214,7 +215,7 @@ class _PortfolioSummaryCard extends StatelessWidget {
                   size: AppSpacing.iconSm,
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Text(
+                PrivacyText(
                   '${currencyFormat.format(totalGainLoss.abs())} (${percentFormat.format(totalGainLossPercentage / 100)})',
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: color,
@@ -234,7 +235,7 @@ class _PortfolioSummaryCard extends StatelessWidget {
                   l10n.investmentsTotalInvested,
                   style: AppTextStyles.bodySmall,
                 ),
-                Text(
+                PrivacyText(
                   currencyFormat.format(totalInvested),
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.w600,
@@ -306,13 +307,13 @@ class _InvestmentCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
+                PrivacyText(
                   currencyFormat.format(investment.currentValue),
                   style: AppTextStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
+                PrivacyText(
                   '${isProfit ? '+' : ''}${percentFormat.format(investment.gainLossPercentage / 100)}',
                   style: AppTextStyles.labelSmall.copyWith(
                     color: color,

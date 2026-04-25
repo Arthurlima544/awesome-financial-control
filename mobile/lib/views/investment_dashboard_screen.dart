@@ -6,6 +6,7 @@ import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class InvestmentDashboardScreen extends StatelessWidget {
   const InvestmentDashboardScreen({super.key});
@@ -75,7 +76,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Patrimônio Total', style: AppTextStyles.labelLarge),
-                    Text(
+                    PrivacyText(
                       currencyFormat.format(data['currentTotalValue']),
                       style: AppTextStyles.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
@@ -102,7 +103,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
                         color: isPositive ? Colors.green : Colors.red,
                       ),
                       const SizedBox(width: 4),
-                      Text(
+                      PrivacyText(
                         '${percentage.toStringAsFixed(2)}%',
                         style: TextStyle(
                           color: isPositive ? Colors.green : Colors.red,
@@ -157,7 +158,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
               style: AppTextStyles.labelSmall.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 4),
-            Text(
+            PrivacyText(
               value,
               style: AppTextStyles.labelLarge.copyWith(
                 fontWeight: FontWeight.bold,
@@ -285,14 +286,14 @@ class InvestmentDashboardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
+                  PrivacyText(
                     currencyFormat.format(p['profitLoss']),
                     style: TextStyle(
                       color: isPositive ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
+                  PrivacyText(
                     '${(p['percentage'] as num).toStringAsFixed(2)}%',
                     style: TextStyle(
                       color: isPositive ? Colors.green : Colors.red,

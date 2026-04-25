@@ -24,6 +24,8 @@ import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/view_models/health_score/health_score_bloc.dart';
 import 'package:afc/widgets/health_score_card/health_score_card.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
@@ -77,6 +79,17 @@ class _HomeViewState extends State<_HomeView> {
                 ? const Icon(Icons.light_mode)
                 : const Icon(Icons.dark_mode),
             onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+          ),
+          IconButton(
+            icon: BlocBuilder<PrivacyCubit, PrivacyState>(
+              builder: (context, state) {
+                return Icon(
+                  state.isPrivate ? Icons.visibility_off : Icons.visibility,
+                );
+              },
+            ),
+            onPressed: () => context.read<PrivacyCubit>().togglePrivacy(),
+            tooltip: l10n.privacyMode,
           ),
           IconButton(
             icon: const Icon(Icons.settings),
@@ -325,8 +338,6 @@ class _HomeViewState extends State<_HomeView> {
   }
 }
 
-// MonthSummaryCard is now a separate reusable widget
-
 class _NetWorthCard extends StatelessWidget {
   const _NetWorthCard();
 
@@ -390,7 +401,7 @@ class _NetWorthCard extends StatelessWidget {
                                 color: AppColors.neutral700,
                               ),
                             ),
-                            Text(
+                            PrivacyText(
                               currencyFormat.format(totalNetWorth),
                               style: AppTextStyles.titleLarge.copyWith(
                                 fontWeight: FontWeight.bold,

@@ -13,6 +13,7 @@ import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
@@ -362,7 +363,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
           label,
           style: AppTextStyles.labelLarge.copyWith(color: Colors.grey.shade700),
         ),
-        Text(
+        PrivacyText(
           value,
           style: AppTextStyles.labelLarge.copyWith(
             fontWeight: isBold || isTeal ? FontWeight.bold : FontWeight.normal,
@@ -474,18 +475,18 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
                 if (value == 0) {
-                  return const Text(
+                  return const PrivacyText(
                     'R\$ 0',
                     style: TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value >= 1000000) {
-                  return Text(
+                  return PrivacyText(
                     'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
-                return Text(
+                return PrivacyText(
                   'R\$ ${(value / 1000).toStringAsFixed(0)}k',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 );

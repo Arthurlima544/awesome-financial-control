@@ -406,6 +406,60 @@ abstract class AppLocalizations {
   /// **'Deseja excluir esta transação? Esta ação não pode ser desfeita.'**
   String get transactionDeleteConfirmMessage;
 
+  /// No description provided for @transactionListByDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Por data'**
+  String get transactionListByDate;
+
+  /// No description provided for @transactionListByGroup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Por grupo'**
+  String get transactionListByGroup;
+
+  /// No description provided for @transactionGroupPix.
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferências PIX'**
+  String get transactionGroupPix;
+
+  /// No description provided for @transactionGroupBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferências bancárias'**
+  String get transactionGroupBank;
+
+  /// No description provided for @transactionGroupTransport.
+  ///
+  /// In pt, this message translates to:
+  /// **'Transporte por app'**
+  String get transactionGroupTransport;
+
+  /// No description provided for @transactionGroupDelivery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Delivery'**
+  String get transactionGroupDelivery;
+
+  /// No description provided for @transactionGroupMarket.
+  ///
+  /// In pt, this message translates to:
+  /// **'Supermercado'**
+  String get transactionGroupMarket;
+
+  /// No description provided for @transactionGroupSubscription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Assinaturas'**
+  String get transactionGroupSubscription;
+
+  /// No description provided for @transactionGroupOther.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outros'**
+  String get transactionGroupOther;
+
   /// Bottom nav bar home tab label
   ///
   /// In pt, this message translates to:
@@ -843,6 +897,24 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Transações importadas com sucesso!'**
   String get importSuccess;
+
+  /// No description provided for @importConfidenceAuto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Auto'**
+  String get importConfidenceAuto;
+
+  /// No description provided for @importConfidenceReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar'**
+  String get importConfidenceReview;
+
+  /// No description provided for @importConfidenceManual.
+  ///
+  /// In pt, this message translates to:
+  /// **'Manual'**
+  String get importConfidenceManual;
 
   /// Report screen title
   ///
@@ -1341,6 +1413,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Deseja realmente sair da conta?'**
   String get settingsLogoutConfirm;
+
+  /// No description provided for @privacyMode.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modo Privacidade (Ocultar valores)'**
+  String get privacyMode;
 }
 
 class _AppLocalizationsDelegate

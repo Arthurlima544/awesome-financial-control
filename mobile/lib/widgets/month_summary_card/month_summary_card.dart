@@ -3,6 +3,7 @@ import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
 class MonthSummaryCard extends StatelessWidget {
   const MonthSummaryCard({
@@ -227,7 +228,7 @@ class _AmountColumn extends StatelessWidget {
           const SizedBox(height: 2),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(
+            child: PrivacyText(
               amount,
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
