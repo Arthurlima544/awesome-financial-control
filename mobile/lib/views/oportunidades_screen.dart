@@ -79,6 +79,7 @@ class OportunidadesScreen extends StatelessWidget {
     BuildContext context,
     MarketBenchmarks benchmarks,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -109,8 +110,16 @@ class OportunidadesScreen extends StatelessWidget {
                 context,
                 'Selic',
                 '${benchmarks.selicRate.toStringAsFixed(2)}%',
+                hasInfo: true,
+                description: l10n.tooltipSelicDesc,
               ),
-              _buildBenchmarkItem(context, 'IPCA (est.)', '4.50%'),
+              _buildBenchmarkItem(
+                context,
+                'IPCA (est.)',
+                '4.50%',
+                hasInfo: true,
+                description: l10n.tooltipIPCADesc,
+              ),
             ],
           ),
         ],
@@ -123,6 +132,7 @@ class OportunidadesScreen extends StatelessWidget {
     String label,
     String value, {
     bool hasInfo = false,
+    String? description,
   }) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
@@ -130,10 +140,10 @@ class OportunidadesScreen extends StatelessWidget {
         Row(
           children: [
             Text(label, style: AppTextStyles.labelSmall),
-            if (hasInfo)
+            if (hasInfo && (description != null || label == 'CDI'))
               AppTooltipIcon(
                 title: label,
-                description: l10n.tooltipCDIDesc,
+                description: description ?? l10n.tooltipCDIDesc,
                 iconSize: 12,
               ),
           ],
@@ -224,6 +234,24 @@ class OportunidadesScreen extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
           children: [
+            if (o.logoUrl != null && o.logoUrl!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.md),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  child: Image.network(
+                    o.logoUrl!,
+                    width: 32,
+                    height: 32,
+                    errorBuilder: (_, _, _) => _buildLogoPlaceholder(o.ticker),
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.md),
+                child: _buildLogoPlaceholder(o.ticker),
+              ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,6 +320,27 @@ class OportunidadesScreen extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoPlaceholder(String ticker) {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+      ),
+      child: Center(
+        child: Text(
+          ticker.substring(0, ticker.length > 2 ? 2 : ticker.length),
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primary,
+          ),
         ),
       ),
     );

@@ -12,4 +12,5 @@ public record MarketOpportunityDTO(
         BigDecimal priceEarnings,
         String sector,
         BigDecimal dyVsCdi,
+        String logoUrl,
         java.time.ZonedDateTime lastUpdated) {}

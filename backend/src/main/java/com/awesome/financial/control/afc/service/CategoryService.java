@@ -41,6 +41,7 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse createCategory(CreateCategoryRequest request) {
+        checkUniqueness(request.name(), null);
         Category category = Category.builder().name(request.name()).build();
         Category saved = categoryRepository.save(category);
         return CategoryResponse.builder()
@@ -56,6 +57,9 @@ public class CategoryService {
                 categoryRepository
                         .findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Category", id));
+
+        checkUniqueness(request.name(), id);
+
         category.setName(request.name());
         Category saved = categoryRepository.save(category);
         return CategoryResponse.builder()
@@ -63,5 +67,23 @@ public class CategoryService {
                 .name(saved.getName())
                 .createdAt(saved.getCreatedAt())
                 .build();
+    }
+
+    private void checkUniqueness(String name, UUID excludeId) {
+        String normalized =
+                com.awesome.financial.control.afc.utils.StringNormalizer.normalize(name);
+        categoryRepository.findAll().stream()
+                .filter(c -> !c.getId().equals(excludeId))
+                .filter(
+                        c ->
+                                com.awesome.financial.control.afc.utils.StringNormalizer.normalize(
+                                                c.getName())
+                                        .equals(normalized))
+                .findAny()
+                .ifPresent(
+                        c -> {
+                            throw new com.awesome.financial.control.afc.exception.ConflictException(
+                                    "Category already exists: " + name);
+                        });
     }
 }

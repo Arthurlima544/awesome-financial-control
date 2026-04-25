@@ -127,12 +127,36 @@ class NetWorthScreen extends StatelessWidget {
                               final index = value.toInt();
                               if (index >= 0 &&
                                   index < data.length &&
-                                  index % 3 == 0) {
-                                final month = data[index].month.split('-').last;
-                                return Text(
-                                  month,
-                                  style: const TextStyle(fontSize: 10),
-                                );
+                                  index % 2 == 0) {
+                                final parts = data[index].month.split('-');
+                                if (parts.length == 2) {
+                                  final month = parts[1];
+                                  final year = parts[0].substring(2);
+                                  final monthNames = [
+                                    '',
+                                    'Jan',
+                                    'Fev',
+                                    'Mar',
+                                    'Abr',
+                                    'Mai',
+                                    'Jun',
+                                    'Jul',
+                                    'Ago',
+                                    'Set',
+                                    'Out',
+                                    'Nov',
+                                    'Dez',
+                                  ];
+                                  final monthName =
+                                      monthNames[int.parse(month)];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      '$monthName/$year',
+                                      style: const TextStyle(fontSize: 9),
+                                    ),
+                                  );
+                                }
                               }
                               return const Text('');
                             },
@@ -174,11 +198,18 @@ class NetWorthScreen extends StatelessWidget {
                               locale: 'pt_BR',
                             );
                             return touchedSpots.map((LineBarSpot touchedSpot) {
+                              final index = touchedSpot.x.toInt();
+                              String monthInfo = '';
+                              if (index >= 0 && index < data.length) {
+                                monthInfo =
+                                    '${_formatMonth(data[index].month)}\n';
+                              }
+
                               final displayValue = privacyState.isPrivate
                                   ? '•••••'
                                   : currencyFormat.format(touchedSpot.y);
                               return LineTooltipItem(
-                                displayValue,
+                                '$monthInfo$displayValue',
                                 const TextStyle(
                                   color: Colors.white,
                                   fontSize: 10,
@@ -199,6 +230,33 @@ class NetWorthScreen extends StatelessWidget {
     );
   }
 
+  String _formatMonth(String monthStr) {
+    try {
+      final parts = monthStr.split('-');
+      if (parts.length == 2) {
+        final year = parts[0];
+        final month = int.parse(parts[1]);
+        final monthNames = [
+          '',
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro',
+        ];
+        return '${monthNames[month]} $year';
+      }
+    } catch (_) {}
+    return monthStr;
+  }
+
   Widget _buildDetailsList(List<dynamic> data) {
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final reversedData = data.reversed.toList();
@@ -211,7 +269,7 @@ class NetWorthScreen extends StatelessWidget {
         ...reversedData.map(
           (p) => ListTile(
             title: Text(
-              p.month,
+              _formatMonth(p.month),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: PrivacyText('Ativos: ${currencyFormat.format(p.assets)}'),

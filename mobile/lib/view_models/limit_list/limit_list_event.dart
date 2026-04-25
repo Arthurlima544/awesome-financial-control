@@ -31,13 +31,13 @@ class LimitListUpdateRequested extends LimitListEvent {
 
 class LimitListCreateRequested extends LimitListEvent {
   const LimitListCreateRequested({
-    required this.categoryName,
+    required this.categoryId,
     required this.amount,
   });
 
-  final String categoryName;
+  final String categoryId;
   final double amount;
 
   @override
-  List<Object?> get props => [categoryName, amount];
+  List<Object?> get props => [categoryId, amount];
 }

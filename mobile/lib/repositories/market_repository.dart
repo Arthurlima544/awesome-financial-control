@@ -11,6 +11,7 @@ class MarketOpportunity {
   final double? priceEarnings;
   final String? sector;
   final double dyVsCdi;
+  final String? logoUrl;
   final DateTime lastUpdated;
 
   MarketOpportunity({
@@ -23,6 +24,7 @@ class MarketOpportunity {
     this.priceEarnings,
     this.sector,
     required this.dyVsCdi,
+    this.logoUrl,
     required this.lastUpdated,
   });
 
@@ -39,6 +41,7 @@ class MarketOpportunity {
           : null,
       sector: json['sector'],
       dyVsCdi: (json['dyVsCdi'] as num).toDouble(),
+      logoUrl: json['logoUrl'],
       lastUpdated: DateTime.parse(json['lastUpdated']),
     );
   }

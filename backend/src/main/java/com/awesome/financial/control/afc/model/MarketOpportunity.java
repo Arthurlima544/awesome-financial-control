@@ -41,6 +41,14 @@ public class MarketOpportunity {
     @Column(name = "dy_vs_cdi")
     private BigDecimal dyVsCdi;
 
+    @Column(name = "change_percent")
+    private BigDecimal changePercent;
+
+    @Column(name = "logo_url")
+    private String logoUrl;
+
+    private String sector;
+
     @Column(name = "last_updated")
     private ZonedDateTime lastUpdated;
 }

@@ -65,6 +65,18 @@ public class LimitSteps {
         ctx.lastLimitId = limitRepository.save(limit).getId();
     }
 
+    @When("I create a limit of {bigdecimal} for the last created category")
+    public void iCreateALimitForLastCategory(BigDecimal amount) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"categoryId\":\"%s\",\"amount\":%s}",
+                        ctx.lastCategoryId, amount.toPlainString());
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        ctx.response = restTemplate.postForEntity("/api/v1/limits", entity, String.class);
+    }
+
     @Given(
             "a transaction with description {string} amount {bigdecimal} type {word} in category {string} occurred today")
     public void aTransactionInCategoryOccurredToday(
