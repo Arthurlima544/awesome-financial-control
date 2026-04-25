@@ -95,7 +95,10 @@ public class MarketService {
         BigDecimal pvp = BigDecimal.ZERO;
 
         if (res.fundamental() != null) {
-            dy = res.fundamental().dividendYield();
+            dy =
+                    res.fundamental().dividendYield() != null
+                            ? res.fundamental().dividendYield()
+                            : BigDecimal.ZERO;
             pe = res.fundamental().pL();
             pvp = res.fundamental().pVp();
         }
@@ -110,6 +113,10 @@ public class MarketService {
                 .name(res.shortName())
                 .type(res.symbol().endsWith("11.SA") ? "FII" : "STOCK")
                 .currentPrice(res.regularMarketPrice())
+                .changePercent(res.regularMarketChangePercent())
+                .logoUrl(res.logourl())
+                .sector("") // Brapi quote doesn't always have sector, could be added from
+                // fundamentals if available
                 .dividendYield(dy)
                 .peRatio(pe)
                 .pvpRatio(pvp)
@@ -123,12 +130,13 @@ public class MarketService {
                 entity.getTicker(),
                 entity.getName(),
                 entity.getCurrentPrice(),
-                BigDecimal.ZERO, // changePercent not persisted for now
+                entity.getChangePercent() != null ? entity.getChangePercent() : BigDecimal.ZERO,
                 entity.getDividendYield(),
                 "FII".equals(entity.getType()),
                 entity.getPeRatio(),
-                "", // sector not persisted
+                entity.getSector(),
                 entity.getDyVsCdi(),
+                entity.getLogoUrl(),
                 entity.getLastUpdated());
     }
 

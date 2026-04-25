@@ -1,7 +1,6 @@
 package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.PassiveIncomeDashboardResponse;
-import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
@@ -57,7 +56,14 @@ public class PassiveIncomeService {
                 label =
                         investmentRepository
                                 .findById(investmentId)
-                                .map(Investment::getTicker)
+                                .map(
+                                        inv -> {
+                                            if (inv.getTicker() != null
+                                                    && !inv.getTicker().isBlank()) {
+                                                return inv.getTicker();
+                                            }
+                                            return inv.getName();
+                                        })
                                 .orElse("Desconhecido");
             }
             incomeByInvestment.put(label, amount);

@@ -9,6 +9,10 @@ import 'package:afc/view_models/transaction_list/transaction_list_bloc.dart';
 import 'package:afc/view_models/transaction_list/transaction_edit_cubit.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/widgets/custom_date_picker/custom_date_picker.dart';
+import 'package:afc/widgets/custom_date_picker/custom_date_picker_cubit.dart'
+    as picker;
+import 'package:afc/utils/config/app_colors.dart';
 
 class TransactionEditScreen extends StatelessWidget {
   const TransactionEditScreen({super.key, required this.transactionId});
@@ -186,6 +190,25 @@ class _TransactionEditFormState extends State<TransactionEditForm> {
                   onChanged: (v) =>
                       context.read<TransactionEditCubit>().categoryChanged(v),
                   textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                BlocBuilder<TransactionEditCubit, TransactionEditState>(
+                  buildWhen: (p, c) => p.occurredAt != c.occurredAt,
+                  builder: (context, state) {
+                    return CustomDatePicker(
+                      mode: picker.DatePickerMode.single,
+                      initialStartDate: state.occurredAt,
+                      placeholder: l10n.filterDate,
+                      primaryColor: AppColors.primary,
+                      onChanged: (start, end) {
+                        if (start != null) {
+                          context
+                              .read<TransactionEditCubit>()
+                              .occurredAtChanged(start);
+                        }
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.md),
                 BlocBuilder<TransactionEditCubit, TransactionEditState>(

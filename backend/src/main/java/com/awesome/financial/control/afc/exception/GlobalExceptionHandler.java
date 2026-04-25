@@ -24,6 +24,13 @@ public class GlobalExceptionHandler {
         return new ErrorResponse("NOT_FOUND", ex.getMessage(), HttpStatus.NOT_FOUND.value());
     }
 
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleConflict(ConflictException ex) {
+        log.warn("Conflict error: {}", ex.getMessage());
+        return new ErrorResponse("CONFLICT", ex.getMessage(), HttpStatus.CONFLICT.value());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handleValidation(MethodArgumentNotValidException ex) {

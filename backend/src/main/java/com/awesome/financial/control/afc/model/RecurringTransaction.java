@@ -20,6 +20,9 @@ public class RecurringTransaction extends AbstractTransaction {
     @Column(name = "next_due_at", nullable = false)
     private Instant nextDueAt;
 
+    @Column(name = "last_paid_at")
+    private Instant lastPaidAt;
+
     @Column(nullable = false)
     private boolean active = true;
 }

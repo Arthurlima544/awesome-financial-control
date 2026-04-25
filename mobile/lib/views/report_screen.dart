@@ -252,6 +252,9 @@ class _CategoryPieChart extends StatelessWidget {
               builder: (context, privacyState) {
                 return PieChart(
                   PieChartData(
+                    pieTouchData: PieTouchData(
+                      touchCallback: (FlTouchEvent event, pieTouchResponse) {},
+                    ),
                     sectionsSpace: 2,
                     centerSpaceRadius: 40,
                     sections: categories.map((c) {
@@ -382,11 +385,17 @@ class _ComparisonBarChart extends StatelessWidget {
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
                 maxY:
-                    (displayList.fold<double>(
-                      0,
-                      (max, c) => c.currentAmount > max ? c.currentAmount : max,
-                    ) *
-                    1.2),
+                    (displayList.fold<double>(0, (max, c) {
+                              final highestInGroup =
+                                  c.currentAmount > c.previousAmount
+                                  ? c.currentAmount
+                                  : c.previousAmount;
+                              return highestInGroup > max
+                                  ? highestInGroup
+                                  : max;
+                            }) *
+                            1.15)
+                        .ceilToDouble(),
                 barGroups: displayList.map((c) {
                   final index = displayList.indexOf(c);
                   return BarChartGroupData(
@@ -441,11 +450,16 @@ class _ComparisonBarChart extends StatelessWidget {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40,
+                      reservedSize: 45,
                       getTitlesWidget: (value, meta) {
-                        return PrivacyText(
-                          value.toInt().toString(),
-                          style: const TextStyle(fontSize: 10),
+                        final format = NumberFormat.compact(locale: 'pt_BR');
+                        return SideTitleWidget(
+                          meta: meta,
+                          space: 4,
+                          child: PrivacyText(
+                            format.format(value),
+                            style: const TextStyle(fontSize: 10),
+                          ),
                         );
                       },
                     ),
@@ -466,9 +480,12 @@ class _ComparisonBarChart extends StatelessWidget {
                         Colors.blueGrey.withValues(alpha: 0.8),
                     tooltipBorderRadius: BorderRadius.circular(8),
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      final currencyFormat = NumberFormat.simpleCurrency(
+                        locale: 'pt_BR',
+                      );
                       final displayValue = privacyState.isPrivate
                           ? '•••••'
-                          : rod.toY.toStringAsFixed(2);
+                          : currencyFormat.format(rod.toY);
                       return BarTooltipItem(
                         displayValue,
                         const TextStyle(color: Colors.white, fontSize: 10),

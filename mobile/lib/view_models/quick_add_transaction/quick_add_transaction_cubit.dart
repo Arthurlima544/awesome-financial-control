@@ -101,6 +101,10 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
     emit(state.copyWith(frequency: frequency));
   }
 
+  void occurredAtChanged(DateTime? value) {
+    emit(state.copyWith(occurredAt: value));
+  }
+
   void setSaveAsTemplate(bool value) {
     emit(state.copyWith(saveAsTemplate: value));
   }
@@ -126,7 +130,7 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
         amount: state.parsedAmount!,
         type: state.type.name,
         category: state.parsedCategory,
-        occurredAt: DateTime.now(),
+        occurredAt: state.occurredAt ?? DateTime.now(),
       );
 
       if (state.isRecurring) {

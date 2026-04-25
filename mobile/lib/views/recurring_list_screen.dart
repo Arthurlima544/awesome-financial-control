@@ -38,12 +38,17 @@ class RecurringListScreen extends StatelessWidget {
                 ),
               );
             }
-            return ListView.builder(
-              itemCount: state.rules.length,
-              itemBuilder: (context, index) {
-                final rule = state.rules[index];
-                return _RecurringItem(rule: rule);
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<RecurringBloc>().add(LoadRecurring());
               },
+              child: ListView.builder(
+                itemCount: state.rules.length,
+                itemBuilder: (context, index) {
+                  final rule = state.rules[index];
+                  return _RecurringItem(rule: rule);
+                },
+              ),
             );
           }
           return const SizedBox.shrink();
@@ -100,6 +105,23 @@ class _RecurringItem extends StatelessWidget {
             l10n.recurringNextDue(dateFormat.format(rule.nextDueAt)),
             style: Theme.of(context).textTheme.bodySmall,
           ),
+          if (rule.isPaidThisMonth)
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                'Pago',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
         ],
       ),
       trailing: Row(

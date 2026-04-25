@@ -16,4 +16,5 @@ public record RecurringTransactionResponse(
         String category,
         RecurrenceFrequency frequency,
         Instant nextDueAt,
+        Instant lastPaidAt,
         boolean active) {}

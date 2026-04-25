@@ -21,6 +21,9 @@ import 'package:afc/widgets/adaptive_segmented_control/adaptive_segmented_contro
 import 'package:afc/widgets/adaptive_segmented_control/adaptive_segmented_control_cubit.dart';
 import 'package:afc/widgets/category_form_sheet/category_form_sheet.dart';
 import 'package:afc/view_models/category/category_bloc.dart';
+import 'package:afc/widgets/custom_date_picker/custom_date_picker.dart';
+import 'package:afc/widgets/custom_date_picker/custom_date_picker_cubit.dart'
+    as picker;
 
 class QuickAddTransactionSheet extends StatelessWidget {
   const QuickAddTransactionSheet({super.key});
@@ -346,6 +349,32 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                       _buildNewCategoryChip(),
                                     ],
                                   );
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            l10n.filterDate,
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          BlocBuilder<
+                            QuickAddTransactionCubit,
+                            QuickAddTransactionState
+                          >(
+                            buildWhen: (p, c) => p.occurredAt != c.occurredAt,
+                            builder: (context, state) {
+                              return CustomDatePicker(
+                                mode: picker.DatePickerMode.single,
+                                initialStartDate: state.occurredAt,
+                                placeholder: l10n.filterDate,
+                                primaryColor: AppColors.primary,
+                                onChanged: (start, end) {
+                                  context
+                                      .read<QuickAddTransactionCubit>()
+                                      .occurredAtChanged(start);
                                 },
                               );
                             },

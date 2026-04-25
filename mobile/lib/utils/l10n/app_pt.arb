@@ -459,6 +459,10 @@
   "tooltipNetWorthDesc": "A soma de todos os seus ativos (contas, investimentos) menos seus passivos (dívidas). É sua verdadeira riqueza.",
   "tooltipCDITitle": "CDI",
   "tooltipCDIDesc": "Certificado de Depósito Interbancário. É a principal taxa de referência para investimentos de renda fixa no Brasil.",
+  "tooltipSelicTitle": "Selic",
+  "tooltipSelicDesc": "A Taxa Selic é a taxa básica de juros da economia brasileira. Ela influencia todas as outras taxas de juros no país.",
+  "tooltipIPCATitle": "IPCA",
+  "tooltipIPCADesc": "O IPCA é o índice oficial de inflação do Brasil. Ele mede a variação de preços para o consumidor final.",
 
   "investmentName": "Nome do Ativo",
   "@investmentName": { "description": "Label for investment name field" },

@@ -131,4 +131,42 @@ public class RecurringSteps {
                         new org.springframework.http.HttpEntity<>(request),
                         String.class);
     }
+
+    @io.cucumber.java.en.Given(
+            "a recurring transaction with description {string} amount {bigdecimal} type {word} category {string} frequency {word}")
+    public void aRecurringTransaction(
+            String description, BigDecimal amount, String type, String category, String frequency) {
+        com.awesome.financial.control.afc.model.RecurringTransaction rule =
+                new com.awesome.financial.control.afc.model.RecurringTransaction();
+        rule.setDescription(description);
+        rule.setAmount(amount);
+        rule.setType(TransactionType.valueOf(type));
+        rule.setCategory(category);
+        rule.setFrequency(RecurrenceFrequency.valueOf(frequency));
+        rule.setNextDueAt(Instant.now().plus(30, ChronoUnit.DAYS));
+        rule.setActive(true);
+        recurringRepository.save(rule);
+    }
+
+    @And("the recurring transaction {string} should be marked as paid today")
+    public void theRecurringTransactionShouldBeMarkedAsPaidToday(String description) {
+        com.awesome.financial.control.afc.model.RecurringTransaction rule =
+                recurringRepository.findAll().stream()
+                        .filter(r -> r.getDescription().equals(description))
+                        .findFirst()
+                        .orElseThrow();
+        assertThat(rule.getLastPaidAt()).isNotNull();
+        // Check if it was paid within the last minute (to account for test execution time)
+        assertThat(rule.getLastPaidAt()).isAfter(Instant.now().minus(1, ChronoUnit.MINUTES));
+    }
+
+    @And("the recurring transaction {string} should not be marked as paid")
+    public void theRecurringTransactionShouldNotBeMarkedAsPaid(String description) {
+        com.awesome.financial.control.afc.model.RecurringTransaction rule =
+                recurringRepository.findAll().stream()
+                        .filter(r -> r.getDescription().equals(description))
+                        .findFirst()
+                        .orElseThrow();
+        assertThat(rule.getLastPaidAt()).isNull();
+    }
 }

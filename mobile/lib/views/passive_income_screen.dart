@@ -152,6 +152,21 @@ class PassiveIncomeScreen extends StatelessWidget {
               height: 200,
               child: BarChart(
                 BarChartData(
+                  barTouchData: BarTouchData(
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (_) =>
+                          Colors.blueGrey.withValues(alpha: 0.8),
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        final format = NumberFormat.simpleCurrency(
+                          locale: 'pt_BR',
+                        );
+                        return BarTooltipItem(
+                          format.format(rod.toY),
+                          const TextStyle(color: Colors.white, fontSize: 10),
+                        );
+                      },
+                    ),
+                  ),
                   alignment: BarChartAlignment.spaceAround,
                   maxY: _getMaxY(progression),
                   barGroups: progression.asMap().entries.map((e) {

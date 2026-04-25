@@ -1150,6 +1150,30 @@ abstract class AppLocalizations {
   /// **'Certificado de Depósito Interbancário. É a principal taxa de referência para investimentos de renda fixa no Brasil.'**
   String get tooltipCDIDesc;
 
+  /// No description provided for @tooltipSelicTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selic'**
+  String get tooltipSelicTitle;
+
+  /// No description provided for @tooltipSelicDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Taxa Selic é a taxa básica de juros da economia brasileira. Ela influencia todas as outras taxas de juros no país.'**
+  String get tooltipSelicDesc;
+
+  /// No description provided for @tooltipIPCATitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'IPCA'**
+  String get tooltipIPCATitle;
+
+  /// No description provided for @tooltipIPCADesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'O IPCA é o índice oficial de inflação do Brasil. Ele mede a variação de preços para o consumidor final.'**
+  String get tooltipIPCADesc;
+
   /// Label for investment name field
   ///
   /// In pt, this message translates to:

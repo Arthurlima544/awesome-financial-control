@@ -88,10 +88,7 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
     final current = state;
     if (current is! LimitListData) return;
     try {
-      final created = await _repository.create(
-        event.categoryName,
-        event.amount,
-      );
+      final created = await _repository.create(event.categoryId, event.amount);
       final updatedList = List<LimitModel>.from(current.limits)..add(created);
       emit(LimitListData(updatedList));
       _refreshBloc.add(DataChanged());

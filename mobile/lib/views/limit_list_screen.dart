@@ -81,18 +81,6 @@ class _LimitListView extends StatelessWidget {
       ),
     );
   }
-
-  void _showLimitForm(BuildContext context, [LimitModel? limit]) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
-        value: context.read<LimitListBloc>(),
-        child: LimitFormSheet(limit: limit),
-      ),
-    );
-  }
 }
 
 class _DismissibleItem extends StatelessWidget {

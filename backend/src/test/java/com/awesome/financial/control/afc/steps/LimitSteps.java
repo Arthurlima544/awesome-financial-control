@@ -65,6 +65,29 @@ public class LimitSteps {
         ctx.lastLimitId = limitRepository.save(limit).getId();
     }
 
+    @Autowired private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
+
+    @When("I create a limit of {bigdecimal} for the last created category")
+    public void iCreateALimitForLastCategory(BigDecimal amount) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"categoryId\":\"%s\",\"amount\":%s}",
+                        ctx.lastCategoryId, amount.toPlainString());
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        ctx.response = restTemplate.postForEntity("/api/v1/limits", entity, String.class);
+
+        if (ctx.response.getStatusCode().is2xxSuccessful() && ctx.response.getBody() != null) {
+            String responseBody = (String) ctx.response.getBody();
+            com.awesome.financial.control.afc.dto.LimitResponse resp =
+                    objectMapper.readValue(
+                            responseBody,
+                            com.awesome.financial.control.afc.dto.LimitResponse.class);
+            ctx.lastLimitId = resp.id();
+        }
+    }
+
     @Given(
             "a transaction with description {string} amount {bigdecimal} type {word} in category {string} occurred today")
     public void aTransactionInCategoryOccurredToday(

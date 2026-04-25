@@ -26,12 +26,22 @@ public class CategorySteps {
         ctx.response = restTemplate.getForEntity("/api/v1/categories", String.class);
     }
 
+    @Autowired private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
+
     @When("I create a category named {string}")
-    public void iCreateACategoryNamed(String name) {
+    public void iCreateACategoryNamed(String name) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>("{\"name\":\"" + name + "\"}", headers);
         ctx.response = restTemplate.postForEntity("/api/v1/categories", entity, String.class);
+
+        if (ctx.response.getStatusCode().is2xxSuccessful() && ctx.response.getBody() != null) {
+            String body = (String) ctx.response.getBody();
+            com.awesome.financial.control.afc.dto.CategoryResponse resp =
+                    objectMapper.readValue(
+                            body, com.awesome.financial.control.afc.dto.CategoryResponse.class);
+            ctx.lastCategoryId = resp.id();
+        }
     }
 
     @When("I delete the last created category")
