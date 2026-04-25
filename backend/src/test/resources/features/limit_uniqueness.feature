@@ -10,8 +10,8 @@ Feature: Limit Uniqueness
   Scenario: Create multiple limits for the same category
     Given a category named "Lazer"
     When I create a limit of 500 for the last created category
-    Then the status code is 201
+    Then the response status is 201
     
     When I create a limit of 300 for the last created category
-    Then the status code is 409
+    Then the response status is 409
     And the all-limits list has 1 items
