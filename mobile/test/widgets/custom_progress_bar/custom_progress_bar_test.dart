@@ -4,29 +4,35 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
+import 'package:afc/view_models/privacy/privacy_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 void main() {
   Widget buildTestWidget({
     double initialProgress = 0.0,
     int? steps,
     ValueChanged<double>? onChanged,
   }) {
-    return MaterialApp(
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('pt'),
-      home: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: CustomProgressBar(
-              initialProgress: initialProgress,
-              steps: steps,
-              onChanged: onChanged,
+    return BlocProvider(
+      create: (_) => PrivacyCubit(),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('pt'),
+        home: Scaffold(
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: CustomProgressBar(
+                initialProgress: initialProgress,
+                steps: steps,
+                onChanged: onChanged,
+              ),
             ),
           ),
         ),

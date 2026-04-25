@@ -10,10 +10,18 @@ import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/models/import_candidate_model.dart';
 import 'package:afc/models/transaction_model.dart';
 
+import 'package:afc/repositories/category_repository.dart';
+import 'package:afc/services/categorization_matcher.dart';
+import 'package:afc/models/category_model.dart';
+
 class MockImportParserService extends Mock implements ImportParserService {}
 
 class MockTransactionListRepository extends Mock
     implements TransactionListRepository {}
+
+class MockCategoryRepository extends Mock implements CategoryRepository {}
+
+class MockCategorizationMatcher extends Mock implements CategorizationMatcher {}
 
 class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
     implements AppRefreshBloc {}
@@ -22,6 +30,8 @@ void main() {
   late ImportBloc importBloc;
   late MockImportParserService mockParserService;
   late MockTransactionListRepository mockRepository;
+  late MockCategoryRepository mockCategoryRepository;
+  late MockCategorizationMatcher mockMatcher;
   late MockAppRefreshBloc mockRefreshBloc;
 
   setUpAll(() {
@@ -33,6 +43,8 @@ void main() {
   setUp(() {
     mockParserService = MockImportParserService();
     mockRepository = MockTransactionListRepository();
+    mockCategoryRepository = MockCategoryRepository();
+    mockMatcher = MockCategorizationMatcher();
     mockRefreshBloc = MockAppRefreshBloc();
 
     // Stub default state for mock bloc
@@ -42,6 +54,8 @@ void main() {
       parserService: mockParserService,
       repository: mockRepository,
       refreshBloc: mockRefreshBloc,
+      categoryRepository: mockCategoryRepository,
+      matcher: mockMatcher,
     );
   });
 
@@ -84,6 +98,10 @@ void main() {
           () => mockParserService.parse(any(), any(), any()),
         ).thenReturn(candidates);
         when(() => mockRepository.getAll()).thenAnswer((_) async => []);
+        when(() => mockCategoryRepository.getAll()).thenAnswer((_) async => []);
+        when(() => mockMatcher.match(any(), any())).thenReturn(
+          const CategorizationResult(categoryId: '1', confidence: 0.9),
+        );
         return importBloc;
       },
       act: (bloc) => bloc.add(const ImportFileSelected('content')),
@@ -92,7 +110,14 @@ void main() {
         ImportState(
           status: ImportStatus.reviewing,
           candidates: candidates
-              .map((c) => c.copyWith(isSelected: true, isDuplicate: false))
+              .map(
+                (c) => c.copyWith(
+                  isSelected: true,
+                  isDuplicate: false,
+                  category: '1',
+                  categoryConfidence: 0.9,
+                ),
+              )
               .toList(),
         ),
       ],
@@ -104,6 +129,10 @@ void main() {
         when(
           () => mockParserService.parse(any(), any(), any()),
         ).thenReturn(candidates);
+        when(() => mockCategoryRepository.getAll()).thenAnswer((_) async => []);
+        when(() => mockMatcher.match(any(), any())).thenReturn(
+          const CategorizationResult(categoryId: '1', confidence: 0.9),
+        );
         when(() => mockRepository.getAll()).thenAnswer(
           (_) async => [
             TransactionModel(
@@ -123,7 +152,14 @@ void main() {
         ImportState(
           status: ImportStatus.reviewing,
           candidates: candidates
-              .map((c) => c.copyWith(isSelected: false, isDuplicate: true))
+              .map(
+                (c) => c.copyWith(
+                  isSelected: false,
+                  isDuplicate: true,
+                  category: '1',
+                  categoryConfidence: 0.9,
+                ),
+              )
               .toList(),
         ),
       ],
