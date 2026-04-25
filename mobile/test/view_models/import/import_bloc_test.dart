@@ -12,7 +12,6 @@ import 'package:afc/models/transaction_model.dart';
 
 import 'package:afc/repositories/category_repository.dart';
 import 'package:afc/services/categorization_matcher.dart';
-import 'package:afc/models/category_model.dart';
 
 class MockImportParserService extends Mock implements ImportParserService {}
 
