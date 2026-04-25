@@ -1,6 +1,7 @@
 package com.awesome.financial.control.afc.exception;
 
 import com.awesome.financial.control.afc.dto.ErrorResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Hidden
 @Slf4j
 public class GlobalExceptionHandler {
 
