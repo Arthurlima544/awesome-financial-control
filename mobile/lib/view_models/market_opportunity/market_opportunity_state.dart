@@ -6,7 +6,7 @@ enum MarketSort { dyDesc, dyVsCdiDesc, peAsc }
 
 enum MarketOpportunityStatus { initial, loading, success, failure }
 
-class MarketOpportunityState {
+class MarketOpportunityState extends Equatable {
   final MarketOpportunityStatus status;
   final List<MarketOpportunity> opportunities;
   final List<MarketOpportunity> filteredOpportunities;
@@ -15,7 +15,7 @@ class MarketOpportunityState {
   final MarketSort sort;
   final String? errorMessage;
 
-  MarketOpportunityState({
+  const MarketOpportunityState({
     this.status = MarketOpportunityStatus.initial,
     this.opportunities = const [],
     this.filteredOpportunities = const [],
@@ -45,4 +45,15 @@ class MarketOpportunityState {
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    status,
+    opportunities,
+    filteredOpportunities,
+    benchmarks,
+    filter,
+    sort,
+    errorMessage,
+  ];
 }

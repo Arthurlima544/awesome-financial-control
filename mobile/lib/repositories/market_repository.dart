@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:afc/utils/config/app_config.dart';
+import 'package:equatable/equatable.dart';
 
-class MarketOpportunity {
+class MarketOpportunity extends Equatable {
   final String ticker;
   final String name;
   final double price;
@@ -14,7 +15,7 @@ class MarketOpportunity {
   final String? logoUrl;
   final DateTime lastUpdated;
 
-  MarketOpportunity({
+  const MarketOpportunity({
     required this.ticker,
     required this.name,
     required this.price,
@@ -45,13 +46,28 @@ class MarketOpportunity {
       lastUpdated: DateTime.parse(json['lastUpdated']),
     );
   }
+
+  @override
+  List<Object?> get props => [
+    ticker,
+    name,
+    price,
+    changePercent,
+    dividendYield,
+    isFii,
+    priceEarnings,
+    sector,
+    dyVsCdi,
+    logoUrl,
+    lastUpdated,
+  ];
 }
 
-class MarketBenchmarks {
+class MarketBenchmarks extends Equatable {
   final double cdiRate;
   final double selicRate;
 
-  MarketBenchmarks({required this.cdiRate, required this.selicRate});
+  const MarketBenchmarks({required this.cdiRate, required this.selicRate});
 
   factory MarketBenchmarks.fromJson(Map<String, dynamic> json) {
     return MarketBenchmarks(
@@ -59,6 +75,9 @@ class MarketBenchmarks {
       selicRate: (json['selicRate'] as num).toDouble(),
     );
   }
+
+  @override
+  List<Object?> get props => [cdiRate, selicRate];
 }
 
 class MarketRepository {

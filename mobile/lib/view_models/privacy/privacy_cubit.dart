@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PrivacyState {
+class PrivacyState extends Equatable {
   final bool isPrivate;
 
   const PrivacyState({this.isPrivate = false});
@@ -8,6 +9,9 @@ class PrivacyState {
   PrivacyState copyWith({bool? isPrivate}) {
     return PrivacyState(isPrivate: isPrivate ?? this.isPrivate);
   }
+
+  @override
+  List<Object?> get props => [isPrivate];
 }
 
 class PrivacyCubit extends Cubit<PrivacyState> {
