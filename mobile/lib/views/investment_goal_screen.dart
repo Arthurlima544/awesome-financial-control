@@ -16,6 +16,7 @@ import 'package:afc/services/currency_service.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
@@ -117,9 +118,9 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
                     const SizedBox(height: AppSpacing.xl),
                     _buildGoalInfo(),
                   ] else if (state.status == InvestmentGoalStatus.failure)
-                    Text(
-                      l10n.calcErrorMessage(state.errorMessage ?? ''),
-                      style: const TextStyle(color: AppColors.error),
+                    ErrorState(
+                      message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                      onRetry: _calculate,
                     ),
                 ],
               );

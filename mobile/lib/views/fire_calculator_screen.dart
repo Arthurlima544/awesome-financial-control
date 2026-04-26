@@ -26,6 +26,7 @@ import 'package:afc/services/currency_service.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 
 class FireCalculatorScreen extends StatefulWidget {
   const FireCalculatorScreen({super.key});
@@ -143,9 +144,9 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                     const SizedBox(height: AppSpacing.xl),
                     _buildAboutFire(),
                   ] else if (state.status == FireCalculatorStatus.failure)
-                    Text(
-                      l10n.calcErrorMessage(state.errorMessage ?? ''),
-                      style: const TextStyle(color: AppColors.error),
+                    ErrorState(
+                      message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                      onRetry: _calculate,
                     ),
                 ],
               );

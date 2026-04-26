@@ -14,6 +14,7 @@ import 'package:afc/services/currency_service.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 
 class PassiveIncomeScreen extends StatelessWidget {
   const PassiveIncomeScreen({super.key});
@@ -35,8 +36,13 @@ class PassiveIncomeScreen extends StatelessWidget {
               }
 
               if (state.status == PassiveIncomeStatus.failure) {
-                return Center(
-                  child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
+                return ErrorState(
+                  message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                  onRetry: () {
+                    context.read<PassiveIncomeBloc>().add(
+                      LoadPassiveIncomeDashboard(),
+                    );
+                  },
                 );
               }
 

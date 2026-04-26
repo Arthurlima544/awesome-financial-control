@@ -38,7 +38,7 @@ class InvestmentGoalBloc
       emit(
         state.copyWith(
           status: InvestmentGoalStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao calcular meta de investimento',
         ),
       );
     }

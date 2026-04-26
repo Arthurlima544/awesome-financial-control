@@ -55,7 +55,7 @@ class NetWorthBloc extends Bloc<NetWorthEvent, NetWorthState> {
       emit(
         state.copyWith(
           status: NetWorthStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao carregar evolução do patrimônio',
         ),
       );
     }

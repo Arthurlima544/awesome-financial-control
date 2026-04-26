@@ -4,6 +4,7 @@ import 'package:afc/services/currency_service.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
 import 'package:afc/models/compound_interest_result.dart';
-import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
@@ -128,9 +128,9 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
                       currencyService,
                     ),
                   ] else if (state.status == CompoundInterestStatus.failure)
-                    Text(
-                      l10n.calcErrorMessage(state.errorMessage ?? ''),
-                      style: const TextStyle(color: AppColors.error),
+                    ErrorState(
+                      message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                      onRetry: _calculate,
                     ),
                 ],
               );

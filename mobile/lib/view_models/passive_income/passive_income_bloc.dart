@@ -89,7 +89,7 @@ class PassiveIncomeBloc extends Bloc<PassiveIncomeEvent, PassiveIncomeState> {
         emit(
           state.copyWith(
             status: PassiveIncomeStatus.failure,
-            errorMessage: e.toString(),
+            errorMessage: 'Erro ao carregar painel de renda passiva',
           ),
         );
       }

@@ -91,7 +91,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       emit(
         state.copyWith(
           status: ReportStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao carregar relatório mensal',
         ),
       );
     }

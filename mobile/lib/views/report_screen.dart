@@ -13,6 +13,7 @@ import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
 import 'package:afc/services/currency_service.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
 
@@ -58,8 +59,13 @@ class ReportView extends StatelessWidget {
               }
 
               if (state.status == ReportStatus.failure) {
-                return Center(
-                  child: Text(state.errorMessage ?? l10n.genericError),
+                return ErrorState(
+                  message: state.errorMessage ?? l10n.genericError,
+                  onRetry: () {
+                    context.read<ReportBloc>().add(
+                      LoadReport(state.selectedMonth),
+                    );
+                  },
                 );
               }
 
