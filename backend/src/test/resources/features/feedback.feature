@@ -9,33 +9,36 @@ Feature: User Feedback
 
   Scenario: Submit feedback successfully
     When I submit feedback with:
-      | rating     | 5               |
-      | message    | Great app!      |
-      | appVersion | 1.0.0           |
-      | platform   | Android         |
+      | userId     | 00000000-0000-0000-0000-000000000001 |
+      | rating     | 5                                    |
+      | message    | Great app!                           |
+      | appVersion | 1.0.0                                |
+      | platform   | Android                              |
     Then the response status is 201
     And the feedback response should contain:
-      | rating     | 5               |
-      | message    | Great app!      |
-      | appVersion | 1.0.0           |
-      | platform   | Android         |
+      | rating     | 5          |
+      | message    | Great app! |
+      | appVersion | 1.0.0      |
+      | platform   | Android    |
 
   Scenario: Submit feedback without message
     When I submit feedback with:
-      | rating     | 4               |
-      | appVersion | 1.0.1           |
-      | platform   | iOS             |
+      | userId     | 00000000-0000-0000-0000-000000000002 |
+      | rating     | 4                                    |
+      | appVersion | 1.0.1                                |
+      | platform   | iOS                                  |
     Then the response status is 201
     And the feedback response should contain:
-      | rating     | 4               |
-      | appVersion | 1.0.1           |
-      | platform   | iOS             |
+      | rating     | 4     |
+      | appVersion | 1.0.1 |
+      | platform   | iOS   |
 
   Scenario Outline: Submit feedback with invalid rating
     When I submit feedback with:
-      | rating     | <rating>        |
-      | appVersion | 1.0.0           |
-      | platform   | Android         |
+      | userId     | 00000000-0000-0000-0000-000000000003 |
+      | rating     | <rating>                             |
+      | appVersion | 1.0.0                                |
+      | platform   | Android                              |
     Then the response status is 422
     And the response should contain "VALIDATION_ERROR"
 
@@ -46,6 +49,15 @@ Feature: User Feedback
 
   Scenario: Submit feedback with missing required fields
     When I submit feedback with:
-      | rating     | 5               |
+      | userId     | 00000000-0000-0000-0000-000000000004 |
+      | rating     | 5                                    |
+    Then the response status is 422
+    And the response should contain "VALIDATION_ERROR"
+
+  Scenario: Submit feedback with missing userId returns 422
+    When I submit feedback with:
+      | rating     | 5       |
+      | appVersion | 1.0.0   |
+      | platform   | Android |
     Then the response status is 422
     And the response should contain "VALIDATION_ERROR"

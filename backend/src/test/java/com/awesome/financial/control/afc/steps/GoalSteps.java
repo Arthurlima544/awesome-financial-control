@@ -36,6 +36,7 @@ public class GoalSteps {
                 GoalRequest.builder()
                         .name(name)
                         .targetAmount(BigDecimal.valueOf(target))
+                        .currentAmount(BigDecimal.ZERO)
                         .deadline(Instant.parse(deadline + "T00:00:00Z"))
                         .build();
         ResponseEntity<GoalResponse> response =
@@ -129,6 +130,7 @@ public class GoalSteps {
                 GoalRequest.builder()
                         .name(name)
                         .targetAmount(BigDecimal.valueOf(target))
+                        .currentAmount(BigDecimal.ZERO)
                         .deadline(Instant.parse(deadline + "T00:00:00Z"))
                         .build();
         context.response =

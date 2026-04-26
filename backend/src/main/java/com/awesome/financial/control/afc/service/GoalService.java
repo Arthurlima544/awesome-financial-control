@@ -46,7 +46,10 @@ public class GoalService {
                         .orElseThrow(() -> new ResourceNotFoundException("Goal", id));
         goal.setName(request.name());
         goal.setTargetAmount(request.targetAmount());
-        goal.setCurrentAmount(request.currentAmount());
+        goal.setCurrentAmount(
+                request.currentAmount() != null
+                        ? request.currentAmount()
+                        : goal.getCurrentAmount());
         goal.setDeadline(request.deadline());
         goal.setIcon(request.icon());
         Goal saved = goalRepository.save(goal);
