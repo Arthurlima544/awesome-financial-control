@@ -1569,6 +1569,498 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Modo Privacidade (Ocultar valores)'**
   String get privacyMode;
+
+  /// Result section title on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado'**
+  String get calcResultTitle;
+
+  /// Inflation adjustment toggle label on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajuste de Inflação'**
+  String get calcInflationToggleLabel;
+
+  /// Inflation adjustment toggle subtitle on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Valores em poder de compra de hoje'**
+  String get calcInflationToggleSubtitle;
+
+  /// Today label on calculator chart x-axis
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje'**
+  String get calcChartTodayLabel;
+
+  /// Year label on calculator chart x-axis
+  ///
+  /// In pt, this message translates to:
+  /// **'A{n}'**
+  String calcChartYearLabel(int n);
+
+  /// Calculate button label on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Calcular'**
+  String get calcButtonCalcular;
+
+  /// Understood / close button label on calculator sheets
+  ///
+  /// In pt, this message translates to:
+  /// **'Entendi'**
+  String get calcButtonEntendi;
+
+  /// Error message on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro: {message}'**
+  String calcErrorMessage(String message);
+
+  /// Portfolio evolution chart title on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Evolução do Patrimônio'**
+  String get calcPatrimonioEvolutionTitle;
+
+  /// Profitability tooltip title on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Rentabilidade'**
+  String get calcRentabilidadeTooltipTitle;
+
+  /// Initial capital tooltip title on calculator screens
+  ///
+  /// In pt, this message translates to:
+  /// **'Capital Inicial'**
+  String get calcCapitalInicialTooltipTitle;
+
+  /// FIRE calculator screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Calculadora FIRE'**
+  String get fireCalcTitle;
+
+  /// Monthly expenses field label on FIRE calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'Gastos mensais (R\$)'**
+  String get fireCalcExpensesLabel;
+
+  /// Monthly expenses tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Gastos Mensais'**
+  String get fireCalcExpensesTooltipTitle;
+
+  /// Monthly expenses tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'O custo total para manter seu padrão de vida atual. Quanto mais baixo, menor será seu Número FIRE.'**
+  String get fireCalcExpensesTooltipDesc;
+
+  /// Monthly savings field label on FIRE calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'Investimento mensal (R\$)'**
+  String get fireCalcSavingsLabel;
+
+  /// Monthly savings tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Aporte Mensal'**
+  String get fireCalcSavingsTooltipTitle;
+
+  /// Monthly savings tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto você economiza e investe todos os meses. Este é o motor que acelera sua independência financeira.'**
+  String get fireCalcSavingsTooltipDesc;
+
+  /// Current portfolio field label on FIRE calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'Patrimônio atual (R\$)'**
+  String get fireCalcPortfolioLabel;
+
+  /// Portfolio tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Patrimônio'**
+  String get fireCalcPortfolioTooltipTitle;
+
+  /// Portfolio tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'A soma de todos os seus investimentos atuais e saldo em conta.'**
+  String get fireCalcPortfolioTooltipDesc;
+
+  /// Expected annual return field label on FIRE calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'Retorno anual esperado (%)'**
+  String get fireCalcReturnLabel;
+
+  /// Expected annual return tooltip description on FIRE calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'A rentabilidade média estimada dos seus investimentos. Um valor conservador costuma ser entre 4% e 7% ao ano acima da inflação.'**
+  String get fireCalcReturnTooltipDesc;
+
+  /// Safe withdrawal rate section label on FIRE calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa de Retirada (SWR)'**
+  String get fireCalcSwrLabel;
+
+  /// Lean FIRE SWR chip label
+  ///
+  /// In pt, this message translates to:
+  /// **'Lean FIRE (3%)'**
+  String get fireCalcSwrLeanChip;
+
+  /// Standard SWR chip label
+  ///
+  /// In pt, this message translates to:
+  /// **'Padrão (4%)'**
+  String get fireCalcSwrStandardChip;
+
+  /// Fat FIRE SWR chip label
+  ///
+  /// In pt, this message translates to:
+  /// **'Fat FIRE (5%)'**
+  String get fireCalcSwrFatChip;
+
+  /// FIRE number result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Número FIRE'**
+  String get fireCalcFireNumberLabel;
+
+  /// Time to FIRE result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Tempo até FIRE'**
+  String get fireCalcTimeToFireLabel;
+
+  /// Time to FIRE result value
+  ///
+  /// In pt, this message translates to:
+  /// **'{years} anos e {months} meses'**
+  String fireCalcTimeToFireValue(int years, int months);
+
+  /// Estimated retirement date result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Data estimada'**
+  String get fireCalcEstimatedDateLabel;
+
+  /// FIRE portfolio trajectory chart title
+  ///
+  /// In pt, this message translates to:
+  /// **'Trajetória do Portfólio'**
+  String get fireCalcChartTitle;
+
+  /// Chart projection annotation label
+  ///
+  /// In pt, this message translates to:
+  /// **'Projeção até {year}'**
+  String fireCalcChartProjectionLabel(int year);
+
+  /// Safe withdrawal rate annotation on FIRE chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa de retirada segura: {rate}% a.a.'**
+  String fireCalcChartSwrLabel(int rate);
+
+  /// About FIRE movement action card title
+  ///
+  /// In pt, this message translates to:
+  /// **'O que é o Movimento FIRE?'**
+  String get fireCalcAboutCardTitle;
+
+  /// About FIRE movement action card description
+  ///
+  /// In pt, this message translates to:
+  /// **'Financial Independence, Retire Early (Independência Financeira, Aposentadoria Precoce). O objetivo é acumular patrimônio suficiente para viver apenas dos rendimentos de seus investimentos.'**
+  String get fireCalcAboutCardDesc;
+
+  /// About FIRE movement card button label
+  ///
+  /// In pt, this message translates to:
+  /// **'Saber mais'**
+  String get fireCalcAboutCardButton;
+
+  /// FIRE concepts bottom sheet title
+  ///
+  /// In pt, this message translates to:
+  /// **'Conceitos do FIRE'**
+  String get fireCalcSheetTitle;
+
+  /// FIRE number concept title in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Número FIRE'**
+  String get fireCalcSheetFireNumberTitle;
+
+  /// FIRE number concept description in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'É o valor total que você precisa ter investido para se aposentar. Geralmente calculado como 25x seus gastos anuais.'**
+  String get fireCalcSheetFireNumberDesc;
+
+  /// 4% rule concept title in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Regra dos 4% (SWR)'**
+  String get fireCalcSheetSwrTitle;
+
+  /// 4% rule concept description in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Safe Withdrawal Rate (Taxa de Retirada Segura). É a porcentagem do seu patrimônio que você pode sacar anualmente sem que o dinheiro acabe.'**
+  String get fireCalcSheetSwrDesc;
+
+  /// Lean FIRE concept title in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Lean FIRE'**
+  String get fireCalcSheetLeanTitle;
+
+  /// Lean FIRE concept description in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Foco em uma vida minimalista e gastos extremamente baixos para se aposentar mais rápido.'**
+  String get fireCalcSheetLeanDesc;
+
+  /// Fat FIRE concept title in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Fat FIRE'**
+  String get fireCalcSheetFatTitle;
+
+  /// Fat FIRE concept description in sheet
+  ///
+  /// In pt, this message translates to:
+  /// **'Foco em manter um padrão de vida alto, exigindo um patrimônio muito maior.'**
+  String get fireCalcSheetFatDesc;
+
+  /// Compound interest calculator screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Simulador de Juros Compostos'**
+  String get compoundCalcTitle;
+
+  /// Initial investment field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Investimento Inicial (R\$)'**
+  String get compoundCalcInitialLabel;
+
+  /// Initial investment tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'O valor que você já tem hoje para começar a investir.'**
+  String get compoundCalcInitialTooltipDesc;
+
+  /// Monthly contribution field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Aporte Mensal (R\$)'**
+  String get compoundCalcContributionLabel;
+
+  /// Monthly contribution tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Investimento Mensal'**
+  String get compoundCalcContributionTooltipTitle;
+
+  /// Monthly contribution tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto você planeja investir todos os meses.'**
+  String get compoundCalcContributionTooltipDesc;
+
+  /// Investment period field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Período (Anos)'**
+  String get compoundCalcPeriodLabel;
+
+  /// Period tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Tempo'**
+  String get compoundCalcPeriodTooltipTitle;
+
+  /// Period tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'Por quanto tempo você pretende manter o investimento.'**
+  String get compoundCalcPeriodTooltipDesc;
+
+  /// Annual rate field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Taxa Anual (%)'**
+  String get compoundCalcRateLabel;
+
+  /// Annual rate tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'A taxa de juros anual estimada.'**
+  String get compoundCalcRateTooltipDesc;
+
+  /// Simulate button label on compound interest calculator
+  ///
+  /// In pt, this message translates to:
+  /// **'Simular'**
+  String get compoundCalcButtonSimular;
+
+  /// Final amount result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Final'**
+  String get compoundCalcFinalAmountLabel;
+
+  /// Total invested result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Total Investido'**
+  String get compoundCalcTotalInvestedLabel;
+
+  /// Total interest result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Total em Juros'**
+  String get compoundCalcTotalInterestLabel;
+
+  /// Accumulated legend label on compound interest chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Acumulado'**
+  String get compoundCalcLegendAccumulated;
+
+  /// Invested legend label on compound interest chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Investido'**
+  String get compoundCalcLegendInvested;
+
+  /// Investment goal calculator screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Meta de Investimento'**
+  String get investmentGoalCalcTitle;
+
+  /// Target amount field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto você quer ter? (R\$)'**
+  String get investmentGoalCalcTargetLabel;
+
+  /// Target tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Objetivo'**
+  String get investmentGoalCalcTargetTooltipTitle;
+
+  /// Target tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'O valor total que você deseja acumular até a data alvo.'**
+  String get investmentGoalCalcTargetTooltipDesc;
+
+  /// Target date field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Data alvo'**
+  String get investmentGoalCalcDateLabel;
+
+  /// Target date tooltip title
+  ///
+  /// In pt, this message translates to:
+  /// **'Prazo'**
+  String get investmentGoalCalcDateTooltipTitle;
+
+  /// Target date tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'A data em que você pretende atingir seu objetivo.'**
+  String get investmentGoalCalcDateTooltipDesc;
+
+  /// Initial amount field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto você já tem? (R\$)'**
+  String get investmentGoalCalcInitialLabel;
+
+  /// Initial amount tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'O valor que você já possui investido para este objetivo.'**
+  String get investmentGoalCalcInitialTooltipDesc;
+
+  /// Expected annual return field label
+  ///
+  /// In pt, this message translates to:
+  /// **'Retorno anual esperado (%)'**
+  String get investmentGoalCalcReturnLabel;
+
+  /// Expected annual return tooltip description
+  ///
+  /// In pt, this message translates to:
+  /// **'A rentabilidade média estimada dos seus investimentos.'**
+  String get investmentGoalCalcReturnTooltipDesc;
+
+  /// Required monthly contribution result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Aporte Mensal Necessário'**
+  String get investmentGoalCalcMonthlyContributionLabel;
+
+  /// Total to be contributed result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Total que você investirá'**
+  String get investmentGoalCalcTotalContributedLabel;
+
+  /// Total interest earned result label
+  ///
+  /// In pt, this message translates to:
+  /// **'Total em juros ganhos'**
+  String get investmentGoalCalcTotalInterestLabel;
+
+  /// Composition bar title on investment goal chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Composição do valor final'**
+  String get investmentGoalCalcCompositionBarTitle;
+
+  /// Contributions legend label on investment goal chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Aportes'**
+  String get investmentGoalCalcLegendContributions;
+
+  /// Interest legend label on investment goal chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Juros'**
+  String get investmentGoalCalcLegendInterest;
+
+  /// Info card title on investment goal screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Planejando seu futuro'**
+  String get investmentGoalCalcInfoCardTitle;
+
+  /// Info card description on investment goal screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Definir metas claras é o primeiro passo para o sucesso financeiro. Lembre-se que aportes constantes são mais importantes que a rentabilidade a longo prazo.'**
+  String get investmentGoalCalcInfoCardDesc;
 }
 
 class _AppLocalizationsDelegate

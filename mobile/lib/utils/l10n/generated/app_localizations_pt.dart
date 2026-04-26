@@ -780,4 +780,281 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get privacyMode => 'Modo Privacidade (Ocultar valores)';
+
+  @override
+  String get calcResultTitle => 'Resultado';
+
+  @override
+  String get calcInflationToggleLabel => 'Ajuste de Inflação';
+
+  @override
+  String get calcInflationToggleSubtitle =>
+      'Valores em poder de compra de hoje';
+
+  @override
+  String get calcChartTodayLabel => 'Hoje';
+
+  @override
+  String calcChartYearLabel(int n) {
+    return 'A$n';
+  }
+
+  @override
+  String get calcButtonCalcular => 'Calcular';
+
+  @override
+  String get calcButtonEntendi => 'Entendi';
+
+  @override
+  String calcErrorMessage(String message) {
+    return 'Erro: $message';
+  }
+
+  @override
+  String get calcPatrimonioEvolutionTitle => 'Evolução do Patrimônio';
+
+  @override
+  String get calcRentabilidadeTooltipTitle => 'Rentabilidade';
+
+  @override
+  String get calcCapitalInicialTooltipTitle => 'Capital Inicial';
+
+  @override
+  String get fireCalcTitle => 'Calculadora FIRE';
+
+  @override
+  String get fireCalcExpensesLabel => 'Gastos mensais (R\$)';
+
+  @override
+  String get fireCalcExpensesTooltipTitle => 'Gastos Mensais';
+
+  @override
+  String get fireCalcExpensesTooltipDesc =>
+      'O custo total para manter seu padrão de vida atual. Quanto mais baixo, menor será seu Número FIRE.';
+
+  @override
+  String get fireCalcSavingsLabel => 'Investimento mensal (R\$)';
+
+  @override
+  String get fireCalcSavingsTooltipTitle => 'Aporte Mensal';
+
+  @override
+  String get fireCalcSavingsTooltipDesc =>
+      'Quanto você economiza e investe todos os meses. Este é o motor que acelera sua independência financeira.';
+
+  @override
+  String get fireCalcPortfolioLabel => 'Patrimônio atual (R\$)';
+
+  @override
+  String get fireCalcPortfolioTooltipTitle => 'Patrimônio';
+
+  @override
+  String get fireCalcPortfolioTooltipDesc =>
+      'A soma de todos os seus investimentos atuais e saldo em conta.';
+
+  @override
+  String get fireCalcReturnLabel => 'Retorno anual esperado (%)';
+
+  @override
+  String get fireCalcReturnTooltipDesc =>
+      'A rentabilidade média estimada dos seus investimentos. Um valor conservador costuma ser entre 4% e 7% ao ano acima da inflação.';
+
+  @override
+  String get fireCalcSwrLabel => 'Taxa de Retirada (SWR)';
+
+  @override
+  String get fireCalcSwrLeanChip => 'Lean FIRE (3%)';
+
+  @override
+  String get fireCalcSwrStandardChip => 'Padrão (4%)';
+
+  @override
+  String get fireCalcSwrFatChip => 'Fat FIRE (5%)';
+
+  @override
+  String get fireCalcFireNumberLabel => 'Número FIRE';
+
+  @override
+  String get fireCalcTimeToFireLabel => 'Tempo até FIRE';
+
+  @override
+  String fireCalcTimeToFireValue(int years, int months) {
+    return '$years anos e $months meses';
+  }
+
+  @override
+  String get fireCalcEstimatedDateLabel => 'Data estimada';
+
+  @override
+  String get fireCalcChartTitle => 'Trajetória do Portfólio';
+
+  @override
+  String fireCalcChartProjectionLabel(int year) {
+    return 'Projeção até $year';
+  }
+
+  @override
+  String fireCalcChartSwrLabel(int rate) {
+    return 'Taxa de retirada segura: $rate% a.a.';
+  }
+
+  @override
+  String get fireCalcAboutCardTitle => 'O que é o Movimento FIRE?';
+
+  @override
+  String get fireCalcAboutCardDesc =>
+      'Financial Independence, Retire Early (Independência Financeira, Aposentadoria Precoce). O objetivo é acumular patrimônio suficiente para viver apenas dos rendimentos de seus investimentos.';
+
+  @override
+  String get fireCalcAboutCardButton => 'Saber mais';
+
+  @override
+  String get fireCalcSheetTitle => 'Conceitos do FIRE';
+
+  @override
+  String get fireCalcSheetFireNumberTitle => 'Número FIRE';
+
+  @override
+  String get fireCalcSheetFireNumberDesc =>
+      'É o valor total que você precisa ter investido para se aposentar. Geralmente calculado como 25x seus gastos anuais.';
+
+  @override
+  String get fireCalcSheetSwrTitle => 'Regra dos 4% (SWR)';
+
+  @override
+  String get fireCalcSheetSwrDesc =>
+      'Safe Withdrawal Rate (Taxa de Retirada Segura). É a porcentagem do seu patrimônio que você pode sacar anualmente sem que o dinheiro acabe.';
+
+  @override
+  String get fireCalcSheetLeanTitle => 'Lean FIRE';
+
+  @override
+  String get fireCalcSheetLeanDesc =>
+      'Foco em uma vida minimalista e gastos extremamente baixos para se aposentar mais rápido.';
+
+  @override
+  String get fireCalcSheetFatTitle => 'Fat FIRE';
+
+  @override
+  String get fireCalcSheetFatDesc =>
+      'Foco em manter um padrão de vida alto, exigindo um patrimônio muito maior.';
+
+  @override
+  String get compoundCalcTitle => 'Simulador de Juros Compostos';
+
+  @override
+  String get compoundCalcInitialLabel => 'Investimento Inicial (R\$)';
+
+  @override
+  String get compoundCalcInitialTooltipDesc =>
+      'O valor que você já tem hoje para começar a investir.';
+
+  @override
+  String get compoundCalcContributionLabel => 'Aporte Mensal (R\$)';
+
+  @override
+  String get compoundCalcContributionTooltipTitle => 'Investimento Mensal';
+
+  @override
+  String get compoundCalcContributionTooltipDesc =>
+      'Quanto você planeja investir todos os meses.';
+
+  @override
+  String get compoundCalcPeriodLabel => 'Período (Anos)';
+
+  @override
+  String get compoundCalcPeriodTooltipTitle => 'Tempo';
+
+  @override
+  String get compoundCalcPeriodTooltipDesc =>
+      'Por quanto tempo você pretende manter o investimento.';
+
+  @override
+  String get compoundCalcRateLabel => 'Taxa Anual (%)';
+
+  @override
+  String get compoundCalcRateTooltipDesc => 'A taxa de juros anual estimada.';
+
+  @override
+  String get compoundCalcButtonSimular => 'Simular';
+
+  @override
+  String get compoundCalcFinalAmountLabel => 'Valor Final';
+
+  @override
+  String get compoundCalcTotalInvestedLabel => 'Total Investido';
+
+  @override
+  String get compoundCalcTotalInterestLabel => 'Total em Juros';
+
+  @override
+  String get compoundCalcLegendAccumulated => 'Acumulado';
+
+  @override
+  String get compoundCalcLegendInvested => 'Investido';
+
+  @override
+  String get investmentGoalCalcTitle => 'Meta de Investimento';
+
+  @override
+  String get investmentGoalCalcTargetLabel => 'Quanto você quer ter? (R\$)';
+
+  @override
+  String get investmentGoalCalcTargetTooltipTitle => 'Objetivo';
+
+  @override
+  String get investmentGoalCalcTargetTooltipDesc =>
+      'O valor total que você deseja acumular até a data alvo.';
+
+  @override
+  String get investmentGoalCalcDateLabel => 'Data alvo';
+
+  @override
+  String get investmentGoalCalcDateTooltipTitle => 'Prazo';
+
+  @override
+  String get investmentGoalCalcDateTooltipDesc =>
+      'A data em que você pretende atingir seu objetivo.';
+
+  @override
+  String get investmentGoalCalcInitialLabel => 'Quanto você já tem? (R\$)';
+
+  @override
+  String get investmentGoalCalcInitialTooltipDesc =>
+      'O valor que você já possui investido para este objetivo.';
+
+  @override
+  String get investmentGoalCalcReturnLabel => 'Retorno anual esperado (%)';
+
+  @override
+  String get investmentGoalCalcReturnTooltipDesc =>
+      'A rentabilidade média estimada dos seus investimentos.';
+
+  @override
+  String get investmentGoalCalcMonthlyContributionLabel =>
+      'Aporte Mensal Necessário';
+
+  @override
+  String get investmentGoalCalcTotalContributedLabel =>
+      'Total que você investirá';
+
+  @override
+  String get investmentGoalCalcTotalInterestLabel => 'Total em juros ganhos';
+
+  @override
+  String get investmentGoalCalcCompositionBarTitle =>
+      'Composição do valor final';
+
+  @override
+  String get investmentGoalCalcLegendContributions => 'Aportes';
+
+  @override
+  String get investmentGoalCalcLegendInterest => 'Juros';
+
+  @override
+  String get investmentGoalCalcInfoCardTitle => 'Planejando seu futuro';
+
+  @override
+  String get investmentGoalCalcInfoCardDesc =>
+      'Definir metas claras é o primeiro passo para o sucesso financeiro. Lembre-se que aportes constantes são mais importantes que a rentabilidade a longo prazo.';
 }

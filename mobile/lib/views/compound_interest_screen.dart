@@ -1,3 +1,4 @@
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
@@ -92,8 +93,9 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Simulador de Juros Compostos')),
+      appBar: AppBar(title: Text(l10n.compoundCalcTitle)),
       body: BlocBuilder<CompoundInterestBloc, CompoundInterestState>(
         builder: (context, state) {
           return ListView(
@@ -104,12 +106,12 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               if (state.status == CompoundInterestStatus.loading)
                 const Center(child: CircularProgressIndicator())
               else if (state.status == CompoundInterestStatus.success) ...[
-                Text('Resultado', style: AppTextStyles.titleMedium),
+                Text(l10n.calcResultTitle, style: AppTextStyles.titleMedium),
                 const SizedBox(height: AppSpacing.md),
                 _buildResults(context, state.result!),
               ] else if (state.status == CompoundInterestStatus.failure)
                 Text(
-                  'Erro: ${state.errorMessage}',
+                  l10n.calcErrorMessage(state.errorMessage ?? ''),
                   style: const TextStyle(color: AppColors.error),
                 ),
             ],
@@ -120,13 +122,14 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
   }
 
   Widget _buildInputs(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildFieldWithTitle(
-          label: 'Investimento Inicial (R\$)',
-          tooltipTitle: 'Capital Inicial',
-          tooltipDesc: 'O valor que você já tem hoje para começar a investir.',
+          label: l10n.compoundCalcInitialLabel,
+          tooltipTitle: l10n.calcCapitalInicialTooltipTitle,
+          tooltipDesc: l10n.compoundCalcInitialTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -141,9 +144,9 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Aporte Mensal (R\$)',
-          tooltipTitle: 'Investimento Mensal',
-          tooltipDesc: 'Quanto você planeja investir todos os meses.',
+          label: l10n.compoundCalcContributionLabel,
+          tooltipTitle: l10n.compoundCalcContributionTooltipTitle,
+          tooltipDesc: l10n.compoundCalcContributionTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -161,10 +164,9 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
           children: [
             Expanded(
               child: _buildFieldWithTitle(
-                label: 'Período (Anos)',
-                tooltipTitle: 'Tempo',
-                tooltipDesc:
-                    'Por quanto tempo você pretende manter o investimento.',
+                label: l10n.compoundCalcPeriodLabel,
+                tooltipTitle: l10n.compoundCalcPeriodTooltipTitle,
+                tooltipDesc: l10n.compoundCalcPeriodTooltipDesc,
                 child: BlocProvider(
                   create: (_) => AdaptiveTextFieldCubit(),
                   child: AdaptiveTextField(
@@ -178,9 +180,9 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: _buildFieldWithTitle(
-                label: 'Taxa Anual (%)',
-                tooltipTitle: 'Rentabilidade',
-                tooltipDesc: 'A taxa de juros anual estimada.',
+                label: l10n.compoundCalcRateLabel,
+                tooltipTitle: l10n.calcRentabilidadeTooltipTitle,
+                tooltipDesc: l10n.compoundCalcRateTooltipDesc,
                 child: BlocProvider(
                   create: (_) => AdaptiveTextFieldCubit(),
                   child: AdaptiveTextField(
@@ -200,13 +202,17 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
         const SizedBox(height: AppSpacing.xl),
         BlocProvider(
           create: (_) => AdaptiveButtonCubit(),
-          child: AdaptiveButton(text: 'Simular', onPressed: _calculate),
+          child: AdaptiveButton(
+            text: l10n.compoundCalcButtonSimular,
+            onPressed: _calculate,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildInflationToggle() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -222,13 +228,13 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ajuste de Inflação',
+                    l10n.calcInflationToggleLabel,
                     style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Valores em poder de compra de hoje',
+                    l10n.calcInflationToggleSubtitle,
                     style: AppTextStyles.labelSmall.copyWith(
                       color: Colors.grey,
                     ),
@@ -240,7 +246,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               create: (_) =>
                   AdaptiveSwitchCubit(initialValue: _adjustForInflation),
               child: AdaptiveSwitch(
-                semanticLabel: 'Ajuste de Inflação',
+                semanticLabel: l10n.calcInflationToggleLabel,
                 onChanged: (value) {
                   setState(() => _adjustForInflation = value);
                   _calculate();
@@ -289,6 +295,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
   }
 
   Widget _buildResults(BuildContext context, Map<String, dynamic> result) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final finalAmount = result['finalAmount'] as double;
     final totalInvested = result['totalInvested'] as double;
@@ -310,18 +317,18 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
             child: Column(
               children: [
                 _buildResultRow(
-                  'Valor Final',
+                  l10n.compoundCalcFinalAmountLabel,
                   currencyFormat.format(finalAmount),
                   isTeal: true,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
-                  'Total Investido',
+                  l10n.compoundCalcTotalInvestedLabel,
                   currencyFormat.format(totalInvested),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
-                  'Total em Juros',
+                  l10n.compoundCalcTotalInterestLabel,
                   currencyFormat.format(totalInterest),
                   isBold: true,
                 ),
@@ -330,7 +337,10 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Evolução do Patrimônio', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.calcPatrimonioEvolutionTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Card(
           elevation: 0,
@@ -347,9 +357,15 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
-                    _buildLegendItem(const Color(0xFF00BFA5), 'Acumulado'),
+                    _buildLegendItem(
+                      const Color(0xFF00BFA5),
+                      l10n.compoundCalcLegendAccumulated,
+                    ),
                     const SizedBox(width: AppSpacing.md),
-                    _buildLegendItem(Colors.grey.shade400, 'Investido'),
+                    _buildLegendItem(
+                      Colors.grey.shade400,
+                      l10n.compoundCalcLegendInvested,
+                    ),
                   ],
                 ),
               ],
@@ -402,6 +418,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
   }
 
   Widget _buildChart(List<dynamic> timeline) {
+    final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
 
     final accumulatedSpots = timeline.map((e) {
@@ -476,13 +493,13 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               showTitles: true,
               getTitlesWidget: (value, meta) {
                 if (value == 0) {
-                  return const Text(
-                    'Hoje',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  return Text(
+                    l10n.calcChartTodayLabel,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 return Text(
-                  'A${value.toInt()}',
+                  l10n.calcChartYearLabel(value.toInt()),
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 );
               },

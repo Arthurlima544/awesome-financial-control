@@ -1,4 +1,5 @@
 import 'package:afc/models/investment_goal.dart';
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/config/app_colors.dart';
@@ -79,8 +80,9 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Meta de Investimento')),
+      appBar: AppBar(title: Text(l10n.investmentGoalCalcTitle)),
       body: BlocBuilder<InvestmentGoalBloc, InvestmentGoalState>(
         builder: (context, state) {
           return ListView(
@@ -91,14 +93,14 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               if (state.status == InvestmentGoalStatus.loading)
                 const Center(child: CircularProgressIndicator())
               else if (state.status == InvestmentGoalStatus.success) ...[
-                Text('Resultado', style: AppTextStyles.titleMedium),
+                Text(l10n.calcResultTitle, style: AppTextStyles.titleMedium),
                 const SizedBox(height: AppSpacing.md),
                 _buildResults(context, state.response!),
                 const SizedBox(height: AppSpacing.xl),
                 _buildGoalInfo(),
               ] else if (state.status == InvestmentGoalStatus.failure)
                 Text(
-                  'Erro: ${state.errorMessage}',
+                  l10n.calcErrorMessage(state.errorMessage ?? ''),
                   style: const TextStyle(color: AppColors.error),
                 ),
             ],
@@ -109,14 +111,14 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   }
 
   Widget _buildInputs(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildFieldWithTitle(
-          label: 'Quanto você quer ter? (R\$)',
-          tooltipTitle: 'Objetivo',
-          tooltipDesc:
-              'O valor total que você deseja acumular até a data alvo.',
+          label: l10n.investmentGoalCalcTargetLabel,
+          tooltipTitle: l10n.investmentGoalCalcTargetTooltipTitle,
+          tooltipDesc: l10n.investmentGoalCalcTargetTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -131,9 +133,9 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Data alvo',
-          tooltipTitle: 'Prazo',
-          tooltipDesc: 'A data em que você pretende atingir seu objetivo.',
+          label: l10n.investmentGoalCalcDateLabel,
+          tooltipTitle: l10n.investmentGoalCalcDateTooltipTitle,
+          tooltipDesc: l10n.investmentGoalCalcDateTooltipDesc,
           child: InkWell(
             onTap: _selectDate,
             child: Container(
@@ -160,10 +162,9 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Quanto você já tem? (R\$)',
-          tooltipTitle: 'Capital Inicial',
-          tooltipDesc:
-              'O valor que você já possui investido para este objetivo.',
+          label: l10n.investmentGoalCalcInitialLabel,
+          tooltipTitle: l10n.calcCapitalInicialTooltipTitle,
+          tooltipDesc: l10n.investmentGoalCalcInitialTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -178,9 +179,9 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Retorno anual esperado (%)',
-          tooltipTitle: 'Rentabilidade',
-          tooltipDesc: 'A rentabilidade média estimada dos seus investimentos.',
+          label: l10n.investmentGoalCalcReturnLabel,
+          tooltipTitle: l10n.calcRentabilidadeTooltipTitle,
+          tooltipDesc: l10n.investmentGoalCalcReturnTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -198,13 +199,17 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
         const SizedBox(height: AppSpacing.xl),
         BlocProvider(
           create: (_) => AdaptiveButtonCubit(),
-          child: AdaptiveButton(text: 'Calcular', onPressed: _calculate),
+          child: AdaptiveButton(
+            text: l10n.calcButtonCalcular,
+            onPressed: _calculate,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildInflationToggle() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -220,13 +225,13 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ajuste de Inflação',
+                    l10n.calcInflationToggleLabel,
                     style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Valores em poder de compra de hoje',
+                    l10n.calcInflationToggleSubtitle,
                     style: AppTextStyles.labelSmall.copyWith(
                       color: Colors.grey,
                     ),
@@ -238,7 +243,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               create: (_) =>
                   AdaptiveSwitchCubit(initialValue: _adjustForInflation),
               child: AdaptiveSwitch(
-                semanticLabel: 'Ajuste de Inflação',
+                semanticLabel: l10n.calcInflationToggleLabel,
                 onChanged: (value) {
                   setState(() => _adjustForInflation = value);
                   _calculate();
@@ -287,6 +292,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   }
 
   Widget _buildResults(BuildContext context, InvestmentGoalResponse response) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Column(
@@ -304,19 +310,19 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
             child: Column(
               children: [
                 _buildResultRow(
-                  'Aporte Mensal Necessário',
+                  l10n.investmentGoalCalcMonthlyContributionLabel,
                   currencyFormat.format(response.requiredMonthlyContribution),
                   isTeal: true,
                   isBold: true,
                 ),
                 const Divider(height: AppSpacing.xl),
                 _buildResultRow(
-                  'Total que você investirá',
+                  l10n.investmentGoalCalcTotalContributedLabel,
                   currencyFormat.format(response.totalContributed),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
-                  'Total em juros ganhos',
+                  l10n.investmentGoalCalcTotalInterestLabel,
                   currencyFormat.format(response.totalInterestEarned),
                   valueColor: AppColors.primary,
                 ),
@@ -325,7 +331,10 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Evolução do Patrimônio', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.calcPatrimonioEvolutionTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Card(
           elevation: 0,
@@ -375,6 +384,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   }
 
   Widget _buildCompositionBar(InvestmentGoalResponse response) {
+    final l10n = AppLocalizations.of(context)!;
     final total = response.totalContributed + response.totalInterestEarned;
     final investedPercent = response.totalContributed / total;
     final interestPercent = response.totalInterestEarned / total;
@@ -383,7 +393,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Composição do valor final',
+          l10n.investmentGoalCalcCompositionBarTitle,
           style: AppTextStyles.labelSmall.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -425,8 +435,14 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildLegendItem('Aportes', Colors.grey),
-            _buildLegendItem('Juros', AppColors.primary),
+            _buildLegendItem(
+              l10n.investmentGoalCalcLegendContributions,
+              Colors.grey,
+            ),
+            _buildLegendItem(
+              l10n.investmentGoalCalcLegendInterest,
+              AppColors.primary,
+            ),
           ],
         ),
       ],
@@ -451,6 +467,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   }
 
   Widget _buildChart(List<InvestmentGoalTimelineEntry> timeline) {
+    final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
     final spots = timeline.map((e) => FlSpot(e.years, e.accumulated)).toList();
 
@@ -512,14 +529,14 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               showTitles: true,
               getTitlesWidget: (value, meta) {
                 if (value == 0) {
-                  return const Text(
-                    'Hoje',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  return Text(
+                    l10n.calcChartTodayLabel,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value % 5 == 0) {
                   return Text(
-                    'A${value.toInt()}',
+                    l10n.calcChartYearLabel(value.toInt()),
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
@@ -547,14 +564,13 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   }
 
   Widget _buildGoalInfo() {
+    final l10n = AppLocalizations.of(context)!;
     return ActionCard(
       style: ActionCardStyle.iconHeader,
-      title: 'Planejando seu futuro',
-      description:
-          'Definir metas claras é o primeiro passo para o sucesso financeiro. '
-          'Lembre-se que aportes constantes são mais importantes que a rentabilidade a longo prazo.',
+      title: l10n.investmentGoalCalcInfoCardTitle,
+      description: l10n.investmentGoalCalcInfoCardDesc,
       leadingIcon: Icons.insights,
-      buttonText: 'Entendi',
+      buttonText: l10n.calcButtonEntendi,
       primaryColor: AppColors.primary,
       onAction: () {},
     );
