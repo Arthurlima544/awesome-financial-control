@@ -861,5 +861,109 @@
   "@investmentGoalCalcInfoCardTitle": { "description": "Info card title on investment goal screen" },
 
   "investmentGoalCalcInfoCardDesc": "Definir metas claras é o primeiro passo para o sucesso financeiro. Lembre-se que aportes constantes são mais importantes que a rentabilidade a longo prazo.",
-  "@investmentGoalCalcInfoCardDesc": { "description": "Info card description on investment goal screen" }
+  "@investmentGoalCalcInfoCardDesc": { "description": "Info card description on investment goal screen" },
+
+  "screenNoDataAvailable": "Nenhum dado disponível",
+  "@screenNoDataAvailable": { "description": "Generic empty-state message when no data is available" },
+
+  "investmentDashboardTitle": "Análise do Portfólio",
+  "@investmentDashboardTitle": { "description": "Investment portfolio analysis screen title" },
+
+  "investmentDashboardProfitLossLabel": "Lucro/Prejuízo",
+  "@investmentDashboardProfitLossLabel": { "description": "Profit or loss metric label on investment dashboard" },
+
+  "investmentDashboardAllocationTitle": "Alocação de Ativos",
+  "@investmentDashboardAllocationTitle": { "description": "Asset allocation section title on investment dashboard" },
+
+  "investmentDashboardPerformanceTitle": "Performance por Ativo",
+  "@investmentDashboardPerformanceTitle": { "description": "Per-asset performance section title on investment dashboard" },
+
+  "marketScreenTitle": "Oportunidades de Mercado",
+  "@marketScreenTitle": { "description": "Market opportunities screen title" },
+
+  "marketLastUpdated": "Última atualização: {date}",
+  "@marketLastUpdated": {
+    "description": "Last updated timestamp on market screen",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "marketBenchmarksTitle": "Benchmarks Fixos",
+  "@marketBenchmarksTitle": { "description": "Benchmark banner section title on market screen" },
+
+  "marketFilterAll": "Todos",
+  "@marketFilterAll": { "description": "Filter chip label for all assets" },
+
+  "marketFilterStocks": "Ações",
+  "@marketFilterStocks": { "description": "Filter chip label for stocks" },
+
+  "marketFilterFiis": "FIIs",
+  "@marketFilterFiis": { "description": "Filter chip label for real-estate funds (FIIs)" },
+
+  "marketSortHighestDy": "Maior DY",
+  "@marketSortHighestDy": { "description": "Sort chip label for highest dividend yield" },
+
+  "marketSortDyVsCdi": "DY vs CDI",
+  "@marketSortDyVsCdi": { "description": "Sort chip label for DY vs CDI ratio" },
+
+  "marketSortLowestPe": "Menor P/L",
+  "@marketSortLowestPe": { "description": "Sort chip label for lowest price-to-earnings" },
+
+  "marketDyColumnHeader": "DY (ano)",
+  "@marketDyColumnHeader": { "description": "Dividend yield annual column header on market opportunity card" },
+
+  "marketDyVsCdiPercent": "{percent}% do CDI",
+  "@marketDyVsCdiPercent": {
+    "description": "DY as a percentage of CDI label on market opportunity card",
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+
+  "passiveIncomeTitle": "Renda Passiva",
+  "@passiveIncomeTitle": { "description": "Passive income screen title" },
+
+  "passiveIncomeFreedomIndexTitle": "Índice de Liberdade Financeira",
+  "@passiveIncomeFreedomIndexTitle": { "description": "Financial freedom index gauge title" },
+
+  "passiveIncomeFreedomIndexGoal": "da meta mensal",
+  "@passiveIncomeFreedomIndexGoal": { "description": "Freedom index gauge subtitle showing percentage of monthly goal" },
+
+  "passiveIncomeReceivedThisMonth": "Recebido este mês: {amount}",
+  "@passiveIncomeReceivedThisMonth": {
+    "description": "Passive income received this month label",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+
+  "passiveIncomeGoalCovered": "🎉 Suas despesas fixas estão cobertas!",
+  "@passiveIncomeGoalCovered": { "description": "Success message when passive income covers fixed expenses" },
+
+  "passiveIncomeMonthlyEvolutionTitle": "Evolução Mensal",
+  "@passiveIncomeMonthlyEvolutionTitle": { "description": "Monthly evolution chart section title on passive income screen" },
+
+  "passiveIncomeSourcesTitle": "Fontes de Renda",
+  "@passiveIncomeSourcesTitle": { "description": "Income sources section title on passive income screen" },
+
+  "netWorthNetWorthLabel": "Patrimônio Líquido Atual",
+  "@netWorthNetWorthLabel": { "description": "Current net worth label on net worth screen summary card" },
+
+  "netWorthAssetsLabel": "Ativos",
+  "@netWorthAssetsLabel": { "description": "Assets label on net worth screen" },
+
+  "netWorthLiabilitiesLabel": "Passivos",
+  "@netWorthLiabilitiesLabel": { "description": "Liabilities label on net worth screen" },
+
+  "netWorthMonthlyHistoryTitle": "Histórico Mensal",
+  "@netWorthMonthlyHistoryTitle": { "description": "Monthly history section title on net worth screen" },
+
+  "netWorthAssetsSubtitle": "Ativos: {amount}",
+  "@netWorthAssetsSubtitle": {
+    "description": "Assets subtitle in monthly history list tile on net worth screen",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  }
 }

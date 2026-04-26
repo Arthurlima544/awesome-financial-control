@@ -1057,4 +1057,97 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get investmentGoalCalcInfoCardDesc =>
       'Definir metas claras é o primeiro passo para o sucesso financeiro. Lembre-se que aportes constantes são mais importantes que a rentabilidade a longo prazo.';
+
+  @override
+  String get screenNoDataAvailable => 'Nenhum dado disponível';
+
+  @override
+  String get investmentDashboardTitle => 'Análise do Portfólio';
+
+  @override
+  String get investmentDashboardProfitLossLabel => 'Lucro/Prejuízo';
+
+  @override
+  String get investmentDashboardAllocationTitle => 'Alocação de Ativos';
+
+  @override
+  String get investmentDashboardPerformanceTitle => 'Performance por Ativo';
+
+  @override
+  String get marketScreenTitle => 'Oportunidades de Mercado';
+
+  @override
+  String marketLastUpdated(String date) {
+    return 'Última atualização: $date';
+  }
+
+  @override
+  String get marketBenchmarksTitle => 'Benchmarks Fixos';
+
+  @override
+  String get marketFilterAll => 'Todos';
+
+  @override
+  String get marketFilterStocks => 'Ações';
+
+  @override
+  String get marketFilterFiis => 'FIIs';
+
+  @override
+  String get marketSortHighestDy => 'Maior DY';
+
+  @override
+  String get marketSortDyVsCdi => 'DY vs CDI';
+
+  @override
+  String get marketSortLowestPe => 'Menor P/L';
+
+  @override
+  String get marketDyColumnHeader => 'DY (ano)';
+
+  @override
+  String marketDyVsCdiPercent(int percent) {
+    return '$percent% do CDI';
+  }
+
+  @override
+  String get passiveIncomeTitle => 'Renda Passiva';
+
+  @override
+  String get passiveIncomeFreedomIndexTitle => 'Índice de Liberdade Financeira';
+
+  @override
+  String get passiveIncomeFreedomIndexGoal => 'da meta mensal';
+
+  @override
+  String passiveIncomeReceivedThisMonth(String amount) {
+    return 'Recebido este mês: $amount';
+  }
+
+  @override
+  String get passiveIncomeGoalCovered =>
+      '🎉 Suas despesas fixas estão cobertas!';
+
+  @override
+  String get passiveIncomeMonthlyEvolutionTitle => 'Evolução Mensal';
+
+  @override
+  String get passiveIncomeSourcesTitle => 'Fontes de Renda';
+
+  @override
+  String get netWorthNetWorthLabel => 'Patrimônio Líquido Atual';
+
+  @override
+  String get netWorthAssetsLabel => 'Ativos';
+
+  @override
+  String get netWorthLiabilitiesLabel => 'Passivos';
+
+  @override
+  String get netWorthMonthlyHistoryTitle => 'Histórico Mensal';
+
+  @override
+  String netWorthAssetsSubtitle(String amount) {
+    return 'Ativos: $amount';
+  }
 }

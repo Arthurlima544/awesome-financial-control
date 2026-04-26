@@ -1,3 +1,4 @@
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
@@ -13,8 +14,9 @@ class InvestmentDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Análise do Portfólio')),
+      appBar: AppBar(title: Text(l10n.investmentDashboardTitle)),
       body: BlocBuilder<InvestmentDashboardBloc, InvestmentDashboardState>(
         builder: (context, state) {
           if (state.status == InvestmentDashboardStatus.loading) {
@@ -22,11 +24,13 @@ class InvestmentDashboardScreen extends StatelessWidget {
           }
 
           if (state.status == InvestmentDashboardStatus.failure) {
-            return Center(child: Text('Erro: ${state.errorMessage}'));
+            return Center(
+              child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
+            );
           }
 
           if (state.data == null) {
-            return const Center(child: Text('Nenhum dado disponível'));
+            return Center(child: Text(l10n.screenNoDataAvailable));
           }
 
           final data = state.data!;
@@ -39,11 +43,11 @@ class InvestmentDashboardScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(AppSpacing.lg),
               children: [
-                _buildSummaryCards(data),
+                _buildSummaryCards(context, data),
                 const SizedBox(height: AppSpacing.xl),
-                _buildAllocationChart(data['allocationByType']),
+                _buildAllocationChart(context, data['allocationByType']),
                 const SizedBox(height: AppSpacing.xl),
-                _buildPerformanceList(data['assetPerformance']),
+                _buildPerformanceList(context, data['assetPerformance']),
               ],
             ),
           );
@@ -52,7 +56,8 @@ class InvestmentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCards(Map<String, dynamic> data) {
+  Widget _buildSummaryCards(BuildContext context, Map<String, dynamic> data) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final profit = data['totalProfitLoss'] as double;
     final percentage = data['totalProfitLossPercentage'] as double;
@@ -75,7 +80,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Patrimônio Total', style: AppTextStyles.labelLarge),
+                    Text(l10n.totalNetWorth, style: AppTextStyles.labelLarge),
                     PrivacyText(
                       currencyFormat.format(data['currentTotalValue']),
                       style: AppTextStyles.titleLarge.copyWith(
@@ -122,7 +127,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
           children: [
             Expanded(
               child: _buildSmallCard(
-                'Total Investido',
+                l10n.investmentsTotalInvested,
                 currencyFormat.format(data['totalInvested']),
                 Colors.grey,
               ),
@@ -130,7 +135,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: _buildSmallCard(
-                'Lucro/Prejuízo',
+                l10n.investmentDashboardProfitLossLabel,
                 currencyFormat.format(profit),
                 isPositive ? Colors.green : Colors.red,
               ),
@@ -171,7 +176,11 @@ class InvestmentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAllocationChart(Map<dynamic, dynamic> allocation) {
+  Widget _buildAllocationChart(
+    BuildContext context,
+    Map<dynamic, dynamic> allocation,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     if (allocation.isEmpty) return const SizedBox.shrink();
 
     final sections = <PieChartSectionData>[];
@@ -198,7 +207,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Alocação de Ativos', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.investmentDashboardAllocationTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Card(
           elevation: 0,
@@ -259,13 +271,20 @@ class InvestmentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPerformanceList(List<dynamic> performances) {
+  Widget _buildPerformanceList(
+    BuildContext context,
+    List<dynamic> performances,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Performance por Ativo', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.investmentDashboardPerformanceTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         ...performances.map((p) {
           final isPositive = (p['profitLoss'] as num) >= 0;

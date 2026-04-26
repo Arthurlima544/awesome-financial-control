@@ -2061,6 +2061,174 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Definir metas claras é o primeiro passo para o sucesso financeiro. Lembre-se que aportes constantes são mais importantes que a rentabilidade a longo prazo.'**
   String get investmentGoalCalcInfoCardDesc;
+
+  /// Generic empty-state message when no data is available
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum dado disponível'**
+  String get screenNoDataAvailable;
+
+  /// Investment portfolio analysis screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Análise do Portfólio'**
+  String get investmentDashboardTitle;
+
+  /// Profit or loss metric label on investment dashboard
+  ///
+  /// In pt, this message translates to:
+  /// **'Lucro/Prejuízo'**
+  String get investmentDashboardProfitLossLabel;
+
+  /// Asset allocation section title on investment dashboard
+  ///
+  /// In pt, this message translates to:
+  /// **'Alocação de Ativos'**
+  String get investmentDashboardAllocationTitle;
+
+  /// Per-asset performance section title on investment dashboard
+  ///
+  /// In pt, this message translates to:
+  /// **'Performance por Ativo'**
+  String get investmentDashboardPerformanceTitle;
+
+  /// Market opportunities screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Oportunidades de Mercado'**
+  String get marketScreenTitle;
+
+  /// Last updated timestamp on market screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Última atualização: {date}'**
+  String marketLastUpdated(String date);
+
+  /// Benchmark banner section title on market screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Benchmarks Fixos'**
+  String get marketBenchmarksTitle;
+
+  /// Filter chip label for all assets
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos'**
+  String get marketFilterAll;
+
+  /// Filter chip label for stocks
+  ///
+  /// In pt, this message translates to:
+  /// **'Ações'**
+  String get marketFilterStocks;
+
+  /// Filter chip label for real-estate funds (FIIs)
+  ///
+  /// In pt, this message translates to:
+  /// **'FIIs'**
+  String get marketFilterFiis;
+
+  /// Sort chip label for highest dividend yield
+  ///
+  /// In pt, this message translates to:
+  /// **'Maior DY'**
+  String get marketSortHighestDy;
+
+  /// Sort chip label for DY vs CDI ratio
+  ///
+  /// In pt, this message translates to:
+  /// **'DY vs CDI'**
+  String get marketSortDyVsCdi;
+
+  /// Sort chip label for lowest price-to-earnings
+  ///
+  /// In pt, this message translates to:
+  /// **'Menor P/L'**
+  String get marketSortLowestPe;
+
+  /// Dividend yield annual column header on market opportunity card
+  ///
+  /// In pt, this message translates to:
+  /// **'DY (ano)'**
+  String get marketDyColumnHeader;
+
+  /// DY as a percentage of CDI label on market opportunity card
+  ///
+  /// In pt, this message translates to:
+  /// **'{percent}% do CDI'**
+  String marketDyVsCdiPercent(int percent);
+
+  /// Passive income screen title
+  ///
+  /// In pt, this message translates to:
+  /// **'Renda Passiva'**
+  String get passiveIncomeTitle;
+
+  /// Financial freedom index gauge title
+  ///
+  /// In pt, this message translates to:
+  /// **'Índice de Liberdade Financeira'**
+  String get passiveIncomeFreedomIndexTitle;
+
+  /// Freedom index gauge subtitle showing percentage of monthly goal
+  ///
+  /// In pt, this message translates to:
+  /// **'da meta mensal'**
+  String get passiveIncomeFreedomIndexGoal;
+
+  /// Passive income received this month label
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebido este mês: {amount}'**
+  String passiveIncomeReceivedThisMonth(String amount);
+
+  /// Success message when passive income covers fixed expenses
+  ///
+  /// In pt, this message translates to:
+  /// **'🎉 Suas despesas fixas estão cobertas!'**
+  String get passiveIncomeGoalCovered;
+
+  /// Monthly evolution chart section title on passive income screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Evolução Mensal'**
+  String get passiveIncomeMonthlyEvolutionTitle;
+
+  /// Income sources section title on passive income screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Fontes de Renda'**
+  String get passiveIncomeSourcesTitle;
+
+  /// Current net worth label on net worth screen summary card
+  ///
+  /// In pt, this message translates to:
+  /// **'Patrimônio Líquido Atual'**
+  String get netWorthNetWorthLabel;
+
+  /// Assets label on net worth screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativos'**
+  String get netWorthAssetsLabel;
+
+  /// Liabilities label on net worth screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Passivos'**
+  String get netWorthLiabilitiesLabel;
+
+  /// Monthly history section title on net worth screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Histórico Mensal'**
+  String get netWorthMonthlyHistoryTitle;
+
+  /// Assets subtitle in monthly history list tile on net worth screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativos: {amount}'**
+  String netWorthAssetsSubtitle(String amount);
 }
 
 class _AppLocalizationsDelegate
