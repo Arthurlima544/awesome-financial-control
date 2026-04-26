@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_slider_cubit.dart';
 
@@ -53,11 +54,10 @@ class AdaptiveSlider extends StatelessWidget {
             final double thumbRadius = shortestSide * 0.035;
 
             // Design System Colors
-            final themeActiveTrack =
-                activeTrackColor ?? const Color(0xFF624BFF);
+            final themeActiveTrack = activeTrackColor ?? AppColors.brandPurple;
             final themeInactiveTrack =
-                inactiveTrackColor ?? const Color(0xFFE0E0E0);
-            final themeThumb = thumbColor ?? const Color(0xFF624BFF);
+                inactiveTrackColor ?? AppColors.neutral250;
+            final themeThumb = thumbColor ?? AppColors.brandPurple;
             final errorColor = Colors.red;
 
             // State-driven Colors

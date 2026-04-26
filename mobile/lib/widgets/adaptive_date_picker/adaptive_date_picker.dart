@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_date_picker_cubit.dart';
 
@@ -28,10 +29,10 @@ class AdaptiveDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeActiveColor = activeColor ?? const Color(0xFF624BFF);
+    final themeActiveColor = activeColor ?? AppColors.brandPurple;
     final themeActiveText = activeTextColor ?? Colors.white;
     final themeDefaultText = defaultTextColor ?? Colors.black87;
-    final themeWeekdayText = weekdayTextColor ?? const Color(0xFF888888);
+    final themeWeekdayText = weekdayTextColor ?? AppColors.neutral450;
 
     const List<String> weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 

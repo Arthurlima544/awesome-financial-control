@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'message_bubble_cubit.dart';
@@ -27,13 +28,11 @@ class MessageBubble extends StatelessWidget {
     this.hasTail = true,
     this.onSelectionChanged,
     this.onTap,
-    this.sentBackgroundColor = const Color(0xFF3B82F6), // Blue
-    this.receivedBackgroundColor = const Color(0xFFF8F9FA), // Light Gray
+    this.sentBackgroundColor = AppColors.brandBlue, // Blue
+    this.receivedBackgroundColor = AppColors.neutral50, // Light Gray
     this.sentTextColor = Colors.white,
-    this.receivedTextColor = const Color(0xFF1F2937),
-    this.selectedOverlayColor = const Color(
-      0x33000000,
-    ), // Semi-transparent black
+    this.receivedTextColor = AppColors.neutral800,
+    this.selectedOverlayColor = AppColors.overlay, // Semi-transparent black
     this.focusNode,
   });
 

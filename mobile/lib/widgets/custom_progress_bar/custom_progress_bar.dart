@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 
@@ -18,8 +19,8 @@ class CustomProgressBar extends StatelessWidget {
     this.initialProgress = 0.0,
     this.steps,
     this.onChanged,
-    this.activeColor = const Color(0xFF2962FF),
-    this.inactiveColor = const Color(0xFFE5E7EB),
+    this.activeColor = AppColors.brandBlue,
+    this.inactiveColor = AppColors.neutral200,
     this.focusNode,
   }) : assert(
          steps == null || steps > 1,

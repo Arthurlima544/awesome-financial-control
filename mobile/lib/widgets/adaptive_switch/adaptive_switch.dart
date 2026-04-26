@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_switch_cubit.dart';
 
@@ -64,9 +65,9 @@ class _AdaptiveSwitchState extends State<AdaptiveSwitch> {
 
             // Theme fallback colors matching the provided design
             final baseActiveColor =
-                widget.activeTrackColor ?? const Color(0xFF624BFF);
+                widget.activeTrackColor ?? AppColors.brandPurple;
             final baseInactiveColor =
-                widget.inactiveTrackColor ?? const Color(0xFFE0E0E0);
+                widget.inactiveTrackColor ?? AppColors.neutral250;
             final baseThumbColor = widget.thumbColor ?? Colors.white;
 
             // Determine visual colors based on state
@@ -76,13 +77,12 @@ class _AdaptiveSwitchState extends State<AdaptiveSwitch> {
 
             if (isEffectivelyDisabled) {
               currentTrackColor =
-                  widget.disabledTrackColor ?? const Color(0xFFF0F0F0);
+                  widget.disabledTrackColor ?? AppColors.neutral150;
               currentThumbColor =
-                  widget.disabledThumbColor ?? const Color(0xFFE8E8E8);
+                  widget.disabledThumbColor ?? AppColors.neutral200;
               if (!state.isOn) {
-                borderColor = const Color(
-                  0xFFE0E0E0,
-                ); // Outline for disabled off state
+                borderColor =
+                    AppColors.neutral250; // Outline for disabled off state
               }
             } else {
               currentTrackColor = state.isOn

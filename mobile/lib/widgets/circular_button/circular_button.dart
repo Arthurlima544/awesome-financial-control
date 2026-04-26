@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'circular_button_cubit.dart';
 
@@ -31,8 +32,7 @@ class CircularButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor =
-        primaryColor ??
-        const Color(0xFF624BFF); // Default purple from the image
+        primaryColor ?? AppColors.brandPurple; // Default purple from the image
     final screenShortestSide = MediaQuery.of(context).size.shortestSide;
 
     return BlocBuilder<CircularButtonCubit, CircularButtonState>(

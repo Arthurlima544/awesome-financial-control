@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'horizontal_date_picker_cubit.dart';
@@ -20,10 +21,10 @@ class HorizontalDatePicker extends StatelessWidget {
     this.daysCount = 7,
     this.initialSelectedDate,
     this.onChanged,
-    this.selectedColor = const Color(0xFF2962FF),
+    this.selectedColor = AppColors.brandBlue,
     this.selectedTextColor = Colors.white,
-    this.unselectedTextColor = const Color(0xFF1F2937),
-    this.unselectedDayColor = const Color(0xFF9CA3AF),
+    this.unselectedTextColor = AppColors.neutral800,
+    this.unselectedDayColor = AppColors.neutral400,
     this.focusNode,
   });
 

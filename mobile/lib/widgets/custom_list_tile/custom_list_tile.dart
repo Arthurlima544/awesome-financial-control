@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'custom_list_tile_cubit.dart';
@@ -38,9 +39,9 @@ class CustomListTile extends StatelessWidget {
     this.initialValue = false,
     this.onChanged,
     this.onTap,
-    this.primaryColor = const Color(0xFF2962FF),
-    this.titleColor = const Color(0xFF1F2937),
-    this.descriptionColor = const Color(0xFF6B7280),
+    this.primaryColor = AppColors.brandBlue,
+    this.titleColor = AppColors.neutral800,
+    this.descriptionColor = AppColors.neutral500,
     this.backgroundColor = Colors.white,
     this.focusNode,
   });

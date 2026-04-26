@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_popup_cubit.dart';
 
@@ -47,7 +48,7 @@ class AdaptivePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final themePrimaryColor = primaryColor ?? const Color(0xFF624BFF);
+    final themePrimaryColor = primaryColor ?? AppColors.brandPurple;
     final themeBgColor = backgroundColor ?? Colors.white;
 
     return BlocBuilder<AdaptivePopupCubit, AdaptivePopupState>(

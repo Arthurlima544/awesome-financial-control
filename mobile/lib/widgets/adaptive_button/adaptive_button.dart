@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_button_cubit.dart';
 
@@ -37,8 +38,7 @@ class AdaptiveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor =
-        primaryColor ??
-        const Color(0xFF624BFF); // Default purple from the image
+        primaryColor ?? AppColors.brandPurple; // Default purple from the image
     final screenWidth = MediaQuery.of(context).size.width;
 
     return BlocBuilder<AdaptiveButtonCubit, AdaptiveButtonState>(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'custom_snackbar_cubit.dart';
 
@@ -24,9 +25,9 @@ class CustomSnackbar extends StatelessWidget {
     this.actionText,
     this.onAction,
     this.onDismissed,
-    this.backgroundColor = const Color(0xFF1E1E1E),
+    this.backgroundColor = AppColors.neutral900,
     this.textColor = Colors.white,
-    this.actionColor = const Color(0xFFA8C7FA),
+    this.actionColor = AppColors.brandBlueLight,
     this.actionFocusNode,
   });
 

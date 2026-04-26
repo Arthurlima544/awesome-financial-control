@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_checkbox_cubit.dart';
 
@@ -48,14 +49,14 @@ class AdaptiveCheckbox extends StatelessWidget {
             final double borderWidth = size * 0.08;
 
             // Define thematic colors based on the design
-            final themeActive = activeColor ?? const Color(0xFF624BFF);
+            final themeActive = activeColor ?? AppColors.brandPurple;
             final themeCheck = checkColor ?? Colors.white;
             final themeInactiveBorder =
-                inactiveBorderColor ?? const Color(0xFFBDBDBD);
+                inactiveBorderColor ?? AppColors.neutral350;
             final themeDisabledActive =
-                disabledActiveColor ?? const Color(0xFFE0E0E0);
+                disabledActiveColor ?? AppColors.neutral250;
             final themeDisabledInactiveBorder =
-                disabledInactiveBorderColor ?? const Color(0xFFEEEEEE);
+                disabledInactiveBorderColor ?? AppColors.neutral150;
 
             // Determine visual properties based on state
             Color fillColor = Colors.transparent;

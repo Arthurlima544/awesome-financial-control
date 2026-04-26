@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'message_input_cubit.dart';
@@ -26,10 +27,10 @@ class MessageInput extends StatelessWidget {
     this.onChanged,
     this.onSubmitted,
     this.onAddAction,
-    this.primaryColor = const Color(0xFF2962FF),
-    this.backgroundColor = const Color(0xFFF8F9FA),
-    this.textColor = const Color(0xFF1F2937),
-    this.hintColor = const Color(0xFF9CA3AF),
+    this.primaryColor = AppColors.brandBlue,
+    this.backgroundColor = AppColors.neutral50,
+    this.textColor = AppColors.neutral800,
+    this.hintColor = AppColors.neutral400,
     this.hintText = 'Type a message...',
   });
 

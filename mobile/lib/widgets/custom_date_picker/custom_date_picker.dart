@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide DatePickerMode;
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'custom_date_picker_cubit.dart';
 
@@ -17,7 +18,7 @@ class CustomDatePicker extends StatelessWidget {
     this.initialStartDate,
     this.initialEndDate,
     required this.onChanged,
-    this.primaryColor = const Color(0xFF10B981),
+    this.primaryColor = AppColors.primary,
     this.textStyle,
     this.placeholder = "Select Date",
   });

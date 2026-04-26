@@ -1,4 +1,5 @@
 import 'package:afc/widgets/horizontal_date_picker/horizontal_date_picker.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -84,7 +85,7 @@ void main() {
       final BoxDecoration decoration = container.decoration as BoxDecoration;
 
       // Selected color is the default blue (0xFF2962FF)
-      expect(decoration.color, const Color(0xFF2962FF));
+      expect(decoration.color, AppColors.brandBlue);
     });
   });
 }

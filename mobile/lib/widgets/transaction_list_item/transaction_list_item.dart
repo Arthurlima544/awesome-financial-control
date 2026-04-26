@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/currency_formatter.dart';
@@ -110,8 +111,8 @@ class _TransactionListItemView extends StatelessWidget {
             final double amountSize = (screenWidth * 0.04).clamp(13.0, 16.0);
 
             final isIncome = type == TransactionItemType.income;
-            final themeIncome = incomeColor ?? const Color(0xFF10B981);
-            final themeExpense = expenseColor ?? const Color(0xFFEF4444);
+            final themeIncome = incomeColor ?? AppColors.primary;
+            final themeExpense = expenseColor ?? AppColors.error;
             final typeColor = isIncome ? themeIncome : themeExpense;
 
             final themeBackground = state.isSelected

@@ -490,7 +490,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                   fontWeight: isBold || isTeal
                       ? FontWeight.bold
                       : FontWeight.normal,
-                  color: isTeal ? const Color(0xFF00BFA5) : Colors.black87,
+                  color: isTeal ? AppColors.primary : Colors.black87,
                 ),
               )
             : Text(
@@ -499,7 +499,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                   fontWeight: isBold || isTeal
                       ? FontWeight.bold
                       : FontWeight.normal,
-                  color: isTeal ? const Color(0xFF00BFA5) : Colors.black87,
+                  color: isTeal ? AppColors.primary : Colors.black87,
                 ),
               ),
       ],
@@ -518,7 +518,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
       return FlSpot(e.year, e.portfolioValue);
     }).toList();
 
-    const tealColor = Color(0xFF00BFA5);
+    final tealColor = AppColors.primary;
 
     return LineChart(
       LineChartData(

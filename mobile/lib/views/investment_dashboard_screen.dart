@@ -229,10 +229,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
 
     final sections = <PieChartSectionData>[];
     final colors = [
-      const Color(0xFF00BFA5),
-      const Color(0xFF2979FF),
-      const Color(0xFFFF9100),
-      const Color(0xFF651FFF),
+      AppColors.chartTeal,
+      AppColors.chartBlue,
+      AppColors.chartOrange,
+      AppColors.chartPurple,
     ];
 
     int index = 0;

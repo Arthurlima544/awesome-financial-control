@@ -1,3 +1,4 @@
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
 import 'package:afc/services/currency_service.dart';
@@ -394,7 +395,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
                 Row(
                   children: [
                     _buildLegendItem(
-                      const Color(0xFF00BFA5),
+                      AppColors.primary,
                       l10n.compoundCalcLegendAccumulated,
                     ),
                     const SizedBox(width: AppSpacing.md),
@@ -429,7 +430,7 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
           value,
           style: AppTextStyles.labelLarge.copyWith(
             fontWeight: isBold || isTeal ? FontWeight.bold : FontWeight.normal,
-            color: isTeal ? const Color(0xFF00BFA5) : Colors.black87,
+            color: isTeal ? AppColors.primary : Colors.black87,
           ),
         ),
       ],
@@ -548,12 +549,12 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
           LineChartBarData(
             spots: accumulatedSpots,
             isCurved: true,
-            color: const Color(0xFF00BFA5),
+            color: AppColors.primary,
             barWidth: 3,
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: const Color(0xFF00BFA5).withValues(alpha: 0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
             ),
           ),
           LineChartBarData(

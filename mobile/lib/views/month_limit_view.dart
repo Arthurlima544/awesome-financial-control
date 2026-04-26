@@ -22,7 +22,7 @@ class MonthLimitView extends StatelessWidget {
     final barColor = isOver
         ? AppColors.error
         : isWarning
-        ? const Color(0xFFF59E0B) // Warning orange
+        ? AppColors.warning
         : AppColors.success;
 
     // Determine icon based on category name roughly
@@ -68,7 +68,7 @@ class MonthLimitView extends StatelessWidget {
                       limit.categoryName,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF0D253F),
+                        color: AppColors.textHighlight,
                       ),
                     ),
                     if (isOver)
@@ -119,7 +119,7 @@ class MonthLimitView extends StatelessWidget {
                     return PrivacyText(
                       '$spentStr de $limitStr',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF4B5563),
+                        color: AppColors.neutral600,
                       ),
                     );
                   },
@@ -135,7 +135,7 @@ class MonthLimitView extends StatelessWidget {
                           height: 4,
                           width: width,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE5E7EB),
+                            color: AppColors.neutral200,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),

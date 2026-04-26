@@ -50,4 +50,33 @@ abstract final class AppColors {
   static const Color onSurfaceDark = Color(0xFFF9FAFB);
   static const Color backgroundDark = Color(0xFF0B0F1A);
   static const Color onBackgroundDark = Color(0xFFF9FAFB);
+
+  // Chart Colors
+  static const Color chartTeal = Color(0xFF00BFA5);
+  static const Color chartBlue = Color(0xFF2979FF);
+  static const Color chartOrange = Color(0xFFFF9100);
+  static const Color chartPurple = Color(0xFF651FFF);
+
+  // Specific UI Elements
+  static const Color textHighlight = Color(0xFF0D253F);
+
+  // Consolidated Brand Colors
+  static const Color brandPurple = Color(0xFF624BFF);
+  static const Color brandBlue = Color(0xFF2962FF);
+
+  // Additional Neutrals
+  static const Color neutral150 = Color(0xFFF0F1F5);
+  static const Color neutral250 = Color(0xFFE0E0E0);
+  static const Color neutral350 = Color(0xFFBDBDBD);
+  static const Color neutral450 = Color(0xFF8A8A8E);
+
+  // Semantic & UI
+  static const Color softRed = Color(0xFFE57373);
+  static const Color cardBackground = Color(0xFFF8F9FE);
+  static const Color sheetBackground = Color(0xFFF4F7F7);
+
+  // Overlays & Tints
+  static const Color overlay = Color(0x33000000);
+  static const Color brandBlueLight = Color(0xFFA8C7FA);
+  static const Color brandBlueLighter = Color(0xFFC6D8FF);
 }

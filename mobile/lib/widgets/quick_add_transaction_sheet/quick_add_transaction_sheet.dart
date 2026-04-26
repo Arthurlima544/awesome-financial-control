@@ -130,7 +130,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
           padding: EdgeInsets.only(bottom: bottomInset),
           child: Container(
             decoration: const BoxDecoration(
-              color: Color(0xFFF4F7F7),
+              color: AppColors.sheetBackground,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
             ),
             child: Column(
@@ -234,7 +234,7 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                 style: Theme.of(context).textTheme.displaySmall
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF0D253F),
+                                      color: AppColors.textHighlight,
                                     ),
                               );
                             },
@@ -393,13 +393,13 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide(
-                                      color: Colors.grey[300]!,
+                                      color: AppColors.neutral250,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide(
-                                      color: Colors.grey[300]!,
+                                      color: AppColors.neutral250,
                                     ),
                                   ),
                                   filled: true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'custom_stepper_cubit.dart';
@@ -24,14 +25,15 @@ class CustomStepper extends StatelessWidget {
     required this.steps,
     this.initialStep = 0,
     this.onStepTapped,
-    this.activeColor = const Color(0xFF2962FF),
+    this.activeColor = AppColors.brandBlue,
     this.activeTextColor = Colors.white,
-    this.completedBackgroundColor = const Color(0xFFC6D8FF), // Light blue tint
-    this.completedIconColor = const Color(0xFF2962FF),
-    this.inactiveBackgroundColor = const Color(0xFFF3F4F6),
-    this.inactiveNumberColor = const Color(0xFF9CA3AF),
+    this.completedBackgroundColor =
+        AppColors.brandBlueLighter, // Light blue tint
+    this.completedIconColor = AppColors.brandBlue,
+    this.inactiveBackgroundColor = AppColors.neutral100,
+    this.inactiveNumberColor = AppColors.neutral400,
     this.activeLabelColor = Colors.black,
-    this.inactiveLabelColor = const Color(0xFF9CA3AF),
+    this.inactiveLabelColor = AppColors.neutral400,
     this.focusNode,
   }) : assert(steps.length > 0);
 

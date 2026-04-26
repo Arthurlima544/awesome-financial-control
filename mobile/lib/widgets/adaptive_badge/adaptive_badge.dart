@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_badge_cubit.dart';
 
@@ -50,7 +51,7 @@ class AdaptiveBadge extends StatelessWidget {
 
             // Determine thematic colors
             final themeBaseColor =
-                baseColor ?? const Color(0xFFE57373); // Default red
+                baseColor ?? AppColors.softRed; // Default red
             Color backgroundColor;
             Color contentColor;
 

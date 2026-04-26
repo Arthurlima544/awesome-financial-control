@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_chip_cubit.dart';
 
@@ -43,7 +44,7 @@ class AdaptiveChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final baseColor = primaryColor ?? const Color(0xFF624BFF); // Default purple
+    final baseColor = primaryColor ?? AppColors.brandPurple; // Default purple
 
     return BlocBuilder<AdaptiveChipCubit, AdaptiveChipState>(
       builder: (context, state) {

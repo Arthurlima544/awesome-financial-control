@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'custom_tooltip_cubit.dart';
 export 'custom_tooltip_cubit.dart';
@@ -19,7 +20,7 @@ class CustomTooltip extends StatelessWidget {
     required this.description,
     required this.child,
     this.position = TooltipPosition.top,
-    this.backgroundColor = const Color(0xFF2D2E33),
+    this.backgroundColor = AppColors.neutral900,
     this.textColor = Colors.white,
     this.maxWidth,
     this.onVisibleChanged,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_segmented_control_cubit.dart';
 
@@ -58,11 +59,10 @@ class AdaptiveSegmentedControl extends StatelessWidget {
                 (availableWidth - (padding * 2)) / segments.length;
 
             // Colors based on the design
-            final themeBgColor = backgroundColor ?? const Color(0xFFF0F1F5);
+            final themeBgColor = backgroundColor ?? AppColors.neutral100;
             final themeThumbColor = thumbColor ?? Colors.white;
             final themeActiveText = activeTextColor ?? Colors.black;
-            final themeInactiveText =
-                inactiveTextColor ?? const Color(0xFF8A8A8E);
+            final themeInactiveText = inactiveTextColor ?? AppColors.neutral450;
 
             // Error visualization
             final Color currentBgColor = state.errorMessage != null

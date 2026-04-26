@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_text_field_cubit.dart';
 
@@ -40,8 +41,8 @@ class AdaptiveTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultFocusColor = focusedBorderColor ?? const Color(0xFF624BFF);
-    final defaultErrorColor = errorBorderColor ?? const Color(0xFFE53935);
+    final defaultFocusColor = focusedBorderColor ?? AppColors.brandPurple;
+    final defaultErrorColor = errorBorderColor ?? AppColors.error;
 
     return BlocBuilder<AdaptiveTextFieldCubit, AdaptiveTextFieldState>(
       builder: (context, state) {
@@ -58,13 +59,13 @@ class AdaptiveTextField extends StatelessWidget {
         final double fontSize = rawFontSize.clamp(14.0, 16.0);
 
         // Determine border and background colors based on state
-        Color borderColor = const Color(0xFFE0E0E0); // Default grey
+        Color borderColor = AppColors.neutral250; // Default grey
         Color backgroundColor = Colors.transparent;
         double borderWidth = 1.0;
 
         if (state.isDisabled) {
-          backgroundColor = const Color(0xFFF5F5F5);
-          borderColor = const Color(0xFFEEEEEE);
+          backgroundColor = AppColors.neutral150;
+          borderColor = AppColors.neutral150;
         } else if (state.errorMessage != null) {
           borderColor = defaultErrorColor;
           borderWidth = 1.5;
@@ -135,7 +136,7 @@ class AdaptiveTextField extends StatelessWidget {
                             hintText: hintText,
                             hintStyle: TextStyle(
                               fontSize: fontSize,
-                              color: const Color(0xFF9E9E9E),
+                              color: AppColors.neutral400,
                             ),
                             border: InputBorder.none,
                             isDense: true,

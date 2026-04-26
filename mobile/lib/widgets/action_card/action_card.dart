@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'action_card_cubit.dart';
@@ -32,7 +33,7 @@ class ActionCard extends StatelessWidget {
     this.leadingIcon,
     this.imageWidget,
     this.primaryColor = Colors.purple,
-    this.backgroundColor = const Color(0xFFF8F9FE),
+    this.backgroundColor = AppColors.cardBackground,
     this.surfaceColor = Colors.white,
     this.buttonFocusNode,
   });

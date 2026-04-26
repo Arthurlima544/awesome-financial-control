@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_radio_button_cubit.dart';
 
@@ -44,15 +45,13 @@ class AdaptiveRadioButton extends StatelessWidget {
             final double borderWidth = size * 0.1;
 
             // Define thematic colors
-            final themeActive = activeColor ?? const Color(0xFF624BFF);
-            final themeInactive = inactiveColor ?? const Color(0xFFBDBDBD);
+            final themeActive = activeColor ?? AppColors.brandPurple;
+            final themeInactive = inactiveColor ?? AppColors.neutral350;
             final themeDisabledActiveOuter =
-                disabledActiveColor ?? const Color(0xFFE0E0E0);
-            final themeDisabledActiveInner = const Color(
-              0xFFF5F5F5,
-            ); // Slightly darker white for the inner hole
+                disabledActiveColor ?? AppColors.neutral250;
+            final themeDisabledActiveInner = AppColors.neutral150;
             final themeDisabledInactive =
-                disabledInactiveColor ?? const Color(0xFFEEEEEE);
+                disabledInactiveColor ?? AppColors.neutral150;
 
             // Determine visual properties based on state
             Color outerColor;

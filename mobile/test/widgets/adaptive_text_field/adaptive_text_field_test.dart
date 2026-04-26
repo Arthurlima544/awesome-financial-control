@@ -1,4 +1,5 @@
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -102,7 +103,7 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       expect(
         decoration.border?.top.color,
-        const Color(0xFFE53935),
+        AppColors.error,
       ); // defaultErrorColor
     });
 

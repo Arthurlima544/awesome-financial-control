@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'pagination_dots_cubit.dart';
@@ -17,8 +18,8 @@ class PaginationDots extends StatelessWidget {
     required this.totalPages,
     this.initialPage = 0,
     this.onPageSelected,
-    this.activeColor = const Color(0xFF2962FF),
-    this.inactiveColor = const Color(0xFFE5E7EB),
+    this.activeColor = AppColors.brandBlue,
+    this.inactiveColor = AppColors.neutral200,
     this.focusNode,
     this.cubit,
   }) : assert(totalPages > 0, 'totalPages must be greater than 0');

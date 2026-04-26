@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:afc/utils/config/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'adaptive_stepper_cubit.dart';
 
@@ -49,10 +50,10 @@ class AdaptiveStepper extends StatelessWidget {
             final double minWidth = containerHeight * 2.5;
 
             // Colors based on the provided design
-            final themeActive = activeIconColor ?? const Color(0xFF624BFF);
-            final themeInactive = inactiveIconColor ?? const Color(0xFFBDBDBD);
-            final themeBorder = borderColor ?? const Color(0xFFE0E0E0);
-            final themeText = textColor ?? const Color(0xFF000000);
+            final themeActive = activeIconColor ?? AppColors.brandPurple;
+            final themeInactive = inactiveIconColor ?? AppColors.neutral350;
+            final themeBorder = borderColor ?? AppColors.neutral250;
+            final themeText = textColor ?? Colors.black;
 
             final currentBorderColor = state.errorMessage != null
                 ? Colors.red
