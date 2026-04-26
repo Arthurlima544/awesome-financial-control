@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/repositories/investment_repository.dart';
+import 'package:afc/models/investment_dashboard_data.dart';
 
 // Events
 abstract class InvestmentDashboardEvent extends Equatable {
@@ -16,7 +17,7 @@ enum InvestmentDashboardStatus { initial, loading, success, failure }
 
 class InvestmentDashboardState extends Equatable {
   final InvestmentDashboardStatus status;
-  final Map<String, dynamic>? data;
+  final InvestmentDashboardData? data;
   final String? errorMessage;
 
   const InvestmentDashboardState({
@@ -27,7 +28,7 @@ class InvestmentDashboardState extends Equatable {
 
   InvestmentDashboardState copyWith({
     InvestmentDashboardStatus? status,
-    Map<String, dynamic>? data,
+    InvestmentDashboardData? data,
     String? errorMessage,
   }) {
     return InvestmentDashboardState(

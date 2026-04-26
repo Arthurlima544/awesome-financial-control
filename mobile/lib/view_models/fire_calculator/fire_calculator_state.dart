@@ -4,7 +4,7 @@ enum FireCalculatorStatus { initial, loading, success, failure }
 
 class FireCalculatorState extends Equatable {
   final FireCalculatorStatus status;
-  final Map<String, dynamic>? result;
+  final FireCalculatorResult? result;
   final String? errorMessage;
 
   const FireCalculatorState({
@@ -15,7 +15,7 @@ class FireCalculatorState extends Equatable {
 
   FireCalculatorState copyWith({
     FireCalculatorStatus? status,
-    Map<String, dynamic>? result,
+    FireCalculatorResult? result,
     String? errorMessage,
   }) {
     return FireCalculatorState(

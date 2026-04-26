@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/repositories/passive_income_repository.dart';
+import 'package:afc/models/passive_income_data.dart';
 
 // Events
 abstract class PassiveIncomeEvent extends Equatable {
@@ -16,7 +17,7 @@ enum PassiveIncomeStatus { initial, loading, success, failure }
 
 class PassiveIncomeState extends Equatable {
   final PassiveIncomeStatus status;
-  final Map<String, dynamic>? data;
+  final PassiveIncomeData? data;
   final String? errorMessage;
 
   const PassiveIncomeState({
@@ -27,7 +28,7 @@ class PassiveIncomeState extends Equatable {
 
   PassiveIncomeState copyWith({
     PassiveIncomeStatus? status,
-    Map<String, dynamic>? data,
+    PassiveIncomeData? data,
     String? errorMessage,
   }) {
     return PassiveIncomeState(

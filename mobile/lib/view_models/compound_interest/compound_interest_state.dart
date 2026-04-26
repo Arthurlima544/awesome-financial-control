@@ -4,7 +4,7 @@ enum CompoundInterestStatus { initial, loading, success, failure }
 
 class CompoundInterestState extends Equatable {
   final CompoundInterestStatus status;
-  final Map<String, dynamic>? result;
+  final CompoundInterestResult? result;
   final String? errorMessage;
 
   const CompoundInterestState({
@@ -15,7 +15,7 @@ class CompoundInterestState extends Equatable {
 
   CompoundInterestState copyWith({
     CompoundInterestStatus? status,
-    Map<String, dynamic>? result,
+    CompoundInterestResult? result,
     String? errorMessage,
   }) {
     return CompoundInterestState(

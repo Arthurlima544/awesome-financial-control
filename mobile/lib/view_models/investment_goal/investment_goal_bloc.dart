@@ -31,12 +31,8 @@ class InvestmentGoalBloc
         adjustForInflation: event.adjustForInflation,
       );
 
-      final response = InvestmentGoalResponse.fromJson(data);
       emit(
-        state.copyWith(
-          status: InvestmentGoalStatus.success,
-          response: response,
-        ),
+        state.copyWith(status: InvestmentGoalStatus.success, response: data),
       );
     } catch (e) {
       emit(

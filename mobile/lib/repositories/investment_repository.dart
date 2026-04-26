@@ -1,4 +1,5 @@
 import 'package:afc/models/investment_model.dart';
+import 'package:afc/models/investment_dashboard_data.dart';
 import 'package:afc/services/investment_service.dart';
 
 class InvestmentRepository {
@@ -23,6 +24,8 @@ class InvestmentRepository {
   Future<InvestmentModel> updatePrice(String id, double price) =>
       _service.updatePrice(id, price);
 
-  Future<Map<String, dynamic>> getDashboardData() =>
-      _service.getDashboardData();
+  Future<InvestmentDashboardData> getDashboardData() async {
+    final data = await _service.getDashboardData();
+    return InvestmentDashboardData.fromJson(data);
+  }
 }

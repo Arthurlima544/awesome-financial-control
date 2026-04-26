@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/repositories/calculator_repository.dart';
+import 'package:afc/models/fire_calculator_result.dart';
 
 part 'fire_calculator_event.dart';
 part 'fire_calculator_state.dart';

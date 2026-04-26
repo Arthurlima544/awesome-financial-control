@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/repositories/calculator_repository.dart';
+import 'package:afc/models/compound_interest_result.dart';
 
 part 'compound_interest_event.dart';
 part 'compound_interest_state.dart';

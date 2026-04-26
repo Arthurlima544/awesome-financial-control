@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:afc/utils/config/app_config.dart';
+import 'package:afc/models/fire_calculator_result.dart';
+import 'package:afc/models/compound_interest_result.dart';
+import 'package:afc/models/investment_goal.dart';
 
 class CalculatorRepository {
   final Dio _dio;
 
   CalculatorRepository({Dio? dio}) : _dio = dio ?? Dio();
 
-  Future<Map<String, dynamic>> calculateFire({
+  Future<FireCalculatorResult> calculateFire({
     required double monthlyExpenses,
     required double currentPortfolio,
     required double monthlySavings,
@@ -28,7 +31,9 @@ class CalculatorRepository {
       );
 
       if (response.statusCode == 200) {
-        return response.data as Map<String, dynamic>;
+        return FireCalculatorResult.fromJson(
+          response.data as Map<String, dynamic>,
+        );
       } else {
         throw Exception('Failed to calculate FIRE: ${response.statusCode}');
       }
@@ -37,7 +42,7 @@ class CalculatorRepository {
     }
   }
 
-  Future<Map<String, dynamic>> calculateCompoundInterest({
+  Future<CompoundInterestResult> calculateCompoundInterest({
     required double initialAmount,
     required double monthlyContribution,
     required int years,
@@ -57,7 +62,9 @@ class CalculatorRepository {
       );
 
       if (response.statusCode == 200) {
-        return response.data as Map<String, dynamic>;
+        return CompoundInterestResult.fromJson(
+          response.data as Map<String, dynamic>,
+        );
       } else {
         throw Exception(
           'Failed to calculate compound interest: ${response.statusCode}',
@@ -68,7 +75,7 @@ class CalculatorRepository {
     }
   }
 
-  Future<Map<String, dynamic>> calculateInvestmentGoal({
+  Future<InvestmentGoalResponse> calculateInvestmentGoal({
     required double targetAmount,
     required DateTime targetDate,
     required double annualReturnRate,
@@ -88,7 +95,9 @@ class CalculatorRepository {
       );
 
       if (response.statusCode == 200) {
-        return response.data as Map<String, dynamic>;
+        return InvestmentGoalResponse.fromJson(
+          response.data as Map<String, dynamic>,
+        );
       } else {
         throw Exception(
           'Failed to calculate investment goal: ${response.statusCode}',

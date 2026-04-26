@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
+import 'package:afc/models/passive_income_data.dart';
 
 class PassiveIncomeScreen extends StatelessWidget {
   const PassiveIncomeScreen({super.key});
@@ -46,13 +47,13 @@ class PassiveIncomeScreen extends StatelessWidget {
               children: [
                 _buildFreedomGauge(
                   context,
-                  data['freedomIndex'],
-                  data['totalPassiveIncomeCurrentMonth'],
+                  data.freedomIndex,
+                  data.totalPassiveIncomeCurrentMonth,
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                _buildProgressionChart(context, data['monthlyProgression']),
+                _buildProgressionChart(context, data.monthlyProgression),
                 const SizedBox(height: AppSpacing.xl),
-                _buildIncomeBySource(context, data['incomeByInvestment']),
+                _buildIncomeBySource(context, data.incomeByInvestment),
               ],
             ),
           );
@@ -151,7 +152,7 @@ class PassiveIncomeScreen extends StatelessWidget {
 
   Widget _buildProgressionChart(
     BuildContext context,
-    List<dynamic> progression,
+    List<PassiveIncomeMonth> progression,
   ) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
@@ -196,7 +197,7 @@ class PassiveIncomeScreen extends StatelessWidget {
                       x: e.key,
                       barRods: [
                         BarChartRodData(
-                          toY: (e.value['amount'] as num).toDouble(),
+                          toY: e.value.amount,
                           color: AppColors.primary,
                           width: 16,
                           borderRadius: BorderRadius.circular(4),
@@ -212,8 +213,7 @@ class PassiveIncomeScreen extends StatelessWidget {
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
                           if (index >= 0 && index < progression.length) {
-                            final month = progression[index]['month']
-                                .toString()
+                            final month = progression[index].month
                                 .split('-')
                                 .last;
                             return Text(
@@ -246,11 +246,11 @@ class PassiveIncomeScreen extends StatelessWidget {
     );
   }
 
-  double _getMaxY(List<dynamic> progression) {
+  double _getMaxY(List<PassiveIncomeMonth> progression) {
     double max = 0;
     for (var p in progression) {
-      if ((p['amount'] as num).toDouble() > max) {
-        max = (p['amount'] as num).toDouble();
+      if (p.amount > max) {
+        max = p.amount;
       }
     }
     return max == 0 ? 100 : max * 1.2;
@@ -258,7 +258,7 @@ class PassiveIncomeScreen extends StatelessWidget {
 
   Widget _buildIncomeBySource(
     BuildContext context,
-    Map<dynamic, dynamic> sources,
+    Map<String, double> sources,
   ) {
     final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
