@@ -21,14 +21,13 @@ void main() {
   });
 
   test('initial state is correct', () {
-    expect(bloc.state.status, NetWorthStatus.initial);
-    expect(bloc.state.data, isEmpty);
+    expect(bloc.state, NetWorthState.initial());
   });
 
   blocTest<NetWorthBloc, NetWorthState>(
     'emits [loading, success] when LoadNetWorthEvolution is successful',
     build: () {
-      final data = [
+      const data = [
         NetWorthPoint(
           month: '2024-01',
           assets: 1000,
@@ -41,16 +40,19 @@ void main() {
       ).thenAnswer((_) async => data);
       return bloc;
     },
-    act: (bloc) => bloc.add(LoadNetWorthEvolution()),
+    act: (bloc) => bloc.add(const LoadNetWorthEvolution()),
     expect: () => [
-      predicate<NetWorthState>(
-        (state) => state.status == NetWorthStatus.loading,
-      ),
-      predicate<NetWorthState>(
-        (state) =>
-            state.status == NetWorthStatus.success &&
-            state.data.length == 1 &&
-            state.data.first.month == '2024-01',
+      const NetWorthState(status: NetWorthStatus.loading, data: []),
+      const NetWorthState(
+        status: NetWorthStatus.success,
+        data: [
+          NetWorthPoint(
+            month: '2024-01',
+            assets: 1000,
+            liabilities: 500,
+            total: 500,
+          ),
+        ],
       ),
     ],
   );
@@ -63,15 +65,13 @@ void main() {
       ).thenThrow(Exception('error'));
       return bloc;
     },
-    act: (bloc) => bloc.add(LoadNetWorthEvolution()),
+    act: (bloc) => bloc.add(const LoadNetWorthEvolution()),
     expect: () => [
-      predicate<NetWorthState>(
-        (state) => state.status == NetWorthStatus.loading,
-      ),
-      predicate<NetWorthState>(
-        (state) =>
-            state.status == NetWorthStatus.failure &&
-            state.errorMessage == 'Erro ao carregar evolução do patrimônio',
+      const NetWorthState(status: NetWorthStatus.loading, data: []),
+      const NetWorthState(
+        status: NetWorthStatus.failure,
+        data: [],
+        errorMessage: 'Erro ao carregar evolução do patrimônio',
       ),
     ],
   );

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:afc/models/recurring_transaction_model.dart';
 import 'package:afc/models/transaction_model.dart';
 import 'package:afc/repositories/recurring_repository.dart';
@@ -5,7 +6,7 @@ import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:afc/utils/config/injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RecurringFormState {
+class RecurringFormState extends Equatable {
   final String description;
   final String amount;
   final TransactionType type;
@@ -17,7 +18,7 @@ class RecurringFormState {
   final bool isSuccess;
   final String? errorMessage;
 
-  RecurringFormState({
+  const RecurringFormState({
     this.description = '',
     this.amount = '',
     this.type = TransactionType.expense,
@@ -61,6 +62,20 @@ class RecurringFormState {
           : errorMessage as String?,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    description,
+    amount,
+    type,
+    category,
+    frequency,
+    nextDueAt,
+    active,
+    isSubmitting,
+    isSuccess,
+    errorMessage,
+  ];
 }
 
 class RecurringFormCubit extends Cubit<RecurringFormState> {

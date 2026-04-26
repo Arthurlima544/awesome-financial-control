@@ -1,24 +1,35 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/models/net_worth_point.dart';
 import 'package:afc/repositories/stats_repository.dart';
 
 // Events
-abstract class NetWorthEvent {}
+abstract class NetWorthEvent extends Equatable {
+  const NetWorthEvent();
+  @override
+  List<Object?> get props => [];
+}
 
-class LoadNetWorthEvolution extends NetWorthEvent {}
+class LoadNetWorthEvolution extends NetWorthEvent {
+  const LoadNetWorthEvolution();
+}
 
 // States
 enum NetWorthStatus { initial, loading, success, failure }
 
-class NetWorthState {
+class NetWorthState extends Equatable {
   final NetWorthStatus status;
   final List<NetWorthPoint> data;
   final String? errorMessage;
 
-  NetWorthState({required this.status, required this.data, this.errorMessage});
+  const NetWorthState({
+    required this.status,
+    required this.data,
+    this.errorMessage,
+  });
 
   factory NetWorthState.initial() =>
-      NetWorthState(status: NetWorthStatus.initial, data: []);
+      const NetWorthState(status: NetWorthStatus.initial, data: []);
 
   NetWorthState copyWith({
     NetWorthStatus? status,
@@ -31,6 +42,9 @@ class NetWorthState {
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+
+  @override
+  List<Object?> get props => [status, data, errorMessage];
 }
 
 // Bloc
