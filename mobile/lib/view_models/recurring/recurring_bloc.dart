@@ -38,7 +38,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       final rules = await _repository.getAll();
       emit(RecurringLoaded(rules));
     } catch (e) {
-      emit(RecurringError(e.toString()));
+      emit(RecurringError('Erro ao carregar transações recorrentes'));
     }
   }
 
@@ -51,7 +51,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       await _repository.update(updated);
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(RecurringError(e.toString()));
+      emit(RecurringError('Erro ao atualizar transação recorrente'));
     }
   }
 
@@ -63,7 +63,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       await _repository.delete(event.id);
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(RecurringError(e.toString()));
+      emit(RecurringError('Erro ao excluir transação recorrente'));
     }
   }
 }

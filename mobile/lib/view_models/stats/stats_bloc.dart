@@ -36,7 +36,7 @@ class StatsBloc extends Bloc<StatsEvent, StatsState> {
       final stats = await _repository.getMonthlyStats();
       emit(StatsData(stats));
     } catch (e) {
-      emit(StatsError(e.toString()));
+      emit(const StatsError('Erro ao carregar estatísticas mensais'));
     }
   }
 }

@@ -327,7 +327,9 @@ class NetWorthScreen extends StatelessWidget {
         ];
         return '${monthNames[month]} $year';
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error formatting month: $e');
+    }
     return monthStr;
   }
 

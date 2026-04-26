@@ -43,7 +43,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       final categories = await _repository.getAll();
       emit(CategoryData(categories));
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError('Erro ao carregar categorias'));
     }
   }
 
@@ -61,7 +61,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       emit(CategoryData(updated));
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError('Erro ao excluir categoria'));
     }
   }
 
@@ -79,7 +79,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       emit(CategoryData(updatedList));
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError('Erro ao atualizar categoria'));
     }
   }
 
@@ -96,7 +96,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       emit(CategoryData(updatedList));
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(CategoryError(e.toString()));
+      emit(CategoryError('Erro ao criar categoria'));
     }
   }
 }

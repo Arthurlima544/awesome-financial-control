@@ -25,7 +25,10 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
       emit(state.copyWith(status: GoalStatus.success, goals: goals));
     } catch (e) {
       emit(
-        state.copyWith(status: GoalStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: GoalStatus.failure,
+          errorMessage: 'Erro ao carregar objetivos',
+        ),
       );
     }
   }
@@ -42,7 +45,10 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
       add(LoadGoals());
     } catch (e) {
       emit(
-        state.copyWith(status: GoalStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: GoalStatus.failure,
+          errorMessage: 'Erro ao criar objetivo',
+        ),
       );
     }
   }
@@ -56,7 +62,10 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
       add(LoadGoals());
     } catch (e) {
       emit(
-        state.copyWith(status: GoalStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: GoalStatus.failure,
+          errorMessage: 'Erro ao adicionar contribuição',
+        ),
       );
     }
   }
@@ -67,7 +76,10 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
       add(LoadGoals());
     } catch (e) {
       emit(
-        state.copyWith(status: GoalStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: GoalStatus.failure,
+          errorMessage: 'Erro ao excluir objetivo',
+        ),
       );
     }
   }

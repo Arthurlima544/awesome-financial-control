@@ -36,7 +36,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
       emit(
         state.copyWith(
           status: InvestmentStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao carregar investimentos',
         ),
       );
     }
@@ -54,7 +54,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
       emit(
         state.copyWith(
           status: InvestmentStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao criar investimento',
         ),
       );
     }
@@ -72,7 +72,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
       emit(
         state.copyWith(
           status: InvestmentStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao atualizar investimento',
         ),
       );
     }
@@ -89,7 +89,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
       emit(
         state.copyWith(
           status: InvestmentStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao excluir investimento',
         ),
       );
     }
@@ -106,7 +106,7 @@ class InvestmentBloc extends Bloc<InvestmentEvent, InvestmentState> {
       emit(
         state.copyWith(
           status: InvestmentStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao atualizar preço do investimento',
         ),
       );
     }
