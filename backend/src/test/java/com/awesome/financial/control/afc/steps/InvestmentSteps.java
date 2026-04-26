@@ -7,7 +7,10 @@ import com.awesome.financial.control.afc.dto.InvestmentRequest;
 import com.awesome.financial.control.afc.dto.InvestmentResponse;
 import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.InvestmentType;
+import com.awesome.financial.control.afc.model.Transaction;
+import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
+import com.awesome.financial.control.afc.repository.TransactionRepository;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
@@ -15,6 +18,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +32,23 @@ public class InvestmentSteps {
     private final TestRestTemplate restTemplate;
     private final ScenarioContext context;
     private final InvestmentRepository investmentRepository;
+    private final TransactionRepository transactionRepository;
 
     @After
     public void cleanUp() {
+        transactionRepository.deleteAll();
         investmentRepository.deleteAll();
+    }
+
+    @Given("a transaction linked to the last created investment")
+    public void aTransactionLinkedToLastCreatedInvestment() {
+        Transaction transaction = new Transaction();
+        transaction.setDescription("Dividendos");
+        transaction.setAmount(BigDecimal.valueOf(100));
+        transaction.setType(TransactionType.INCOME);
+        transaction.setInvestmentId(context.lastInvestmentId);
+        transaction.setOccurredAt(Instant.now());
+        transactionRepository.save(transaction);
     }
 
     @Given("I have the following investments:")
@@ -195,7 +212,7 @@ public class InvestmentSteps {
                         "/api/v1/investments/" + context.lastInvestmentId,
                         HttpMethod.DELETE,
                         null,
-                        Void.class);
+                        String.class);
     }
 
     @And("the investment {string} should not exist")

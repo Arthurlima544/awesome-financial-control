@@ -3,11 +3,14 @@ package com.awesome.financial.control.afc.service;
 import com.awesome.financial.control.afc.dto.InvestmentDashboardResponse;
 import com.awesome.financial.control.afc.dto.InvestmentRequest;
 import com.awesome.financial.control.afc.dto.InvestmentResponse;
+import com.awesome.financial.control.afc.exception.ConflictException;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.InvestmentMapper;
 import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.InvestmentType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
+import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
+import com.awesome.financial.control.afc.repository.TransactionRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ public class InvestmentService {
 
     private final InvestmentRepository investmentRepository;
     private final InvestmentMapper investmentMapper;
+    private final TransactionRepository transactionRepository;
+    private final RecurringTransactionRepository recurringTransactionRepository;
 
     @Transactional(readOnly = true)
     public List<InvestmentResponse> getAllInvestments() {
@@ -107,6 +112,11 @@ public class InvestmentService {
     public void deleteInvestment(UUID id) {
         if (!investmentRepository.existsById(id)) {
             throw new ResourceNotFoundException("Investment", id);
+        }
+        if (transactionRepository.existsByInvestmentId(id)
+                || recurringTransactionRepository.existsByInvestmentId(id)) {
+            throw new ConflictException(
+                    "Investimento possui transações ou recorrências associadas");
         }
         investmentRepository.deleteById(id);
     }

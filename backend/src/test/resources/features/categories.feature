@@ -45,3 +45,10 @@ Feature: Categories management
     Given a category named "Lazer"
     When I update the last created category name to ""
     Then the response status is 422
+
+  Scenario: Delete a category that has an associated limit returns 409
+    Given a category named "Alimentação"
+    And a spending limit of 500 for category "Alimentação"
+    When I delete the last created category
+    Then the response status is 409
+    And the response contains "Categoria possui um limite associado"

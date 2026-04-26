@@ -10,4 +10,6 @@ public interface LimitRepository extends JpaRepository<Limit, UUID> {
 
     @Query("SELECT l FROM Limit l JOIN FETCH l.category")
     List<Limit> findAllWithCategory();
+
+    boolean existsByCategoryId(UUID categoryId);
 }

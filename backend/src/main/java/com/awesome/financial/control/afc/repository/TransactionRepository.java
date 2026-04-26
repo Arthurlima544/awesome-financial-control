@@ -54,4 +54,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             "SELECT SUM(t.amount) FROM Transaction t WHERE t.type = :type AND t.occurredAt < :before")
     Optional<BigDecimal> sumAmountByTypeAndOccurredAtBefore(
             @Param("type") TransactionType type, @Param("before") Instant before);
+
+    boolean existsByInvestmentId(UUID investmentId);
 }

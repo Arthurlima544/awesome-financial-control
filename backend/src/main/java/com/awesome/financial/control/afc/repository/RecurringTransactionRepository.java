@@ -10,4 +10,6 @@ public interface RecurringTransactionRepository extends JpaRepository<RecurringT
     List<RecurringTransaction> findAllByActiveTrueAndNextDueAtBefore(Instant now);
 
     List<RecurringTransaction> findAllByActiveTrue();
+
+    boolean existsByInvestmentId(UUID investmentId);
 }

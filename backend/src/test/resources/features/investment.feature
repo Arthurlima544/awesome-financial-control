@@ -52,3 +52,10 @@ Feature: Investment portfolio management
   Scenario: Delete a non-existing investment returns 404
     When I delete investment with id "00000000-0000-0000-0000-000000000000"
     Then the response status is 404
+
+  Scenario: Delete an investment referenced by a transaction returns 409
+    Given I have an investment "ITUB4" price 30.0 quantity 10
+    And a transaction linked to the last created investment
+    When I delete investment "ITUB4"
+    Then the response status is 409
+    And the response contains "Investimento possui transações ou recorrências associadas"

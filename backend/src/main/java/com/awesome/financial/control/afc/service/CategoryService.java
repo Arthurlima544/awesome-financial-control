@@ -3,9 +3,11 @@ package com.awesome.financial.control.afc.service;
 import com.awesome.financial.control.afc.dto.CategoryResponse;
 import com.awesome.financial.control.afc.dto.CreateCategoryRequest;
 import com.awesome.financial.control.afc.dto.UpdateCategoryRequest;
+import com.awesome.financial.control.afc.exception.ConflictException;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.model.Category;
 import com.awesome.financial.control.afc.repository.CategoryRepository;
+import com.awesome.financial.control.afc.repository.LimitRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final LimitRepository limitRepository;
 
     @Transactional(readOnly = true)
     public List<CategoryResponse> getAllCategories() {
@@ -35,6 +38,10 @@ public class CategoryService {
     public void deleteCategory(UUID id) {
         if (!categoryRepository.existsById(id)) {
             throw new ResourceNotFoundException("Category", id);
+        }
+        if (limitRepository.existsByCategoryId(id)) {
+            throw new ConflictException(
+                    "Categoria possui um limite associado e não pode ser excluída");
         }
         categoryRepository.deleteById(id);
     }
