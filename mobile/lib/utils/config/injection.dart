@@ -83,10 +83,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => CalculatorRepository());
   sl.registerLazySingleton(() => MarketRepository());
   sl.registerLazySingleton(() => FeedbackRepository());
+  sl.registerLazySingleton(() => PassiveIncomeRepository());
 
   // Blocs
   sl.registerLazySingleton(() => AuthBloc());
-  sl.registerLazySingleton(() => HomeBloc());
+  sl.registerLazySingleton(() => HomeBloc(repository: sl(), refreshBloc: sl()));
   sl.registerFactory(() => CategoryBloc());
   sl.registerFactory(() => LimitBloc());
   sl.registerFactory(() => LimitListBloc());
@@ -113,7 +114,6 @@ Future<void> init() async {
   sl.registerFactory(
     () => InvestmentDashboardBloc(repository: sl(), cacheService: sl()),
   );
-  sl.registerLazySingleton(() => PassiveIncomeRepository());
   sl.registerFactory(
     () => PassiveIncomeBloc(repository: sl(), cacheService: sl()),
   );

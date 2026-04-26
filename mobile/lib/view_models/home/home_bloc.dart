@@ -16,10 +16,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AppRefreshBloc _refreshBloc;
   late final StreamSubscription _refreshSubscription;
 
-  HomeBloc({HomeRepository? repository, AppRefreshBloc? refreshBloc})
-    : _repository = repository ?? sl<HomeRepository>(),
-      _refreshBloc = refreshBloc ?? sl<AppRefreshBloc>(),
-      super(HomeInitial()) {
+  HomeBloc({
+    required HomeRepository repository,
+    required AppRefreshBloc refreshBloc,
+  }) : _repository = repository,
+       _refreshBloc = refreshBloc,
+       super(HomeInitial()) {
     on<HomeDashboardLoaded>(_onDashboardLoaded);
     _refreshSubscription = _refreshBloc.stream.listen(
       (_) => add(const HomeDashboardLoaded()),
