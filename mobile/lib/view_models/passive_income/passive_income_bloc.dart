@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/repositories/passive_income_repository.dart';
+import 'package:afc/models/passive_income_data.dart';
+import 'package:afc/services/cache_service.dart';
 
 // Events
 abstract class PassiveIncomeEvent extends Equatable {
@@ -16,7 +18,7 @@ enum PassiveIncomeStatus { initial, loading, success, failure }
 
 class PassiveIncomeState extends Equatable {
   final PassiveIncomeStatus status;
-  final Map<String, dynamic>? data;
+  final PassiveIncomeData? data;
   final String? errorMessage;
 
   const PassiveIncomeState({
@@ -27,7 +29,7 @@ class PassiveIncomeState extends Equatable {
 
   PassiveIncomeState copyWith({
     PassiveIncomeStatus? status,
-    Map<String, dynamic>? data,
+    PassiveIncomeData? data,
     String? errorMessage,
   }) {
     return PassiveIncomeState(
@@ -44,10 +46,15 @@ class PassiveIncomeState extends Equatable {
 // Bloc
 class PassiveIncomeBloc extends Bloc<PassiveIncomeEvent, PassiveIncomeState> {
   final PassiveIncomeRepository _repository;
+  final CacheService _cacheService;
+  static const _cacheKey = 'passive_income_dashboard';
 
-  PassiveIncomeBloc({required PassiveIncomeRepository repository})
-    : _repository = repository,
-      super(const PassiveIncomeState()) {
+  PassiveIncomeBloc({
+    required PassiveIncomeRepository repository,
+    required CacheService cacheService,
+  }) : _repository = repository,
+       _cacheService = cacheService,
+       super(const PassiveIncomeState()) {
     on<LoadPassiveIncomeDashboard>(_onLoadPassiveIncomeDashboard);
   }
 
@@ -55,17 +62,38 @@ class PassiveIncomeBloc extends Bloc<PassiveIncomeEvent, PassiveIncomeState> {
     LoadPassiveIncomeDashboard event,
     Emitter<PassiveIncomeState> emit,
   ) async {
-    emit(state.copyWith(status: PassiveIncomeStatus.loading));
+    // 1. Load from cache
+    final cachedData = _cacheService.load(_cacheKey);
+    if (cachedData != null) {
+      try {
+        final data = PassiveIncomeData.fromJson(cachedData);
+        emit(state.copyWith(status: PassiveIncomeStatus.success, data: data));
+      } catch (_) {
+        // Cache corrupted, ignore
+      }
+    }
+
+    // 2. Fetch from API
+    if (state.status != PassiveIncomeStatus.success) {
+      emit(state.copyWith(status: PassiveIncomeStatus.loading));
+    }
+
     try {
       final data = await _repository.getDashboardData();
+      // 3. Update cache
+      await _cacheService.save(_cacheKey, data.toJson());
       emit(state.copyWith(status: PassiveIncomeStatus.success, data: data));
     } catch (e) {
-      emit(
-        state.copyWith(
-          status: PassiveIncomeStatus.failure,
-          errorMessage: e.toString(),
-        ),
-      );
+      // 4. If failure and no cached data, show error
+      if (state.data == null) {
+        emit(
+          state.copyWith(
+            status: PassiveIncomeStatus.failure,
+            errorMessage: e.toString(),
+          ),
+        );
+      }
+      // If we have cached data, we stay in success state (silent error or we could show a snackbar)
     }
   }
 }

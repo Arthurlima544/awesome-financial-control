@@ -28,6 +28,17 @@ class HealthScoreModel extends Equatable {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'score': score,
+      'savingsScore': savingsScore,
+      'limitsScore': limitsScore,
+      'goalsScore': goalsScore,
+      'varianceScore': varianceScore,
+      'historicalScores': historicalScores,
+    };
+  }
+
   @override
   List<Object?> get props => [
     score,

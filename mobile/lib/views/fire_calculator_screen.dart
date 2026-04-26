@@ -4,6 +4,7 @@ import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/view_models/fire_calculator/fire_calculator_bloc.dart';
+import 'package:afc/models/fire_calculator_result.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field.dart';
@@ -324,13 +325,13 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     );
   }
 
-  Widget _buildResults(BuildContext context, Map<String, dynamic> result) {
+  Widget _buildResults(BuildContext context, FireCalculatorResult result) {
     final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
-    final fireNumber = result['fireNumber'] as double;
-    final monthsToFire = result['monthsToFire'] as int;
-    final retirementDate = DateTime.parse(result['retirementDate'] as String);
-    final yearlyTimeline = result['yearlyTimeline'] as List<dynamic>;
+    final fireNumber = result.fireNumber;
+    final monthsToFire = result.monthsToFire;
+    final retirementDate = result.retirementDate;
+    final yearlyTimeline = result.yearlyTimeline;
 
     final years = monthsToFire ~/ 12;
     final months = monthsToFire % 12;
@@ -370,7 +371,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
                   l10n.tooltipFIScoreTitle,
-                  '${((result['fiScore'] ?? 0.0) as num).toDouble().toStringAsFixed(1)}%',
+                  '${result.fiScore.toStringAsFixed(1)}%',
                   isBold: true,
                   hasInfo: true,
                   tooltipDesc: l10n.tooltipFIScoreDesc,
@@ -472,14 +473,11 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     );
   }
 
-  Widget _buildChart(List<dynamic> timeline, double fireNumber) {
+  Widget _buildChart(List<FireTimelinePoint> timeline, double fireNumber) {
     final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
     final spots = timeline.map((e) {
-      return FlSpot(
-        (e['year'] as num).toDouble(),
-        (e['portfolioValue'] as num).toDouble(),
-      );
+      return FlSpot(e.year, e.portfolioValue);
     }).toList();
 
     const tealColor = Color(0xFF00BFA5);

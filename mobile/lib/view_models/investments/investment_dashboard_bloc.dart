@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/repositories/investment_repository.dart';
+import 'package:afc/models/investment_dashboard_data.dart';
+import 'package:afc/services/cache_service.dart';
 
 // Events
 abstract class InvestmentDashboardEvent extends Equatable {
@@ -16,7 +18,7 @@ enum InvestmentDashboardStatus { initial, loading, success, failure }
 
 class InvestmentDashboardState extends Equatable {
   final InvestmentDashboardStatus status;
-  final Map<String, dynamic>? data;
+  final InvestmentDashboardData? data;
   final String? errorMessage;
 
   const InvestmentDashboardState({
@@ -27,7 +29,7 @@ class InvestmentDashboardState extends Equatable {
 
   InvestmentDashboardState copyWith({
     InvestmentDashboardStatus? status,
-    Map<String, dynamic>? data,
+    InvestmentDashboardData? data,
     String? errorMessage,
   }) {
     return InvestmentDashboardState(
@@ -45,10 +47,15 @@ class InvestmentDashboardState extends Equatable {
 class InvestmentDashboardBloc
     extends Bloc<InvestmentDashboardEvent, InvestmentDashboardState> {
   final InvestmentRepository _repository;
+  final CacheService _cacheService;
+  static const _cacheKey = 'investment_dashboard';
 
-  InvestmentDashboardBloc({required InvestmentRepository repository})
-    : _repository = repository,
-      super(const InvestmentDashboardState()) {
+  InvestmentDashboardBloc({
+    required InvestmentRepository repository,
+    required CacheService cacheService,
+  }) : _repository = repository,
+       _cacheService = cacheService,
+       super(const InvestmentDashboardState()) {
     on<LoadInvestmentDashboard>(_onLoadInvestmentDashboard);
   }
 
@@ -56,19 +63,42 @@ class InvestmentDashboardBloc
     LoadInvestmentDashboard event,
     Emitter<InvestmentDashboardState> emit,
   ) async {
-    emit(state.copyWith(status: InvestmentDashboardStatus.loading));
+    // 1. Load from cache
+    final cachedData = _cacheService.load(_cacheKey);
+    if (cachedData != null) {
+      try {
+        final data = InvestmentDashboardData.fromJson(cachedData);
+        emit(
+          state.copyWith(status: InvestmentDashboardStatus.success, data: data),
+        );
+      } catch (_) {
+        // Cache corrupted, ignore
+      }
+    }
+
+    // 2. Fetch from API
+    if (state.status != InvestmentDashboardStatus.success) {
+      emit(state.copyWith(status: InvestmentDashboardStatus.loading));
+    }
+
     try {
       final data = await _repository.getDashboardData();
+      // 3. Update cache
+      await _cacheService.save(_cacheKey, data.toJson());
       emit(
         state.copyWith(status: InvestmentDashboardStatus.success, data: data),
       );
     } catch (e) {
-      emit(
-        state.copyWith(
-          status: InvestmentDashboardStatus.failure,
-          errorMessage: e.toString(),
-        ),
-      );
+      // 4. If failure and no cached data, show error
+      if (state.data == null) {
+        emit(
+          state.copyWith(
+            status: InvestmentDashboardStatus.failure,
+            errorMessage: e.toString(),
+          ),
+        );
+      }
+      // If we have cached data, we stay in success state
     }
   }
 }

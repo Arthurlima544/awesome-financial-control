@@ -5,6 +5,7 @@ import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/compound_interest/compound_interest_bloc.dart';
+import 'package:afc/models/compound_interest_result.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
@@ -294,13 +295,13 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
     );
   }
 
-  Widget _buildResults(BuildContext context, Map<String, dynamic> result) {
+  Widget _buildResults(BuildContext context, CompoundInterestResult result) {
     final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
-    final finalAmount = result['finalAmount'] as double;
-    final totalInvested = result['totalInvested'] as double;
-    final totalInterest = result['totalInterest'] as double;
-    final timeline = result['timeline'] as List<dynamic>;
+    final finalAmount = result.finalAmount;
+    final totalInvested = result.totalInvested;
+    final totalInterest = result.totalInterest;
+    final timeline = result.timeline;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,22 +418,16 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
     );
   }
 
-  Widget _buildChart(List<dynamic> timeline) {
+  Widget _buildChart(List<CompoundTimelinePoint> timeline) {
     final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
 
     final accumulatedSpots = timeline.map((e) {
-      return FlSpot(
-        (e['year'] as num).toDouble(),
-        (e['accumulated'] as num).toDouble(),
-      );
+      return FlSpot(e.year, e.accumulated);
     }).toList();
 
     final investedSpots = timeline.map((e) {
-      return FlSpot(
-        (e['year'] as num).toDouble(),
-        (e['invested'] as num).toDouble(),
-      );
+      return FlSpot(e.year, e.invested);
     }).toList();
 
     return LineChart(

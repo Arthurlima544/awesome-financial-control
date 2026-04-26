@@ -8,6 +8,7 @@ import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/models/investment_dashboard_data.dart';
 
 class InvestmentDashboardScreen extends StatelessWidget {
   const InvestmentDashboardScreen({super.key});
@@ -45,9 +46,9 @@ class InvestmentDashboardScreen extends StatelessWidget {
               children: [
                 _buildSummaryCards(context, data),
                 const SizedBox(height: AppSpacing.xl),
-                _buildAllocationChart(context, data['allocationByType']),
+                _buildAllocationChart(context, data.allocationByType),
                 const SizedBox(height: AppSpacing.xl),
-                _buildPerformanceList(context, data['assetPerformance']),
+                _buildPerformanceList(context, data.assetPerformance),
               ],
             ),
           );
@@ -56,11 +57,14 @@ class InvestmentDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCards(BuildContext context, Map<String, dynamic> data) {
+  Widget _buildSummaryCards(
+    BuildContext context,
+    InvestmentDashboardData data,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
-    final profit = data['totalProfitLoss'] as double;
-    final percentage = data['totalProfitLossPercentage'] as double;
+    final profit = data.totalProfitLoss;
+    final percentage = data.totalProfitLossPercentage;
     final isPositive = profit >= 0;
 
     return Column(
@@ -82,7 +86,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
                   children: [
                     Text(l10n.totalNetWorth, style: AppTextStyles.labelLarge),
                     PrivacyText(
-                      currencyFormat.format(data['currentTotalValue']),
+                      currencyFormat.format(data.currentTotalValue),
                       style: AppTextStyles.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -128,7 +132,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
             Expanded(
               child: _buildSmallCard(
                 l10n.investmentsTotalInvested,
-                currencyFormat.format(data['totalInvested']),
+                currencyFormat.format(data.totalInvested),
                 Colors.grey,
               ),
             ),
@@ -178,7 +182,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
 
   Widget _buildAllocationChart(
     BuildContext context,
-    Map<dynamic, dynamic> allocation,
+    Map<String, double> allocation,
   ) {
     final l10n = AppLocalizations.of(context)!;
     if (allocation.isEmpty) return const SizedBox.shrink();
@@ -273,7 +277,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
 
   Widget _buildPerformanceList(
     BuildContext context,
-    List<dynamic> performances,
+    List<AssetPerformance> performances,
   ) {
     final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
@@ -287,7 +291,7 @@ class InvestmentDashboardScreen extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         ...performances.map((p) {
-          final isPositive = (p['profitLoss'] as num) >= 0;
+          final isPositive = p.profitLoss >= 0;
           return Card(
             elevation: 0,
             margin: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -297,28 +301,25 @@ class InvestmentDashboardScreen extends StatelessWidget {
             ),
             child: ListTile(
               title: Text(
-                (p['ticker'] != null && p['ticker'].toString().isNotEmpty)
-                    ? p['ticker']
-                    : p['name'],
+                (p.ticker != null && p.ticker!.isNotEmpty) ? p.ticker! : p.name,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle:
-                  (p['ticker'] != null && p['ticker'].toString().isNotEmpty)
-                  ? Text(p['name'])
+              subtitle: (p.ticker != null && p.ticker!.isNotEmpty)
+                  ? Text(p.name)
                   : null,
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   PrivacyText(
-                    currencyFormat.format(p['profitLoss']),
+                    currencyFormat.format(p.profitLoss),
                     style: TextStyle(
                       color: isPositive ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   PrivacyText(
-                    '${(p['percentage'] as num).toStringAsFixed(2)}%',
+                    '${p.percentage.toStringAsFixed(2)}%',
                     style: TextStyle(
                       color: isPositive ? Colors.green : Colors.red,
                       fontSize: 12,
