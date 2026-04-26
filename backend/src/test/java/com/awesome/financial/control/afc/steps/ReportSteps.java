@@ -3,12 +3,14 @@ package com.awesome.financial.control.afc.steps;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.awesome.financial.control.afc.dto.MonthlyReportResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 
@@ -17,14 +19,20 @@ public class ReportSteps {
 
     private final TestRestTemplate restTemplate;
     private final ScenarioContext context;
+    private final ObjectMapper objectMapper;
 
+    @SneakyThrows
     @When("I request the monthly report for {string}")
     public void iRequestTheMonthlyReportFor(String month) {
-        ResponseEntity<MonthlyReportResponse> response =
-                restTemplate.getForEntity(
-                        "/api/v1/reports/monthly?month=" + month, MonthlyReportResponse.class);
-        context.monthlyReportResponse = response;
+        ResponseEntity<String> response =
+                restTemplate.getForEntity("/api/v1/reports/monthly?month=" + month, String.class);
         context.response = response;
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            MonthlyReportResponse report =
+                    objectMapper.readValue(response.getBody(), MonthlyReportResponse.class);
+            context.monthlyReportResponse =
+                    ResponseEntity.status(response.getStatusCode()).body(report);
+        }
     }
 
     @Then("the response should contain:")

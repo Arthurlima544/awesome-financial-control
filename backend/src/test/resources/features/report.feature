@@ -37,3 +37,8 @@ Feature: Monthly Reporting
       | totalIncome   | 0.0   |
       | totalExpenses | 100.0 |
       | savingsRate   | 0.0   |
+
+  Scenario: Get monthly report with invalid month format returns 400
+    When I request the monthly report for "invalid"
+    Then the response status is 400
+    And the response should contain "Formato de mês inválido"
