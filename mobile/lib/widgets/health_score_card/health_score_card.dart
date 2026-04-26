@@ -174,6 +174,7 @@ class _ScoreFactor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: Column(
@@ -183,7 +184,10 @@ class _ScoreFactor extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label, style: AppTextStyles.bodySmall),
-              Text('$value/25', style: AppTextStyles.bodySmall),
+              Text(
+                l10n.healthScoreSubScorePattern(value),
+                style: AppTextStyles.bodySmall,
+              ),
             ],
           ),
           const SizedBox(height: 4),

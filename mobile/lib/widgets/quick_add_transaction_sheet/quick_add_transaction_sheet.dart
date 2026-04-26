@@ -150,13 +150,13 @@ class _QuickAddTransactionFormState extends State<_QuickAddTransactionForm> {
                   builder: (context, state) {
                     if (state.status ==
                         QuickAddTransactionStatus.processingImage) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24.0),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24.0),
                         child: Column(
                           children: [
-                            CircularProgressIndicator(),
-                            SizedBox(height: 12),
-                            Text('Analisando recibo...'),
+                            const CircularProgressIndicator(),
+                            const SizedBox(height: 12),
+                            Text(l10n.quickAddAnalyzingReceipt),
                           ],
                         ),
                       );

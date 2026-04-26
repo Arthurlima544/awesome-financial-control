@@ -113,9 +113,9 @@ class _RecurringItem extends StatelessWidget {
                 color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Text(
-                'Pago',
-                style: TextStyle(
+              child: Text(
+                l10n.recurringPaidBadge,
+                style: const TextStyle(
                   color: Colors.green,
                   fontSize: 10,
                   fontWeight: FontWeight.bold,

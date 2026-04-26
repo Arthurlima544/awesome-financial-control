@@ -1148,6 +1148,75 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String netWorthAssetsSubtitle(String amount) {
-    return 'Ativos: $amount';
+    return '$amount em ativos';
+  }
+
+  @override
+  String get planningCalculators => 'Calculadoras';
+
+  @override
+  String get goalContributionDialogTitle => 'Adicionar Contribuição';
+
+  @override
+  String get goalContributionValueLabel => 'Valor';
+
+  @override
+  String get goalContributionTooltip => 'Adicionar contribuição';
+
+  @override
+  String get goalDeleteTooltip => 'Excluir objetivo';
+
+  @override
+  String goalDaysRemaining(int days) {
+    return '$days dias restantes';
+  }
+
+  @override
+  String goalDeadlineUntil(String date) {
+    return 'Até $date';
+  }
+
+  @override
+  String get goalDeleteConfirmTitle => 'Excluir Objetivo';
+
+  @override
+  String goalDeleteConfirmMessage(String name) {
+    return 'Deseja realmente excluir o objetivo \"$name\"?';
+  }
+
+  @override
+  String goalTargetAmountLabel(String amount) {
+    return 'Meta: $amount';
+  }
+
+  @override
+  String get recurringPaidBadge => 'Pago';
+
+  @override
+  String get reportNoExpenses => 'Sem gastos';
+
+  @override
+  String get reportNoDataSimple => 'Sem dados';
+
+  @override
+  String get quickAddAnalyzingReceipt => 'Analisando recibo...';
+
+  @override
+  String healthScoreSubScorePattern(int value) {
+    return '$value/25';
+  }
+
+  @override
+  String get goalFormNameHint => 'Nome do objetivo';
+
+  @override
+  String get goalFormTargetHint => 'Valor total (R\$)';
+
+  @override
+  String get goalFormDeadlineLabel => 'Prazo final';
+
+  @override
+  String importErrorTitle(String error) {
+    return 'Erro: $error';
   }
 }

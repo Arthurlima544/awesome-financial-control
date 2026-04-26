@@ -2227,8 +2227,122 @@ abstract class AppLocalizations {
   /// Assets subtitle in monthly history list tile on net worth screen
   ///
   /// In pt, this message translates to:
-  /// **'Ativos: {amount}'**
+  /// **'{amount} em ativos'**
   String netWorthAssetsSubtitle(String amount);
+
+  /// Section title for calculators in planning screen
+  ///
+  /// In pt, this message translates to:
+  /// **'Calculadoras'**
+  String get planningCalculators;
+
+  /// Title for the contribution dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar Contribuição'**
+  String get goalContributionDialogTitle;
+
+  /// Label for amount field in contribution dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get goalContributionValueLabel;
+
+  /// Tooltip for the add contribution button
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar contribuição'**
+  String get goalContributionTooltip;
+
+  /// Tooltip for the delete goal button
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir objetivo'**
+  String get goalDeleteTooltip;
+
+  /// Days remaining for a goal
+  ///
+  /// In pt, this message translates to:
+  /// **'{days} dias restantes'**
+  String goalDaysRemaining(int days);
+
+  /// Deadline date label
+  ///
+  /// In pt, this message translates to:
+  /// **'Até {date}'**
+  String goalDeadlineUntil(String date);
+
+  /// Title for delete goal confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir Objetivo'**
+  String get goalDeleteConfirmTitle;
+
+  /// Message for delete goal confirmation dialog
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja realmente excluir o objetivo \"{name}\"?'**
+  String goalDeleteConfirmMessage(String name);
+
+  /// Target amount label on goal card
+  ///
+  /// In pt, this message translates to:
+  /// **'Meta: {amount}'**
+  String goalTargetAmountLabel(String amount);
+
+  /// Label for the 'Paid' badge on recurring items
+  ///
+  /// In pt, this message translates to:
+  /// **'Pago'**
+  String get recurringPaidBadge;
+
+  /// Empty state message for spending chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem gastos'**
+  String get reportNoExpenses;
+
+  /// Simple empty state message for comparison chart
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem dados'**
+  String get reportNoDataSimple;
+
+  /// Loading message while processing receipt image
+  ///
+  /// In pt, this message translates to:
+  /// **'Analisando recibo...'**
+  String get quickAddAnalyzingReceipt;
+
+  /// Pattern for sub-scores in health score card
+  ///
+  /// In pt, this message translates to:
+  /// **'{value}/25'**
+  String healthScoreSubScorePattern(int value);
+
+  /// Hint for goal name field
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do objetivo'**
+  String get goalFormNameHint;
+
+  /// Hint for goal target amount field
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor total (R\$)'**
+  String get goalFormTargetHint;
+
+  /// Label for goal deadline field
+  ///
+  /// In pt, this message translates to:
+  /// **'Prazo final'**
+  String get goalFormDeadlineLabel;
+
+  /// Error message title with details
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro: {error}'**
+  String importErrorTitle(String error);
 }
 
 class _AppLocalizationsDelegate

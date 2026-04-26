@@ -959,11 +959,98 @@
   "netWorthMonthlyHistoryTitle": "Histórico Mensal",
   "@netWorthMonthlyHistoryTitle": { "description": "Monthly history section title on net worth screen" },
 
-  "netWorthAssetsSubtitle": "Ativos: {amount}",
+  "netWorthAssetsSubtitle": "{amount} em ativos",
   "@netWorthAssetsSubtitle": {
     "description": "Assets subtitle in monthly history list tile on net worth screen",
     "placeholders": {
       "amount": { "type": "String" }
+    }
+  },
+
+  "planningCalculators": "Calculadoras",
+  "@planningCalculators": { "description": "Section title for calculators in planning screen" },
+
+  "goalContributionDialogTitle": "Adicionar Contribuição",
+  "@goalContributionDialogTitle": { "description": "Title for the contribution dialog" },
+  
+  "goalContributionValueLabel": "Valor",
+  "@goalContributionValueLabel": { "description": "Label for amount field in contribution dialog" },
+
+  "goalContributionTooltip": "Adicionar contribuição",
+  "@goalContributionTooltip": { "description": "Tooltip for the add contribution button" },
+
+  "goalDeleteTooltip": "Excluir objetivo",
+  "@goalDeleteTooltip": { "description": "Tooltip for the delete goal button" },
+
+  "goalDaysRemaining": "{days} dias restantes",
+  "@goalDaysRemaining": {
+    "description": "Days remaining for a goal",
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+
+  "goalDeadlineUntil": "Até {date}",
+  "@goalDeadlineUntil": {
+    "description": "Deadline date label",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "goalDeleteConfirmTitle": "Excluir Objetivo",
+  "@goalDeleteConfirmTitle": { "description": "Title for delete goal confirmation dialog" },
+
+  "goalDeleteConfirmMessage": "Deseja realmente excluir o objetivo \"{name}\"?",
+  "@goalDeleteConfirmMessage": {
+    "description": "Message for delete goal confirmation dialog",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "goalTargetAmountLabel": "Meta: {amount}",
+  "@goalTargetAmountLabel": {
+    "description": "Target amount label on goal card",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+
+  "recurringPaidBadge": "Pago",
+  "@recurringPaidBadge": { "description": "Label for the 'Paid' badge on recurring items" },
+
+  "reportNoExpenses": "Sem gastos",
+  "@reportNoExpenses": { "description": "Empty state message for spending chart" },
+
+  "reportNoDataSimple": "Sem dados",
+  "@reportNoDataSimple": { "description": "Simple empty state message for comparison chart" },
+
+  "quickAddAnalyzingReceipt": "Analisando recibo...",
+  "@quickAddAnalyzingReceipt": { "description": "Loading message while processing receipt image" },
+
+  "healthScoreSubScorePattern": "{value}/25",
+  "@healthScoreSubScorePattern": {
+    "description": "Pattern for sub-scores in health score card",
+    "placeholders": {
+      "value": { "type": "int" }
+    }
+  },
+
+  "goalFormNameHint": "Nome do objetivo",
+  "@goalFormNameHint": { "description": "Hint for goal name field" },
+
+  "goalFormTargetHint": "Valor total (R$)",
+  "@goalFormTargetHint": { "description": "Hint for goal target amount field" },
+
+  "goalFormDeadlineLabel": "Prazo final",
+  "@goalFormDeadlineLabel": { "description": "Label for goal deadline field" },
+
+  "importErrorTitle": "Erro: {error}",
+  "@importErrorTitle": {
+    "description": "Error message title with details",
+    "placeholders": {
+      "error": { "type": "String" }
     }
   }
 }

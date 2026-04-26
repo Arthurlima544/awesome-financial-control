@@ -93,7 +93,7 @@ class _GoalFormSheetState extends State<GoalFormSheet> {
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
               controller: _nameController,
-              hintText: 'Nome do objetivo',
+              hintText: l10n.goalFormNameHint,
               leadingIcon: const Icon(Icons.flag_outlined),
             ),
           ),
@@ -102,7 +102,7 @@ class _GoalFormSheetState extends State<GoalFormSheet> {
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
               controller: _targetController,
-              hintText: 'Valor total (R\$)',
+              hintText: l10n.goalFormTargetHint,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
@@ -113,7 +113,7 @@ class _GoalFormSheetState extends State<GoalFormSheet> {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.calendar_today),
-            title: const Text('Prazo final'),
+            title: Text(l10n.goalFormDeadlineLabel),
             subtitle: Text(dateFormat.format(_selectedDate)),
             onTap: () async {
               final picked = await showDatePicker(
