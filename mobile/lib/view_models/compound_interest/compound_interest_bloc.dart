@@ -38,7 +38,7 @@ class CompoundInterestBloc
       emit(
         state.copyWith(
           status: CompoundInterestStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao calcular juros compostos',
         ),
       );
     }

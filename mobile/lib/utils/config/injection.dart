@@ -48,6 +48,7 @@ import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:afc/repositories/feedback_repository.dart';
 import 'package:afc/view_models/feedback/feedback_cubit.dart';
 import 'package:afc/services/cache_service.dart';
+import 'package:afc/services/currency_service.dart';
 
 final sl = GetIt.instance;
 
@@ -58,6 +59,7 @@ Future<void> init() async {
 
   // Services
   sl.registerLazySingleton(() => CacheService(sl()));
+  sl.registerLazySingleton(() => CurrencyService(cacheService: sl()));
   sl.registerLazySingleton(() => NavigationService());
   sl.registerLazySingleton(() => ImportParserService());
   sl.registerLazySingleton(() => ReceiptService());
@@ -101,7 +103,7 @@ Future<void> init() async {
   sl.registerFactory(
     () => HealthScoreBloc(repository: sl(), cacheService: sl()),
   );
-  sl.registerFactory(() => SettingsBloc());
+  sl.registerLazySingleton(() => SettingsBloc(sl()));
   sl.registerLazySingleton(() => ThemeCubit());
   sl.registerFactory(() => OnboardingCubit());
   sl.registerFactory(() => FireCalculatorBloc(repository: sl()));

@@ -43,7 +43,7 @@ class MarketOpportunityBloc
       emit(
         state.copyWith(
           status: MarketOpportunityStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao carregar oportunidades de mercado',
         ),
       );
     }
@@ -76,7 +76,7 @@ class MarketOpportunityBloc
       emit(
         state.copyWith(
           status: MarketOpportunityStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao carregar oportunidades de mercado',
         ),
       );
     }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/currency_formatter.dart';
+import '../../utils/config/injection.dart';
+import '../../services/currency_service.dart';
+import '../../view_models/settings/settings_bloc.dart';
 import '../../widgets/privacy_text/privacy_text.dart';
 import 'transaction_list_item_cubit.dart';
 
@@ -117,7 +120,16 @@ class _TransactionListItemView extends StatelessWidget {
 
             final amountPrefix = isIncome ? '+' : '-';
             final icon = isIncome ? Icons.arrow_downward : Icons.arrow_upward;
-            final formattedAmount = CurrencyFormatter.format(amount);
+
+            final settingsState = context.watch<SettingsBloc>().state;
+            final currency = settingsState.selectedCurrency;
+            final currencyService = sl<CurrencyService>();
+
+            final convertedAmount = currencyService.convert(amount, currency);
+            final formattedAmount = CurrencyFormatter.format(
+              convertedAmount,
+              currency,
+            );
 
             return Semantics(
               label:

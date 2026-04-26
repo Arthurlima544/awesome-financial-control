@@ -25,7 +25,10 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       emit(state.copyWith(status: BillStatus.success, bills: bills));
     } catch (e) {
       emit(
-        state.copyWith(status: BillStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: BillStatus.failure,
+          errorMessage: 'Erro ao carregar contas',
+        ),
       );
     }
   }
@@ -36,7 +39,10 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       add(const LoadBills());
     } catch (e) {
       emit(
-        state.copyWith(status: BillStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: BillStatus.failure,
+          errorMessage: 'Erro ao criar conta',
+        ),
       );
     }
   }
@@ -47,7 +53,10 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       add(const LoadBills());
     } catch (e) {
       emit(
-        state.copyWith(status: BillStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: BillStatus.failure,
+          errorMessage: 'Erro ao atualizar conta',
+        ),
       );
     }
   }
@@ -58,7 +67,10 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       add(const LoadBills());
     } catch (e) {
       emit(
-        state.copyWith(status: BillStatus.failure, errorMessage: e.toString()),
+        state.copyWith(
+          status: BillStatus.failure,
+          errorMessage: 'Erro ao excluir conta',
+        ),
       );
     }
   }

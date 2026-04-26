@@ -12,8 +12,12 @@ import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:afc/widgets/skeleton/list_item_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:afc/models/currency.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
 
 class BillsScreen extends StatelessWidget {
   const BillsScreen({super.key});
@@ -21,100 +25,108 @@ class BillsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 120.0,
-            floating: false,
-            pinned: true,
-            backgroundColor: AppColors.surface,
-            elevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                l10n.billsTitle,
-                style: AppTextStyles.headlineSmall.copyWith(
-                  color: AppColors.onSurface,
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, settingsState) {
+        final currency = settingsState.selectedCurrency;
+        final currencyService = sl<CurrencyService>();
+
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 120.0,
+                floating: false,
+                pinned: true,
+                backgroundColor: AppColors.surface,
+                elevation: 0,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    l10n.billsTitle,
+                    style: AppTextStyles.headlineSmall.copyWith(
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                  centerTitle: false,
+                  titlePadding: const EdgeInsets.only(
+                    left: AppSpacing.lg,
+                    bottom: AppSpacing.md,
+                  ),
                 ),
               ),
-              centerTitle: false,
-              titlePadding: const EdgeInsets.only(
-                left: AppSpacing.lg,
-                bottom: AppSpacing.md,
-              ),
-            ),
-          ),
-          BlocBuilder<BillBloc, BillState>(
-            builder: (context, state) {
-              if (state.status == BillStatus.failure) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: ErrorState(
-                      message: l10n.billsErrorLoading,
-                      onRetry: () =>
-                          context.read<BillBloc>().add(const LoadBills()),
-                    ),
-                  ),
-                );
-              }
-
-              if (state.status == BillStatus.loading && state.bills.isEmpty) {
-                return SliverPadding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => const Padding(
-                        padding: EdgeInsets.only(bottom: AppSpacing.md),
-                        child: ListItemSkeleton(),
-                      ),
-                      childCount: 5,
-                    ),
-                  ),
-                );
-              }
-
-              if (state.bills.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: EmptyState(
-                      icon: Icons.receipt_long_outlined,
-                      title: l10n.billsNoBills,
-                    ),
-                  ),
-                );
-              }
-
-              return SliverPadding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final bill = state.bills[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                      child: _BillCard(
-                        bill: bill,
-                        currencyFormat: currencyFormat,
-                        onTap: () => _showBillForm(context, bill),
+              BlocBuilder<BillBloc, BillState>(
+                builder: (context, state) {
+                  if (state.status == BillStatus.failure) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: ErrorState(
+                          message: l10n.billsErrorLoading,
+                          onRetry: () =>
+                              context.read<BillBloc>().add(const LoadBills()),
+                        ),
                       ),
                     );
-                  }, childCount: state.bills.length),
-                ),
-              );
-            },
+                  }
+
+                  if (state.status == BillStatus.loading &&
+                      state.bills.isEmpty) {
+                    return SliverPadding(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) => const Padding(
+                            padding: EdgeInsets.only(bottom: AppSpacing.md),
+                            child: ListItemSkeleton(),
+                          ),
+                          childCount: 5,
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (state.bills.isEmpty) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: EmptyState(
+                          icon: Icons.receipt_long_outlined,
+                          title: l10n.billsNoBills,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return SliverPadding(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final bill = state.bills[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: _BillCard(
+                            bill: bill,
+                            onTap: () => _showBillForm(context, bill),
+                            currency: currency,
+                            currencyService: currencyService,
+                          ),
+                        );
+                      }, childCount: state.bills.length),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: BlocProvider(
-        create: (_) => CircularButtonCubit(),
-        child: CircularButton(
-          icon: Icons.add,
-          onPressed: () => _showBillForm(context),
-          semanticLabel: l10n.add,
-        ),
-      ),
+          floatingActionButton: BlocProvider(
+            create: (_) => CircularButtonCubit(),
+            child: CircularButton(
+              icon: Icons.add,
+              onPressed: () => _showBillForm(context),
+              semanticLabel: l10n.add,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -133,13 +145,15 @@ class BillsScreen extends StatelessWidget {
 
 class _BillCard extends StatelessWidget {
   final BillModel bill;
-  final NumberFormat currencyFormat;
   final VoidCallback onTap;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   const _BillCard({
     required this.bill,
-    required this.currencyFormat,
     required this.onTap,
+    required this.currency,
+    required this.currencyService,
   });
 
   @override
@@ -209,7 +223,10 @@ class _BillCard extends StatelessWidget {
               ),
             ),
             PrivacyText(
-              currencyFormat.format(bill.amount),
+              CurrencyFormatter.format(
+                currencyService.convert(bill.amount, currency),
+                currency,
+              ),
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isOverdue ? AppColors.error : AppColors.onSurface,

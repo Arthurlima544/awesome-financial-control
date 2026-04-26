@@ -16,6 +16,9 @@ import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/goal_form_sheet/goal_form_sheet.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/currency_formatter.dart';
 import 'package:intl/intl.dart';
 
 class GoalsScreen extends StatelessWidget {
@@ -105,7 +108,6 @@ class _GoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final deadlineFormat = DateFormat.yMMMMd('pt_BR');
 
     return Card(
@@ -132,11 +134,24 @@ class _GoalCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      PrivacyText(
-                        l10n.goalTargetAmountLabel(
-                          currencyFormat.format(goal.targetAmount),
-                        ),
-                        style: Theme.of(context).textTheme.bodySmall,
+                      BlocBuilder<SettingsBloc, SettingsState>(
+                        builder: (context, settingsState) {
+                          final currency = settingsState.selectedCurrency;
+                          final currencyService = sl<CurrencyService>();
+
+                          return PrivacyText(
+                            l10n.goalTargetAmountLabel(
+                              CurrencyFormatter.format(
+                                currencyService.convert(
+                                  goal.targetAmount,
+                                  currency,
+                                ),
+                                currency,
+                              ),
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          );
+                        },
                       ),
                     ],
                   ),

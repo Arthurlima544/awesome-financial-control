@@ -7,12 +7,16 @@ import 'package:afc/utils/config/app_config.dart';
 class ReceiptExtractionResult {
   final double? amount;
   final String? merchant;
+  final bool failed;
 
-  ReceiptExtractionResult({this.amount, this.merchant});
+  ReceiptExtractionResult({this.amount, this.merchant, this.failed = false});
+
+  factory ReceiptExtractionResult.failed() =>
+      ReceiptExtractionResult(failed: true);
 
   @override
   String toString() =>
-      'ReceiptExtractionResult(amount: $amount, merchant: $merchant)';
+      'ReceiptExtractionResult(amount: $amount, merchant: $merchant, failed: $failed)';
 }
 
 class ReceiptService {
@@ -103,16 +107,16 @@ class ReceiptService {
           level: 1000,
         );
 
-        // If it's the last model, don't just continue, return empty result
+        // If it's the last model, don't just continue, return failed result
         if (modelName == modelsToTry.last) {
-          return ReceiptExtractionResult();
+          return ReceiptExtractionResult.failed();
         }
 
         developer.log('ReceiptService: Trying fallback model...');
       }
     }
 
-    return ReceiptExtractionResult();
+    return ReceiptExtractionResult.failed();
   }
 
   String? _extractJson(String text) {

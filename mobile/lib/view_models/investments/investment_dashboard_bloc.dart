@@ -94,7 +94,7 @@ class InvestmentDashboardBloc
         emit(
           state.copyWith(
             status: InvestmentDashboardStatus.failure,
-            errorMessage: e.toString(),
+            errorMessage: 'Erro ao carregar análise de portfólio',
           ),
         );
       }

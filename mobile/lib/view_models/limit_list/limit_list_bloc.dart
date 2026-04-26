@@ -43,7 +43,7 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
       final limits = await _repository.getAll();
       emit(LimitListData(limits));
     } catch (e) {
-      emit(LimitListError(e.toString()));
+      emit(const LimitListError('Erro ao carregar limites'));
     }
   }
 
@@ -59,7 +59,7 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
       emit(LimitListData(updated));
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(LimitListError(e.toString()));
+      emit(const LimitListError('Erro ao excluir limite'));
     }
   }
 
@@ -77,7 +77,7 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
       emit(LimitListData(updatedList));
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(LimitListError(e.toString()));
+      emit(const LimitListError('Erro ao atualizar limite'));
     }
   }
 
@@ -93,7 +93,7 @@ class LimitListBloc extends Bloc<LimitListEvent, LimitListState> {
       emit(LimitListData(updatedList));
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(LimitListError(e.toString()));
+      emit(const LimitListError('Erro ao criar limite'));
     }
   }
 }

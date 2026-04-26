@@ -7,7 +7,7 @@ void main() {
       final result = ReceiptExtractionResult(amount: 10.5, merchant: 'Test');
       expect(
         result.toString(),
-        'ReceiptExtractionResult(amount: 10.5, merchant: Test)',
+        'ReceiptExtractionResult(amount: 10.5, merchant: Test, failed: false)',
       );
     });
   });

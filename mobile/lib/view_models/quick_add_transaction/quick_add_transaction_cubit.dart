@@ -43,6 +43,16 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
         'QuickAddTransactionCubit: Extraction result received: $result',
       );
 
+      if (result.failed) {
+        emit(
+          state.copyWith(
+            status: QuickAddTransactionStatus.failure,
+            errorMessage: 'Não foi possível extrair dados do comprovante',
+          ),
+        );
+        return;
+      }
+
       emit(
         state.copyWith(
           status: QuickAddTransactionStatus.initial,
@@ -60,7 +70,7 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
       emit(
         state.copyWith(
           status: QuickAddTransactionStatus.failure,
-          errorMessage: 'Erro ao processar recibo: ${e.toString()}',
+          errorMessage: 'Erro ao processar comprovante',
         ),
       );
     }
@@ -179,7 +189,7 @@ class QuickAddTransactionCubit extends Cubit<QuickAddTransactionState> {
       emit(
         state.copyWith(
           status: QuickAddTransactionStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao salvar transação',
         ),
       );
     }

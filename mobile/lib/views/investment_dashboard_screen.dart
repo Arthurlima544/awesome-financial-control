@@ -5,10 +5,15 @@ import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
-import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/models/investment_dashboard_data.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 
 class InvestmentDashboardScreen extends StatelessWidget {
   const InvestmentDashboardScreen({super.key});
@@ -18,39 +23,61 @@ class InvestmentDashboardScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.investmentDashboardTitle)),
-      body: BlocBuilder<InvestmentDashboardBloc, InvestmentDashboardState>(
-        builder: (context, state) {
-          if (state.status == InvestmentDashboardStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          final currency = settingsState.selectedCurrency;
+          final currencyService = sl<CurrencyService>();
 
-          if (state.status == InvestmentDashboardStatus.failure) {
-            return Center(
-              child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
-            );
-          }
+          return BlocBuilder<InvestmentDashboardBloc, InvestmentDashboardState>(
+            builder: (context, state) {
+              if (state.status == InvestmentDashboardStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          if (state.data == null) {
-            return Center(child: Text(l10n.screenNoDataAvailable));
-          }
+              if (state.status == InvestmentDashboardStatus.failure) {
+                return ErrorState(
+                  message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                  onRetry: () {
+                    context.read<InvestmentDashboardBloc>().add(
+                      LoadInvestmentDashboard(),
+                    );
+                  },
+                );
+              }
 
-          final data = state.data!;
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<InvestmentDashboardBloc>().add(
-                LoadInvestmentDashboard(),
+              if (state.data == null) {
+                return Center(child: Text(l10n.screenNoDataAvailable));
+              }
+
+              final data = state.data!;
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<InvestmentDashboardBloc>().add(
+                    LoadInvestmentDashboard(),
+                  );
+                },
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  children: [
+                    _buildSummaryCards(
+                      context,
+                      data,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildAllocationChart(context, data.allocationByType),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildPerformanceList(
+                      context,
+                      data.assetPerformance,
+                      currency,
+                      currencyService,
+                    ),
+                  ],
+                ),
               );
             },
-            child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              children: [
-                _buildSummaryCards(context, data),
-                const SizedBox(height: AppSpacing.xl),
-                _buildAllocationChart(context, data.allocationByType),
-                const SizedBox(height: AppSpacing.xl),
-                _buildPerformanceList(context, data.assetPerformance),
-              ],
-            ),
           );
         },
       ),
@@ -60,9 +87,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
   Widget _buildSummaryCards(
     BuildContext context,
     InvestmentDashboardData data,
+    Currency currency,
+    CurrencyService currencyService,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final profit = data.totalProfitLoss;
     final percentage = data.totalProfitLossPercentage;
     final isPositive = profit >= 0;
@@ -86,7 +114,13 @@ class InvestmentDashboardScreen extends StatelessWidget {
                   children: [
                     Text(l10n.totalNetWorth, style: AppTextStyles.labelLarge),
                     PrivacyText(
-                      currencyFormat.format(data.currentTotalValue),
+                      CurrencyFormatter.format(
+                        currencyService.convert(
+                          data.currentTotalValue,
+                          currency,
+                        ),
+                        currency,
+                      ),
                       style: AppTextStyles.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -132,7 +166,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
             Expanded(
               child: _buildSmallCard(
                 l10n.investmentsTotalInvested,
-                currencyFormat.format(data.totalInvested),
+                CurrencyFormatter.format(
+                  currencyService.convert(data.totalInvested, currency),
+                  currency,
+                ),
                 Colors.grey,
               ),
             ),
@@ -140,7 +177,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
             Expanded(
               child: _buildSmallCard(
                 l10n.investmentDashboardProfitLossLabel,
-                currencyFormat.format(profit),
+                CurrencyFormatter.format(
+                  currencyService.convert(profit, currency),
+                  currency,
+                ),
                 isPositive ? Colors.green : Colors.red,
               ),
             ),
@@ -278,9 +318,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
   Widget _buildPerformanceList(
     BuildContext context,
     List<AssetPerformance> performances,
+    Currency currency,
+    CurrencyService currencyService,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +353,10 @@ class InvestmentDashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   PrivacyText(
-                    currencyFormat.format(p.profitLoss),
+                    CurrencyFormatter.format(
+                      currencyService.convert(p.profitLoss, currency),
+                      currency,
+                    ),
                     style: TextStyle(
                       color: isPositive ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,

@@ -37,7 +37,7 @@ class FireCalculatorBloc
       emit(
         state.copyWith(
           status: FireCalculatorStatus.failure,
-          errorMessage: e.toString(),
+          errorMessage: 'Erro ao calcular FIRE',
         ),
       );
     }

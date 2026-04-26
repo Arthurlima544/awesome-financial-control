@@ -56,7 +56,7 @@ class TransactionListBloc
         ),
       );
     } catch (e) {
-      emit(TransactionListError(e.toString()));
+      emit(TransactionListError('Erro ao carregar transações'));
     }
   }
 
@@ -84,7 +84,7 @@ class TransactionListBloc
       );
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(TransactionListError(e.toString()));
+      emit(TransactionListError('Erro ao excluir transação'));
     }
   }
 
@@ -121,7 +121,7 @@ class TransactionListBloc
       );
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(TransactionListError(e.toString()));
+      emit(TransactionListError('Erro ao atualizar transação'));
     }
   }
 

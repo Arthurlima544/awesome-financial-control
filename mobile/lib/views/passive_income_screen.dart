@@ -5,11 +5,16 @@ import 'package:afc/view_models/passive_income/passive_income_bloc.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
-import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:afc/models/passive_income_data.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 
 class PassiveIncomeScreen extends StatelessWidget {
   const PassiveIncomeScreen({super.key});
@@ -19,43 +24,67 @@ class PassiveIncomeScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.passiveIncomeTitle)),
-      body: BlocBuilder<PassiveIncomeBloc, PassiveIncomeState>(
-        builder: (context, state) {
-          if (state.status == PassiveIncomeStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          final currency = settingsState.selectedCurrency;
+          final currencyService = sl<CurrencyService>();
 
-          if (state.status == PassiveIncomeStatus.failure) {
-            return Center(
-              child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
-            );
-          }
+          return BlocBuilder<PassiveIncomeBloc, PassiveIncomeState>(
+            builder: (context, state) {
+              if (state.status == PassiveIncomeStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          if (state.data == null) {
-            return Center(child: Text(l10n.screenNoDataAvailable));
-          }
+              if (state.status == PassiveIncomeStatus.failure) {
+                return ErrorState(
+                  message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                  onRetry: () {
+                    context.read<PassiveIncomeBloc>().add(
+                      LoadPassiveIncomeDashboard(),
+                    );
+                  },
+                );
+              }
 
-          final data = state.data!;
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<PassiveIncomeBloc>().add(
-                LoadPassiveIncomeDashboard(),
+              if (state.data == null) {
+                return Center(child: Text(l10n.screenNoDataAvailable));
+              }
+
+              final data = state.data!;
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<PassiveIncomeBloc>().add(
+                    LoadPassiveIncomeDashboard(),
+                  );
+                },
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  children: [
+                    _buildFreedomGauge(
+                      context,
+                      data.freedomIndex,
+                      data.totalPassiveIncomeCurrentMonth,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildProgressionChart(
+                      context,
+                      data.monthlyProgression,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildIncomeBySource(
+                      context,
+                      data.incomeByInvestment,
+                      currency,
+                      currencyService,
+                    ),
+                  ],
+                ),
               );
             },
-            child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              children: [
-                _buildFreedomGauge(
-                  context,
-                  data.freedomIndex,
-                  data.totalPassiveIncomeCurrentMonth,
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                _buildProgressionChart(context, data.monthlyProgression),
-                const SizedBox(height: AppSpacing.xl),
-                _buildIncomeBySource(context, data.incomeByInvestment),
-              ],
-            ),
           );
         },
       ),
@@ -66,9 +95,10 @@ class PassiveIncomeScreen extends StatelessWidget {
     BuildContext context,
     double index,
     dynamic amount,
+    Currency currency,
+    CurrencyService currencyService,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final isComplete = index >= 100;
 
     return Card(
@@ -127,7 +157,10 @@ class PassiveIncomeScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.lg),
             PrivacyText(
               l10n.passiveIncomeReceivedThisMonth(
-                currencyFormat.format(amount),
+                CurrencyFormatter.format(
+                  currencyService.convert(amount, currency),
+                  currency,
+                ),
               ),
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
@@ -153,6 +186,8 @@ class PassiveIncomeScreen extends StatelessWidget {
   Widget _buildProgressionChart(
     BuildContext context,
     List<PassiveIncomeMonth> progression,
+    Currency currency,
+    CurrencyService currencyService,
   ) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
@@ -180,11 +215,11 @@ class PassiveIncomeScreen extends StatelessWidget {
                       getTooltipColor: (_) =>
                           Colors.blueGrey.withValues(alpha: 0.8),
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        final format = NumberFormat.simpleCurrency(
-                          locale: 'pt_BR',
-                        );
                         return BarTooltipItem(
-                          format.format(rod.toY),
+                          CurrencyFormatter.format(
+                            currencyService.convert(rod.toY, currency),
+                            currency,
+                          ),
                           const TextStyle(color: Colors.white, fontSize: 10),
                         );
                       },
@@ -259,9 +294,10 @@ class PassiveIncomeScreen extends StatelessWidget {
   Widget _buildIncomeBySource(
     BuildContext context,
     Map<String, double> sources,
+    Currency currency,
+    CurrencyService currencyService,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     if (sources.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -287,7 +323,10 @@ class PassiveIncomeScreen extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               trailing: PrivacyText(
-                currencyFormat.format(e.value),
+                CurrencyFormatter.format(
+                  currencyService.convert(e.value, currency),
+                  currency,
+                ),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.success,

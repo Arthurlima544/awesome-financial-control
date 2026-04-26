@@ -5,10 +5,15 @@ import 'package:afc/view_models/net_worth/net_worth_bloc.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
 import 'package:afc/utils/config/app_text_styles.dart';
-import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 
 class NetWorthScreen extends StatelessWidget {
   const NetWorthScreen({super.key});
@@ -18,45 +23,74 @@ class NetWorthScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.calcPatrimonioEvolutionTitle)),
-      body: BlocBuilder<NetWorthBloc, NetWorthState>(
-        builder: (context, state) {
-          if (state.status == NetWorthStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          final currency = settingsState.selectedCurrency;
+          final currencyService = sl<CurrencyService>();
 
-          if (state.status == NetWorthStatus.failure) {
-            return Center(
-              child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
-            );
-          }
+          return BlocBuilder<NetWorthBloc, NetWorthState>(
+            builder: (context, state) {
+              if (state.status == NetWorthStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          if (state.data.isEmpty) {
-            return Center(child: Text(l10n.screenNoDataAvailable));
-          }
+              if (state.status == NetWorthStatus.failure) {
+                return ErrorState(
+                  message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+                  onRetry: () {
+                    context.read<NetWorthBloc>().add(LoadNetWorthEvolution());
+                  },
+                );
+              }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<NetWorthBloc>().add(LoadNetWorthEvolution());
+              if (state.data.isEmpty) {
+                return Center(child: Text(l10n.screenNoDataAvailable));
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<NetWorthBloc>().add(LoadNetWorthEvolution());
+                },
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  children: [
+                    _buildSummary(
+                      context,
+                      state.data.last,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildEvolutionChart(
+                      context,
+                      state.data,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildDetailsList(
+                      context,
+                      state.data,
+                      currency,
+                      currencyService,
+                    ),
+                  ],
+                ),
+              );
             },
-            child: ListView(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              children: [
-                _buildSummary(context, state.data.last),
-                const SizedBox(height: AppSpacing.xl),
-                _buildEvolutionChart(context, state.data),
-                const SizedBox(height: AppSpacing.xl),
-                _buildDetailsList(context, state.data),
-              ],
-            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildSummary(BuildContext context, dynamic latest) {
+  Widget _buildSummary(
+    BuildContext context,
+    dynamic latest,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -70,7 +104,10 @@ class NetWorthScreen extends StatelessWidget {
             Text(l10n.netWorthNetWorthLabel, style: AppTextStyles.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             PrivacyText(
-              currencyFormat.format(latest.total),
+              CurrencyFormatter.format(
+                currencyService.convert(latest.total, currency),
+                currency,
+              ),
               style: AppTextStyles.displaySmall.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary,
@@ -84,11 +121,15 @@ class NetWorthScreen extends StatelessWidget {
                   l10n.netWorthAssetsLabel,
                   latest.assets,
                   AppColors.success,
+                  currency,
+                  currencyService,
                 ),
                 _buildMiniStat(
                   l10n.netWorthLiabilitiesLabel,
                   latest.liabilities,
                   AppColors.error,
+                  currency,
+                  currencyService,
                 ),
               ],
             ),
@@ -98,20 +139,33 @@ class NetWorthScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMiniStat(String label, double value, Color color) {
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
+  Widget _buildMiniStat(
+    String label,
+    double value,
+    Color color,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     return Column(
       children: [
         Text(label, style: AppTextStyles.labelSmall),
         PrivacyText(
-          currencyFormat.format(value),
+          CurrencyFormatter.format(
+            currencyService.convert(value, currency),
+            currency,
+          ),
           style: AppTextStyles.titleSmall.copyWith(color: color),
         ),
       ],
     );
   }
 
-  Widget _buildEvolutionChart(BuildContext context, List<dynamic> data) {
+  Widget _buildEvolutionChart(
+    BuildContext context,
+    List<dynamic> data,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +247,10 @@ class NetWorthScreen extends StatelessWidget {
                       lineBarsData: [
                         LineChartBarData(
                           spots: data.asMap().entries.map((e) {
-                            return FlSpot(e.key.toDouble(), e.value.total);
+                            return FlSpot(
+                              e.key.toDouble(),
+                              currencyService.convert(e.value.total, currency),
+                            );
                           }).toList(),
                           isCurved: true,
                           color: AppColors.primary,
@@ -211,9 +268,6 @@ class NetWorthScreen extends StatelessWidget {
                           getTooltipColor: (_) =>
                               Colors.blueGrey.withValues(alpha: 0.8),
                           getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                            final currencyFormat = NumberFormat.simpleCurrency(
-                              locale: 'pt_BR',
-                            );
                             return touchedSpots.map((LineBarSpot touchedSpot) {
                               final index = touchedSpot.x.toInt();
                               String monthInfo = '';
@@ -224,7 +278,10 @@ class NetWorthScreen extends StatelessWidget {
 
                               final displayValue = privacyState.isPrivate
                                   ? '•••••'
-                                  : currencyFormat.format(touchedSpot.y);
+                                  : CurrencyFormatter.format(
+                                      touchedSpot.y,
+                                      currency,
+                                    );
                               return LineTooltipItem(
                                 '$monthInfo$displayValue',
                                 const TextStyle(
@@ -270,13 +327,19 @@ class NetWorthScreen extends StatelessWidget {
         ];
         return '${monthNames[month]} $year';
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error formatting month: $e');
+    }
     return monthStr;
   }
 
-  Widget _buildDetailsList(BuildContext context, List<dynamic> data) {
+  Widget _buildDetailsList(
+    BuildContext context,
+    List<dynamic> data,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final reversedData = data.reversed.toList();
 
     return Column(
@@ -294,10 +357,18 @@ class NetWorthScreen extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: PrivacyText(
-              l10n.netWorthAssetsSubtitle(currencyFormat.format(p.assets)),
+              l10n.netWorthAssetsSubtitle(
+                CurrencyFormatter.format(
+                  currencyService.convert(p.assets, currency),
+                  currency,
+                ),
+              ),
             ),
             trailing: PrivacyText(
-              currencyFormat.format(p.total),
+              CurrencyFormatter.format(
+                currencyService.convert(p.total, currency),
+                currency,
+              ),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: p.total >= 0 ? AppColors.success : AppColors.error,

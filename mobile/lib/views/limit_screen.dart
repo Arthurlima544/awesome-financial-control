@@ -13,6 +13,9 @@ import 'package:afc/widgets/skeleton/card_skeleton.dart';
 import 'package:afc/view_models/limit/limit_bloc.dart';
 import 'package:afc/models/limit_progress_model.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/currency_formatter.dart';
 
 class LimitScreen extends StatelessWidget {
   const LimitScreen({super.key});
@@ -127,18 +130,34 @@ class _LimitCard extends StatelessWidget {
               inactiveColor: AppColors.neutral100,
             ),
             const SizedBox(height: AppSpacing.sm),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                PrivacyText(
-                  l10n.limitSpent(limit.spentFormatted),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                PrivacyText(
-                  l10n.limitOf(limit.limitAmountFormatted),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+            BlocBuilder<SettingsBloc, SettingsState>(
+              builder: (context, settingsState) {
+                final currency = settingsState.selectedCurrency;
+                final currencyService = sl<CurrencyService>();
+
+                final spentStr = CurrencyFormatter.format(
+                  currencyService.convert(limit.spent, currency),
+                  currency,
+                );
+                final limitStr = CurrencyFormatter.format(
+                  currencyService.convert(limit.limitAmount, currency),
+                  currency,
+                );
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PrivacyText(
+                      l10n.limitSpent(spentStr),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    PrivacyText(
+                      l10n.limitOf(limitStr),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),

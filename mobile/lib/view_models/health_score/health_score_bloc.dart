@@ -59,7 +59,7 @@ class HealthScoreBloc extends Bloc<HealthScoreEvent, HealthScoreState> {
         emit(
           state.copyWith(
             status: HealthScoreStatus.failure,
-            errorMessage: e.toString(),
+            errorMessage: 'Erro ao carregar pontuação de saúde financeira',
           ),
         );
       }

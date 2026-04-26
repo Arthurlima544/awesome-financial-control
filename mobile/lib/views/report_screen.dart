@@ -11,6 +11,11 @@ import 'package:intl/intl.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
@@ -42,69 +47,95 @@ class ReportView extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<ReportBloc, ReportState>(
-        builder: (context, state) {
-          if (state.status == ReportStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          final currency = settingsState.selectedCurrency;
+          final currencyService = sl<CurrencyService>();
 
-          if (state.status == ReportStatus.failure) {
-            return Center(child: Text(state.errorMessage ?? l10n.genericError));
-          }
+          return BlocBuilder<ReportBloc, ReportState>(
+            builder: (context, state) {
+              if (state.status == ReportStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _MonthPicker(selectedMonth: state.selectedMonth),
-                const SizedBox(height: 24),
-                if (state.report != null) ...[
-                  FadeInAnimation(
-                    trigger: StatefulNavigationShell.of(context).currentIndex,
-                    child: _SummaryRow(
-                      income: state.report!.totalIncome,
-                      expenses: state.report!.totalExpenses,
-                      savingsRate: state.report!.savingsRate,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  Text(
-                    l10n.reportCategorySpending,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  FadeInAnimation(
-                    trigger: StatefulNavigationShell.of(context).currentIndex,
-                    delay: const Duration(milliseconds: 200),
-                    child: _CategoryPieChart(
-                      categories: state.report!.categories,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  Text(
-                    l10n.reportMoMComparison,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  FadeInAnimation(
-                    trigger: StatefulNavigationShell.of(context).currentIndex,
-                    delay: const Duration(milliseconds: 400),
-                    child: _ComparisonBarChart(
-                      comparison: state.report!.comparison,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                ] else
-                  Center(child: Text(l10n.reportNoData)),
-              ],
-            ),
+              if (state.status == ReportStatus.failure) {
+                return ErrorState(
+                  message: state.errorMessage ?? l10n.genericError,
+                  onRetry: () {
+                    context.read<ReportBloc>().add(
+                      LoadReport(state.selectedMonth),
+                    );
+                  },
+                );
+              }
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _MonthPicker(selectedMonth: state.selectedMonth),
+                    const SizedBox(height: 24),
+                    if (state.report != null) ...[
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        child: _SummaryRow(
+                          income: state.report!.totalIncome,
+                          expenses: state.report!.totalExpenses,
+                          savingsRate: state.report!.savingsRate,
+                          currency: currency,
+                          currencyService: currencyService,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Text(
+                        l10n.reportCategorySpending,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: const Duration(milliseconds: 200),
+                        child: _CategoryPieChart(
+                          categories: state.report!.categories,
+                          currency: currency,
+                          currencyService: currencyService,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Text(
+                        l10n.reportMoMComparison,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      FadeInAnimation(
+                        trigger: StatefulNavigationShell.of(
+                          context,
+                        ).currentIndex,
+                        delay: const Duration(milliseconds: 400),
+                        child: _ComparisonBarChart(
+                          comparison: state.report!.comparison,
+                          currency: currency,
+                          currencyService: currencyService,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                    ] else
+                      Center(child: Text(l10n.reportNoData)),
+                  ],
+                ),
+              );
+            },
           );
         },
       ),
@@ -155,11 +186,15 @@ class _SummaryRow extends StatelessWidget {
   final double income;
   final double expenses;
   final double savingsRate;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   const _SummaryRow({
     required this.income,
     required this.expenses,
     required this.savingsRate,
+    required this.currency,
+    required this.currencyService,
   });
 
   @override
@@ -173,16 +208,18 @@ class _SummaryRow extends StatelessWidget {
           children: [
             _SummaryItem(
               label: l10n.homeTotalIncome,
-              value: NumberFormat.simpleCurrency(
-                locale: 'pt_BR',
-              ).format(income),
+              value: CurrencyFormatter.format(
+                currencyService.convert(income, currency),
+                currency,
+              ),
               color: Colors.green,
             ),
             _SummaryItem(
               label: l10n.homeTotalExpenses,
-              value: NumberFormat.simpleCurrency(
-                locale: 'pt_BR',
-              ).format(expenses),
+              value: CurrencyFormatter.format(
+                currencyService.convert(expenses, currency),
+                currency,
+              ),
               color: Colors.red,
             ),
             _SummaryItem(
@@ -229,8 +266,14 @@ class _SummaryItem extends StatelessWidget {
 
 class _CategoryPieChart extends StatelessWidget {
   final List<CategoryBreakdownModel> categories;
+  final Currency currency;
+  final CurrencyService currencyService;
 
-  const _CategoryPieChart({required this.categories});
+  const _CategoryPieChart({
+    required this.categories,
+    required this.currency,
+    required this.currencyService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -357,8 +400,14 @@ class _Badge extends StatelessWidget {
 
 class _ComparisonBarChart extends StatelessWidget {
   final List<CategoryComparisonModel> comparison;
+  final Currency currency;
+  final CurrencyService currencyService;
 
-  const _ComparisonBarChart({required this.comparison});
+  const _ComparisonBarChart({
+    required this.comparison,
+    required this.currency,
+    required this.currencyService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -386,10 +435,18 @@ class _ComparisonBarChart extends StatelessWidget {
                 alignment: BarChartAlignment.spaceAround,
                 maxY:
                     (displayList.fold<double>(0, (max, c) {
+                              final currentConverted = currencyService.convert(
+                                c.currentAmount,
+                                currency,
+                              );
+                              final previousConverted = currencyService.convert(
+                                c.previousAmount,
+                                currency,
+                              );
                               final highestInGroup =
-                                  c.currentAmount > c.previousAmount
-                                  ? c.currentAmount
-                                  : c.previousAmount;
+                                  currentConverted > previousConverted
+                                  ? currentConverted
+                                  : previousConverted;
                               return highestInGroup > max
                                   ? highestInGroup
                                   : max;
@@ -402,7 +459,10 @@ class _ComparisonBarChart extends StatelessWidget {
                     x: index,
                     barRods: [
                       BarChartRodData(
-                        toY: c.previousAmount,
+                        toY: currencyService.convert(
+                          c.previousAmount,
+                          currency,
+                        ),
                         color: Colors.grey[300],
                         width: 12,
                         borderRadius: const BorderRadius.vertical(
@@ -410,7 +470,7 @@ class _ComparisonBarChart extends StatelessWidget {
                         ),
                       ),
                       BarChartRodData(
-                        toY: c.currentAmount,
+                        toY: currencyService.convert(c.currentAmount, currency),
                         color: Colors.blue,
                         width: 12,
                         borderRadius: const BorderRadius.vertical(
@@ -452,12 +512,14 @@ class _ComparisonBarChart extends StatelessWidget {
                       showTitles: true,
                       reservedSize: 45,
                       getTitlesWidget: (value, meta) {
-                        final format = NumberFormat.compact(locale: 'pt_BR');
                         return SideTitleWidget(
                           meta: meta,
                           space: 4,
                           child: PrivacyText(
-                            format.format(value),
+                            CurrencyFormatter.formatCompact(
+                              currencyService.convert(value, currency),
+                              currency,
+                            ),
                             style: const TextStyle(fontSize: 10),
                           ),
                         );
@@ -480,12 +542,9 @@ class _ComparisonBarChart extends StatelessWidget {
                         Colors.blueGrey.withValues(alpha: 0.8),
                     tooltipBorderRadius: BorderRadius.circular(8),
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      final currencyFormat = NumberFormat.simpleCurrency(
-                        locale: 'pt_BR',
-                      );
                       final displayValue = privacyState.isPrivate
                           ? '•••••'
-                          : currencyFormat.format(rod.toY);
+                          : CurrencyFormatter.format(rod.toY, currency);
                       return BarTooltipItem(
                         displayValue,
                         const TextStyle(color: Colors.white, fontSize: 10),

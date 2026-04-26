@@ -16,7 +16,10 @@ import 'package:afc/models/monthly_stat_model.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:afc/widgets/insight_card/insight_card.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
-import 'package:intl/intl.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -73,7 +76,17 @@ class _StatsView extends StatelessWidget {
                 ),
               );
             }
-            return _StatsDashboard(state: state);
+            return BlocBuilder<SettingsBloc, SettingsState>(
+              builder: (context, settingsState) {
+                final currency = settingsState.selectedCurrency;
+                final currencyService = sl<CurrencyService>();
+                return _StatsDashboard(
+                  state: state,
+                  currency: currency,
+                  currencyService: currencyService,
+                );
+              },
+            );
           }
           return const SizedBox.shrink();
         },
@@ -83,14 +96,19 @@ class _StatsView extends StatelessWidget {
 }
 
 class _StatsDashboard extends StatelessWidget {
-  const _StatsDashboard({required this.state});
+  const _StatsDashboard({
+    required this.state,
+    required this.currency,
+    required this.currencyService,
+  });
 
   final StatsData state;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -101,7 +119,10 @@ class _StatsDashboard extends StatelessWidget {
             children: [
               _MetricCard(
                 label: l10n.statsSummaryTotal,
-                value: currencyFormat.format(state.totalSavings),
+                value: CurrencyFormatter.format(
+                  currencyService.convert(state.totalSavings, currency),
+                  currency,
+                ),
                 color: AppColors.success,
                 icon: Icons.account_balance_wallet_outlined,
                 isPrimary: true,
@@ -159,7 +180,12 @@ class _StatsDashboard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.lg),
                   SizedBox(
                     height: 250,
-                    child: _BarChart(stats: state.stats, state: state),
+                    child: _BarChart(
+                      stats: state.stats,
+                      state: state,
+                      currency: currency,
+                      currencyService: currencyService,
+                    ),
                   ),
                 ],
               ),
@@ -371,10 +397,17 @@ class _LegendDot extends StatelessWidget {
 }
 
 class _BarChart extends StatelessWidget {
-  const _BarChart({required this.stats, required this.state});
+  const _BarChart({
+    required this.stats,
+    required this.state,
+    required this.currency,
+    required this.currencyService,
+  });
 
   final List<MonthlyStatModel> stats;
   final StatsData state;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   @override
   Widget build(BuildContext context) {
@@ -385,11 +418,15 @@ class _BarChart extends StatelessWidget {
       curve: Curves.elasticOut,
       builder: (context, value, child) {
         final l10n = AppLocalizations.of(context)!;
+        final convertedMaxValue = currencyService.convert(
+          state.maxValue,
+          currency,
+        );
         return Semantics(
           label: l10n.statsChartLabel,
           child: BarChart(
             BarChartData(
-              maxY: state.maxValue * 1.2,
+              maxY: convertedMaxValue * 1.2,
               barGroups: _buildGroups(value),
               titlesData: FlTitlesData(
                 leftTitles: AxisTitles(
@@ -398,7 +435,7 @@ class _BarChart extends StatelessWidget {
                     reservedSize: 56,
                     interval: state.yInterval,
                     getTitlesWidget: (value, meta) => PrivacyText(
-                      state.formatYLabel(value),
+                      CurrencyFormatter.formatCompact(value, currency),
                       style: Theme.of(context).textTheme.labelSmall,
                       textAlign: TextAlign.right,
                     ),
@@ -441,11 +478,8 @@ class _BarChart extends StatelessWidget {
                   getTooltipColor: (_) =>
                       Colors.blueGrey.withValues(alpha: 0.8),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final currencyFormat = NumberFormat.simpleCurrency(
-                      locale: 'pt_BR',
-                    );
                     return BarTooltipItem(
-                      currencyFormat.format(rod.toY),
+                      CurrencyFormatter.format(rod.toY, currency),
                       const TextStyle(color: Colors.white, fontSize: 10),
                     );
                   },
@@ -466,13 +500,13 @@ class _BarChart extends StatelessWidget {
         barsSpace: 4,
         barRods: [
           BarChartRodData(
-            toY: s.income * animationValue,
+            toY: currencyService.convert(s.income, currency) * animationValue,
             color: AppColors.primary,
             width: 10,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
           ),
           BarChartRodData(
-            toY: s.expenses * animationValue,
+            toY: currencyService.convert(s.expenses, currency) * animationValue,
             color: AppColors.error,
             width: 10,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),

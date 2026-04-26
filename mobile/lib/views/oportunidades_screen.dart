@@ -9,6 +9,7 @@ import 'package:afc/utils/config/app_text_styles.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/widgets/error_state/error_state.dart';
 
 class OportunidadesScreen extends StatelessWidget {
   const OportunidadesScreen({super.key});
@@ -25,11 +26,13 @@ class OportunidadesScreen extends StatelessWidget {
           }
 
           if (state.status == MarketOpportunityStatus.failure) {
-            return Center(
-              child: Text(
-                l10n.calcErrorMessage(state.errorMessage ?? ''),
-                style: const TextStyle(color: AppColors.error),
-              ),
+            return ErrorState(
+              message: l10n.calcErrorMessage(state.errorMessage ?? ''),
+              onRetry: () {
+                context.read<MarketOpportunityBloc>().add(
+                  RefreshMarketOpportunities(),
+                );
+              },
             );
           }
 

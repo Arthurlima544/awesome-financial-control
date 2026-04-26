@@ -14,6 +14,9 @@ import 'package:afc/widgets/limit_form_sheet/limit_form_sheet.dart';
 import 'package:afc/widgets/skeleton/skeleton_list.dart';
 import 'package:afc/view_models/limit_list/limit_list_bloc.dart';
 import 'package:afc/models/limit_model.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/currency_formatter.dart';
 
 class LimitListScreen extends StatelessWidget {
   const LimitListScreen({super.key});
@@ -116,14 +119,26 @@ class _DismissibleItem extends StatelessWidget {
       onDismissed: (_) =>
           context.read<LimitListBloc>().add(LimitListDeleteRequested(limit.id)),
       background: const DismissibleDeleteBackground(),
-      child: CustomListTile(
-        title: limit.categoryName,
-        description: limit.formattedAmount,
-        leadingType: CustomListTileLeading.icon,
-        leadingIcon: Icons.price_change_outlined,
-        trailingType: CustomListTileTrailing.arrow,
-        primaryColor: AppColors.primary,
-        onTap: () => _showLimitForm(context, limit),
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, settingsState) {
+          final currency = settingsState.selectedCurrency;
+          final currencyService = sl<CurrencyService>();
+
+          final amountStr = CurrencyFormatter.format(
+            currencyService.convert(limit.amount, currency),
+            currency,
+          );
+
+          return CustomListTile(
+            title: limit.categoryName,
+            description: amountStr,
+            leadingType: CustomListTileLeading.icon,
+            leadingIcon: Icons.price_change_outlined,
+            trailingType: CustomListTileTrailing.arrow,
+            primaryColor: AppColors.primary,
+            onTap: () => _showLimitForm(context, limit),
+          );
+        },
       ),
     );
   }

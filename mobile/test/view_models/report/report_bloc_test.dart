@@ -91,7 +91,11 @@ void main() {
         ),
         isA<ReportState>()
             .having((s) => s.status, 'status', ReportStatus.failure)
-            .having((s) => s.errorMessage, 'errorMessage', contains('Error')),
+            .having(
+              (s) => s.errorMessage,
+              'errorMessage',
+              contains('Erro ao carregar relatório'),
+            ),
       ],
     );
 
