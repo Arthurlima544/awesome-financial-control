@@ -30,8 +30,7 @@ public class GoalService {
         Goal goal = new Goal();
         goal.setName(request.name());
         goal.setTargetAmount(request.targetAmount());
-        goal.setCurrentAmount(
-                request.currentAmount() != null ? request.currentAmount() : BigDecimal.ZERO);
+        goal.setCurrentAmount(request.currentAmount());
         goal.setDeadline(request.deadline());
         goal.setIcon(request.icon());
         Goal saved = goalRepository.save(goal);

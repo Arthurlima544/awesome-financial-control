@@ -4,11 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 
 public class CommonSteps {
 
     @Autowired private ScenarioContext ctx;
+    @Autowired private TestRestTemplate restTemplate;
 
     @Autowired
     private com.awesome.financial.control.afc.repository.TransactionRepository
@@ -21,6 +28,14 @@ public class CommonSteps {
     public void theDatabaseIsClean() {
         transactionRepository.deleteAll();
         feedbackRepository.deleteAll();
+    }
+
+    @When("I send a POST request to {string} with malformed JSON")
+    public void iSendPostRequestWithMalformedJson(String url) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>("{invalid json", headers);
+        ctx.response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
 
     @Then("the response status is {int}")

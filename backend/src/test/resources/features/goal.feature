@@ -45,3 +45,17 @@ Feature: Savings Goals management
   Scenario: Delete a non-existing goal returns 404
     When I delete goal with id "00000000-0000-0000-0000-000000000000"
     Then the response status is 404
+
+  Scenario: Delete a goal
+    Given I have a goal with name "Emergency Fund", target 10000.0, current 0.0, and deadline "2026-12-31"
+    When I delete the last created goal
+    Then the response status is 204
+
+  Scenario: Add contribution to non-existing goal returns 404
+    When I add a contribution of 100.0 to goal with id "00000000-0000-0000-0000-000000000000"
+    Then the response status is 404
+
+  Scenario: Send malformed JSON to create a goal returns 400
+    When I send a POST request to "/api/v1/goals" with malformed JSON
+    Then the response status is 400
+    And the response should contain "Malformed JSON request"

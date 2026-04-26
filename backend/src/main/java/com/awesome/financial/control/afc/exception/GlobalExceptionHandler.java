@@ -3,8 +3,10 @@ package com.awesome.financial.control.afc.exception;
 import com.awesome.financial.control.afc.dto.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolationException;
+import java.time.format.DateTimeParseException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,6 +53,26 @@ public class GlobalExceptionHandler {
                         .collect(Collectors.joining(", "));
         return new ErrorResponse(
                 "VALIDATION_ERROR", message, HttpStatus.UNPROCESSABLE_ENTITY.value());
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleDateTimeParse(DateTimeParseException ex) {
+        log.warn("Invalid date-time format: {}", ex.getMessage());
+        return new ErrorResponse(
+                "BAD_REQUEST",
+                "Formato de mês inválido. Use yyyy-MM (ex: 2024-03)",
+                HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        log.warn("Data integrity violation: {}", ex.getMessage());
+        return new ErrorResponse(
+                "CONFLICT",
+                "A operação viola uma restrição de integridade de dados",
+                HttpStatus.CONFLICT.value());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

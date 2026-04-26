@@ -59,3 +59,8 @@ Feature: Last transactions
   Scenario: Create a transaction with empty description returns 422
     When I create a transaction with description "" amount 10.00 type EXPENSE occurred today
     Then the response status is 422
+
+  Scenario: Create a transaction linked to a non-existing investment returns 409
+    When I create a transaction with description "Dividend" amount 100.00 type INCOME linked to investment "00000000-0000-0000-0000-000000000000" occurred today
+    Then the response status is 409
+    And the response should contain "A operação viola uma restrição de integridade de dados"

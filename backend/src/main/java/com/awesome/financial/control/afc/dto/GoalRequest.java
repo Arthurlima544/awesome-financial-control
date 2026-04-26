@@ -11,6 +11,6 @@ import lombok.Builder;
 public record GoalRequest(
         @NotBlank String name,
         @NotNull @DecimalMin("0.01") BigDecimal targetAmount,
-        BigDecimal currentAmount,
+        @NotNull @DecimalMin("0.00") BigDecimal currentAmount,
         @NotNull Instant deadline,
         String icon) {}

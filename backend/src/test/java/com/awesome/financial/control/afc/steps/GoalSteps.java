@@ -36,6 +36,7 @@ public class GoalSteps {
                 GoalRequest.builder()
                         .name(name)
                         .targetAmount(BigDecimal.valueOf(target))
+                        .currentAmount(BigDecimal.ZERO)
                         .deadline(Instant.parse(deadline + "T00:00:00Z"))
                         .build();
         ResponseEntity<GoalResponse> response =
@@ -129,6 +130,7 @@ public class GoalSteps {
                 GoalRequest.builder()
                         .name(name)
                         .targetAmount(BigDecimal.valueOf(target))
+                        .currentAmount(BigDecimal.ZERO)
                         .deadline(Instant.parse(deadline + "T00:00:00Z"))
                         .build();
         context.response =
@@ -143,5 +145,25 @@ public class GoalSteps {
     public void iDeleteGoalWithId(String id) {
         context.response =
                 restTemplate.exchange("/api/v1/goals/" + id, HttpMethod.DELETE, null, String.class);
+    }
+
+    @When("I delete the last created goal")
+    public void iDeleteTheLastCreatedGoal() {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/goals/" + context.lastGoalId,
+                        HttpMethod.DELETE,
+                        null,
+                        String.class);
+    }
+
+    @When("I add a contribution of {double} to goal with id {string}")
+    public void iAddAContributionOfToGoalWithId(double amount, String id) {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/goals/" + id + "/contribute?amount=" + amount,
+                        HttpMethod.PATCH,
+                        null,
+                        String.class);
     }
 }

@@ -19,9 +19,10 @@ public class FeedbackSteps {
 
     @When("I submit feedback with:")
     public void iSubmitFeedbackWith(Map<String, String> data) {
+        UUID userId = data.containsKey("userId") ? UUID.fromString(data.get("userId")) : null;
         FeedbackRequest request =
                 new FeedbackRequest(
-                        UUID.randomUUID(),
+                        userId,
                         data.containsKey("rating") ? Integer.parseInt(data.get("rating")) : 0,
                         data.get("message"),
                         data.get("appVersion"),
