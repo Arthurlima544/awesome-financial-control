@@ -2,6 +2,7 @@ import 'package:afc/models/recurring_transaction_model.dart';
 import 'package:afc/repositories/recurring_repository.dart';
 import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'dart:async';
 
 part 'recurring_event.dart';
@@ -13,13 +14,13 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
   late final StreamSubscription _refreshSubscription;
 
   RecurringBloc(this._repository, this._refreshBloc)
-    : super(RecurringInitial()) {
+    : super(const RecurringInitial()) {
     on<LoadRecurring>(_onLoadRecurring);
     on<ToggleRecurringActive>(_onToggleRecurringActive);
     on<DeleteRecurring>(_onDeleteRecurring);
 
     _refreshSubscription = _refreshBloc.stream.listen(
-      (_) => add(LoadRecurring()),
+      (_) => add(const LoadRecurring()),
     );
   }
 
@@ -33,12 +34,12 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
     LoadRecurring event,
     Emitter<RecurringState> emit,
   ) async {
-    emit(RecurringLoading());
+    emit(const RecurringLoading());
     try {
       final rules = await _repository.getAll();
       emit(RecurringLoaded(rules));
     } catch (e) {
-      emit(RecurringError('Erro ao carregar transações recorrentes'));
+      emit(const RecurringError('Erro ao carregar transações recorrentes'));
     }
   }
 
@@ -51,7 +52,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       await _repository.update(updated);
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(RecurringError('Erro ao atualizar transação recorrente'));
+      emit(const RecurringError('Erro ao atualizar transação recorrente'));
     }
   }
 
@@ -63,7 +64,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
       await _repository.delete(event.id);
       _refreshBloc.add(DataChanged());
     } catch (e) {
-      emit(RecurringError('Erro ao excluir transação recorrente'));
+      emit(const RecurringError('Erro ao excluir transação recorrente'));
     }
   }
 }

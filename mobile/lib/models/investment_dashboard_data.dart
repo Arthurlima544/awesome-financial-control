@@ -1,4 +1,6 @@
-class AssetPerformance {
+import 'package:equatable/equatable.dart';
+
+class AssetPerformance extends Equatable {
   final String? ticker;
   final String name;
   final double profitLoss;
@@ -28,9 +30,12 @@ class AssetPerformance {
       'percentage': percentage,
     };
   }
+
+  @override
+  List<Object?> get props => [ticker, name, profitLoss, percentage];
 }
 
-class InvestmentDashboardData {
+class InvestmentDashboardData extends Equatable {
   final double totalProfitLoss;
   final double totalProfitLossPercentage;
   final double currentTotalValue;
@@ -78,4 +83,14 @@ class InvestmentDashboardData {
       'assetPerformance': assetPerformance.map((e) => e.toJson()).toList(),
     };
   }
+
+  @override
+  List<Object?> get props => [
+    totalProfitLoss,
+    totalProfitLossPercentage,
+    currentTotalValue,
+    totalInvested,
+    allocationByType,
+    assetPerformance,
+  ];
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:afc/repositories/market_repository.dart';
 
 part 'market_opportunity_event.dart';

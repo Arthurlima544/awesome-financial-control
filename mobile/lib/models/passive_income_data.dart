@@ -1,4 +1,6 @@
-class PassiveIncomeMonth {
+import 'package:equatable/equatable.dart';
+
+class PassiveIncomeMonth extends Equatable {
   final String month;
   final double amount;
 
@@ -14,9 +16,12 @@ class PassiveIncomeMonth {
   Map<String, dynamic> toJson() {
     return {'month': month, 'amount': amount};
   }
+
+  @override
+  List<Object?> get props => [month, amount];
 }
 
-class PassiveIncomeData {
+class PassiveIncomeData extends Equatable {
   final double freedomIndex;
   final double totalPassiveIncomeCurrentMonth;
   final List<PassiveIncomeMonth> monthlyProgression;
@@ -59,4 +64,12 @@ class PassiveIncomeData {
       'incomeByInvestment': incomeByInvestment,
     };
   }
+
+  @override
+  List<Object?> get props => [
+    freedomIndex,
+    totalPassiveIncomeCurrentMonth,
+    monthlyProgression,
+    incomeByInvestment,
+  ];
 }
