@@ -7,9 +7,11 @@ import 'package:afc/view_models/theme/theme_cubit.dart';
 import 'package:afc/models/currency.dart';
 import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/feedback_sheet/feedback_sheet.dart';
+import 'package:afc/widgets/profile_edit_sheet/profile_edit_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -44,9 +46,11 @@ class _SettingsView extends StatelessWidget {
                 trailingType: CustomListTileTrailing.arrow,
                 backgroundColor: AppColors.surface,
                 titleColor: AppColors.onSurface,
-                onTap: () {
-                  // TODO: Profile edit
-                },
+                onTap: () => ProfileEditSheet.show(
+                  context,
+                  initialName: state.userName,
+                  initialEmail: state.userEmail,
+                ),
               ),
               const SizedBox(height: AppSpacing.lg),
               _SectionHeader(title: l10n.settingsAppearance),
@@ -130,14 +134,20 @@ class _SettingsView extends StatelessWidget {
                 leadingIcon: Icons.description_outlined,
                 backgroundColor: AppColors.surface,
                 titleColor: AppColors.onSurface,
-                onTap: () {},
+                onTap: () => launchUrl(
+                  Uri.parse('https://example.com/terms'),
+                  mode: LaunchMode.externalApplication,
+                ),
               ),
               CustomListTile(
                 title: l10n.settingsAboutPrivacy,
                 leadingIcon: Icons.privacy_tip_outlined,
                 backgroundColor: AppColors.surface,
                 titleColor: AppColors.onSurface,
-                onTap: () {},
+                onTap: () => launchUrl(
+                  Uri.parse('https://example.com/privacy'),
+                  mode: LaunchMode.externalApplication,
+                ),
               ),
               CustomListTile(
                 title: l10n.feedbackTitle,

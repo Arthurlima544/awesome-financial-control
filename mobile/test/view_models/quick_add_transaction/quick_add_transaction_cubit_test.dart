@@ -161,7 +161,7 @@ void main() {
             .having(
               (s) => s.errorMessage,
               'errorMessage',
-              contains('Extraction failed'),
+              'Erro ao processar comprovante',
             ),
       ],
     );
@@ -307,7 +307,7 @@ void main() {
             .having(
               (s) => s.errorMessage,
               'errorMessage',
-              'Exception: create failed',
+              'Erro ao salvar transação',
             ),
       ],
     );

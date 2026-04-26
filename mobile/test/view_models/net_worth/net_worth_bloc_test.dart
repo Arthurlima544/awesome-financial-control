@@ -71,7 +71,7 @@ void main() {
       predicate<NetWorthState>(
         (state) =>
             state.status == NetWorthStatus.failure &&
-            state.errorMessage == 'Exception: error',
+            state.errorMessage == 'Erro ao carregar evolução do patrimônio',
       ),
     ],
   );

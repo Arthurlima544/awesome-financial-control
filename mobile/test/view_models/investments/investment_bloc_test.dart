@@ -68,7 +68,7 @@ void main() {
         const InvestmentState(status: InvestmentStatus.loading),
         const InvestmentState(
           status: InvestmentStatus.failure,
-          errorMessage: 'Exception: error',
+          errorMessage: 'Erro ao carregar investimentos',
         ),
       ],
     );

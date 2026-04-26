@@ -9,6 +9,10 @@ part 'settings_state.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SharedPreferences _prefs;
   static const _currencyKey = 'selected_currency';
+  static const _nameKey = 'settings_user_name';
+  static const _emailKey = 'settings_user_email';
+  static const _notificationsKey = 'settings_notifications_enabled';
+  static const _biometricKey = 'settings_biometric_enabled';
 
   SettingsBloc(this._prefs) : super(const SettingsState()) {
     on<SettingsLoaded>(_onLoaded);
@@ -21,9 +25,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   void _onLoaded(SettingsLoaded event, Emitter<SettingsState> emit) {
     final currencyIndex = _prefs.getInt(_currencyKey);
-    if (currencyIndex != null) {
-      emit(state.copyWith(selectedCurrency: Currency.values[currencyIndex]));
-    }
+    final name = _prefs.getString(_nameKey);
+    final email = _prefs.getString(_emailKey);
+    final notifications = _prefs.getBool(_notificationsKey);
+    final biometric = _prefs.getBool(_biometricKey);
+    emit(
+      state.copyWith(
+        selectedCurrency: currencyIndex != null
+            ? Currency.values[currencyIndex]
+            : null,
+        userName: name,
+        userEmail: email,
+        notificationsEnabled: notifications,
+        biometricEnabled: biometric,
+      ),
+    );
   }
 
   void _onCurrencyChanged(
@@ -38,6 +54,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsProfileUpdated event,
     Emitter<SettingsState> emit,
   ) {
+    _prefs.setString(_nameKey, event.name);
+    _prefs.setString(_emailKey, event.email);
     emit(state.copyWith(userName: event.name, userEmail: event.email));
   }
 
@@ -45,6 +63,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsNotificationsToggled event,
     Emitter<SettingsState> emit,
   ) {
+    _prefs.setBool(_notificationsKey, event.enabled);
     emit(state.copyWith(notificationsEnabled: event.enabled));
   }
 
@@ -52,11 +71,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsBiometricToggled event,
     Emitter<SettingsState> emit,
   ) {
+    _prefs.setBool(_biometricKey, event.enabled);
     emit(state.copyWith(biometricEnabled: event.enabled));
   }
 
-  void _onDataCleared(SettingsDataCleared event, Emitter<SettingsState> emit) {
-    // Logic for clearing local data would go here
-    // For now, just a placeholder for the state transition
+  Future<void> _onDataCleared(
+    SettingsDataCleared event,
+    Emitter<SettingsState> emit,
+  ) async {
+    await _prefs.clear();
+    emit(const SettingsState());
   }
 }
