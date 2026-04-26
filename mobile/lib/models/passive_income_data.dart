@@ -10,6 +10,10 @@ class PassiveIncomeMonth {
       amount: (json['amount'] as num).toDouble(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {'month': month, 'amount': amount};
+  }
 }
 
 class PassiveIncomeData {
@@ -45,5 +49,14 @@ class PassiveIncomeData {
           .toList(),
       incomeByInvestment: incomeMap,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'freedomIndex': freedomIndex,
+      'totalPassiveIncomeCurrentMonth': totalPassiveIncomeCurrentMonth,
+      'monthlyProgression': monthlyProgression.map((e) => e.toJson()).toList(),
+      'incomeByInvestment': incomeByInvestment,
+    };
   }
 }

@@ -19,6 +19,15 @@ class AssetPerformance {
       percentage: (json['percentage'] as num).toDouble(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ticker': ticker,
+      'name': name,
+      'profitLoss': profitLoss,
+      'percentage': percentage,
+    };
+  }
 }
 
 class InvestmentDashboardData {
@@ -57,5 +66,16 @@ class InvestmentDashboardData {
           .map((e) => AssetPerformance.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'totalProfitLoss': totalProfitLoss,
+      'totalProfitLossPercentage': totalProfitLossPercentage,
+      'currentTotalValue': currentTotalValue,
+      'totalInvested': totalInvested,
+      'allocationByType': allocationByType,
+      'assetPerformance': assetPerformance.map((e) => e.toJson()).toList(),
+    };
   }
 }

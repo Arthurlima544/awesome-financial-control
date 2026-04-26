@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 import 'package:afc/view_models/investments/investment_dashboard_bloc.dart';
 import 'package:afc/services/navigation_service.dart';
@@ -46,11 +47,17 @@ import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart'
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:afc/repositories/feedback_repository.dart';
 import 'package:afc/view_models/feedback/feedback_cubit.dart';
+import 'package:afc/services/cache_service.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // External
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
+
   // Services
+  sl.registerLazySingleton(() => CacheService(sl()));
   sl.registerLazySingleton(() => NavigationService());
   sl.registerLazySingleton(() => ImportParserService());
   sl.registerLazySingleton(() => ReceiptService());
@@ -91,7 +98,9 @@ Future<void> init() async {
   sl.registerFactory(() => GoalBloc(repository: sl()));
   sl.registerFactory(() => InvestmentBloc(repository: sl()));
   sl.registerFactory(() => BillBloc(repository: sl()));
-  sl.registerFactory(() => HealthScoreBloc(repository: sl()));
+  sl.registerFactory(
+    () => HealthScoreBloc(repository: sl(), cacheService: sl()),
+  );
   sl.registerFactory(() => SettingsBloc());
   sl.registerLazySingleton(() => ThemeCubit());
   sl.registerFactory(() => OnboardingCubit());
@@ -99,9 +108,13 @@ Future<void> init() async {
   sl.registerFactory(() => CompoundInterestBloc(repository: sl()));
   sl.registerFactory(() => InvestmentGoalBloc(repository: sl()));
   sl.registerFactory(() => MarketOpportunityBloc(marketRepository: sl()));
-  sl.registerFactory(() => InvestmentDashboardBloc(repository: sl()));
+  sl.registerFactory(
+    () => InvestmentDashboardBloc(repository: sl(), cacheService: sl()),
+  );
   sl.registerLazySingleton(() => PassiveIncomeRepository());
-  sl.registerFactory(() => PassiveIncomeBloc(repository: sl()));
+  sl.registerFactory(
+    () => PassiveIncomeBloc(repository: sl(), cacheService: sl()),
+  );
   sl.registerLazySingleton(() => PrivacyCubit());
   sl.registerFactory(() => FeedbackCubit(repository: sl()));
 }
