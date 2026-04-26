@@ -7,9 +7,12 @@ import com.awesome.financial.control.afc.dto.InvestmentRequest;
 import com.awesome.financial.control.afc.dto.InvestmentResponse;
 import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.InvestmentType;
+import com.awesome.financial.control.afc.model.RecurrenceFrequency;
+import com.awesome.financial.control.afc.model.RecurringTransaction;
 import com.awesome.financial.control.afc.model.Transaction;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
+import com.awesome.financial.control.afc.repository.RecurringTransactionRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
@@ -19,10 +22,12 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
@@ -33,9 +38,11 @@ public class InvestmentSteps {
     private final ScenarioContext context;
     private final InvestmentRepository investmentRepository;
     private final TransactionRepository transactionRepository;
+    private final RecurringTransactionRepository recurringTransactionRepository;
 
     @After
     public void cleanUp() {
+        recurringTransactionRepository.deleteAll();
         transactionRepository.deleteAll();
         investmentRepository.deleteAll();
     }
@@ -240,5 +247,59 @@ public class InvestmentSteps {
         String body = (String) context.response.getBody();
         long bracketCount = body.chars().filter(c -> c == '{').count();
         assertThat(bracketCount).isEqualTo(count);
+    }
+
+    @When(
+            "I update the last created investment with name {string}, ticker {string}, type {string}, quantity {double}, and avg cost {double}")
+    public void iUpdateTheLastCreatedInvestment(
+            String name, String ticker, String type, double quantity, double avgCost) {
+        InvestmentRequest request =
+                InvestmentRequest.builder()
+                        .name(name)
+                        .ticker(ticker)
+                        .type(InvestmentType.valueOf(type))
+                        .quantity(BigDecimal.valueOf(quantity))
+                        .avgCost(BigDecimal.valueOf(avgCost))
+                        .currentPrice(BigDecimal.valueOf(avgCost))
+                        .build();
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/investments/" + context.lastInvestmentId,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(request),
+                        InvestmentResponse.class);
+    }
+
+    @When(
+            "I update investment with id {string} with name {string}, ticker {string}, type {string}, quantity {double}, and avg cost {double}")
+    public void iUpdateInvestmentWithId(
+            String id, String name, String ticker, String type, double quantity, double avgCost) {
+        InvestmentRequest request =
+                InvestmentRequest.builder()
+                        .name(name)
+                        .ticker(ticker)
+                        .type(InvestmentType.valueOf(type))
+                        .quantity(BigDecimal.valueOf(quantity))
+                        .avgCost(BigDecimal.valueOf(avgCost))
+                        .currentPrice(BigDecimal.valueOf(avgCost))
+                        .build();
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/investments/" + id,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(request),
+                        String.class);
+    }
+
+    @Given("a recurring transaction linked to the last created investment")
+    public void aRecurringTransactionLinkedToLastCreatedInvestment() {
+        RecurringTransaction rt = new RecurringTransaction();
+        rt.setDescription("Dividendos recorrentes");
+        rt.setAmount(BigDecimal.valueOf(50));
+        rt.setType(TransactionType.INCOME);
+        rt.setFrequency(RecurrenceFrequency.MONTHLY);
+        rt.setNextDueAt(Instant.now().plus(30, ChronoUnit.DAYS));
+        rt.setInvestmentId(context.lastInvestmentId);
+        recurringTransactionRepository.save(rt);
     }
 }

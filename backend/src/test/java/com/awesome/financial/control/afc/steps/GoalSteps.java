@@ -146,4 +146,24 @@ public class GoalSteps {
         context.response =
                 restTemplate.exchange("/api/v1/goals/" + id, HttpMethod.DELETE, null, String.class);
     }
+
+    @When("I delete the last created goal")
+    public void iDeleteTheLastCreatedGoal() {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/goals/" + context.lastGoalId,
+                        HttpMethod.DELETE,
+                        null,
+                        String.class);
+    }
+
+    @When("I add a contribution of {double} to goal with id {string}")
+    public void iAddAContributionOfToGoalWithId(double amount, String id) {
+        context.response =
+                restTemplate.exchange(
+                        "/api/v1/goals/" + id + "/contribute?amount=" + amount,
+                        HttpMethod.PATCH,
+                        null,
+                        String.class);
+    }
 }
