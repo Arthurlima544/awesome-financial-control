@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/models/limit_progress_model.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MonthLimitView extends StatelessWidget {
   const MonthLimitView({super.key, required this.limit});
@@ -88,11 +93,36 @@ class MonthLimitView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                PrivacyText(
-                  '${limit.spentFormatted} de ${limit.limitAmountFormatted}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF4B5563),
-                  ),
+                BlocBuilder<SettingsBloc, SettingsState>(
+                  builder: (context, settingsState) {
+                    final currency = settingsState.selectedCurrency;
+                    final currencyService = sl<CurrencyService>();
+
+                    final convertedSpent = currencyService.convert(
+                      limit.spent,
+                      currency,
+                    );
+                    final convertedLimit = currencyService.convert(
+                      limit.limitAmount,
+                      currency,
+                    );
+
+                    final spentStr = CurrencyFormatter.format(
+                      convertedSpent,
+                      currency,
+                    );
+                    final limitStr = CurrencyFormatter.format(
+                      convertedLimit,
+                      currency,
+                    );
+
+                    return PrivacyText(
+                      '$spentStr de $limitStr',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: const Color(0xFF4B5563),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
                 LayoutBuilder(

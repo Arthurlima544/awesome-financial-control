@@ -6,6 +6,7 @@ class SettingsState extends Equatable {
   final bool notificationsEnabled;
   final bool biometricEnabled;
   final String appVersion;
+  final Currency selectedCurrency;
 
   const SettingsState({
     this.userName = 'Arthur Lima',
@@ -13,6 +14,7 @@ class SettingsState extends Equatable {
     this.notificationsEnabled = true,
     this.biometricEnabled = false,
     this.appVersion = '1.0.0 (42)',
+    this.selectedCurrency = Currency.brl,
   });
 
   SettingsState copyWith({
@@ -21,6 +23,7 @@ class SettingsState extends Equatable {
     bool? notificationsEnabled,
     bool? biometricEnabled,
     String? appVersion,
+    Currency? selectedCurrency,
   }) {
     return SettingsState(
       userName: userName ?? this.userName,
@@ -28,6 +31,7 @@ class SettingsState extends Equatable {
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       biometricEnabled: biometricEnabled ?? this.biometricEnabled,
       appVersion: appVersion ?? this.appVersion,
+      selectedCurrency: selectedCurrency ?? this.selectedCurrency,
     );
   }
 
@@ -38,5 +42,6 @@ class SettingsState extends Equatable {
     notificationsEnabled,
     biometricEnabled,
     appVersion,
+    selectedCurrency,
   ];
 }

@@ -25,7 +25,10 @@ import 'package:afc/widgets/adaptive_chip/adaptive_chip.dart';
 import 'package:afc/widgets/custom_date_picker/custom_date_picker.dart';
 import 'package:afc/widgets/custom_date_picker/custom_date_picker_cubit.dart'
     as picker;
-import 'package:intl/intl.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 
 class TransactionListScreen extends StatelessWidget {
   const TransactionListScreen({super.key});
@@ -203,7 +206,6 @@ class _TransactionListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Scaffold(
       appBar: AppBar(
@@ -302,9 +304,18 @@ class _TransactionListView extends StatelessWidget {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _GroupHeader(
-                                group: group,
-                                currencyFormat: currencyFormat,
+                              BlocBuilder<SettingsBloc, SettingsState>(
+                                builder: (context, settingsState) {
+                                  final currency =
+                                      settingsState.selectedCurrency;
+                                  final currencyService = sl<CurrencyService>();
+
+                                  return _GroupHeader(
+                                    group: group,
+                                    currency: currency,
+                                    currencyService: currencyService,
+                                  );
+                                },
                               ),
                               ...group.transactions.map(
                                 (t) => _DismissibleItem(
@@ -343,10 +354,15 @@ class _TransactionListView extends StatelessWidget {
 }
 
 class _GroupHeader extends StatelessWidget {
-  const _GroupHeader({required this.group, required this.currencyFormat});
+  const _GroupHeader({
+    required this.group,
+    required this.currency,
+    required this.currencyService,
+  });
 
   final TransactionGroup group;
-  final NumberFormat currencyFormat;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   @override
   Widget build(BuildContext context) {
@@ -384,7 +400,10 @@ class _GroupHeader extends StatelessWidget {
             ],
           ),
           Text(
-            currencyFormat.format(group.total),
+            CurrencyFormatter.format(
+              currencyService.convert(group.total, currency),
+              currency,
+            ),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: AppColors.neutral700,

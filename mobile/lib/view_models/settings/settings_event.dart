@@ -36,3 +36,14 @@ class SettingsBiometricToggled extends SettingsEvent {
 }
 
 class SettingsDataCleared extends SettingsEvent {}
+
+class SettingsCurrencyChanged extends SettingsEvent {
+  final Currency currency;
+
+  const SettingsCurrencyChanged(this.currency);
+
+  @override
+  List<Object?> get props => [currency];
+}
+
+class SettingsLoaded extends SettingsEvent {}

@@ -2343,6 +2343,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Erro: {error}'**
   String importErrorTitle(String error);
+
+  /// No description provided for @settingsCurrencyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Moeda de exibição'**
+  String get settingsCurrencyTitle;
 }
 
 class _AppLocalizationsDelegate

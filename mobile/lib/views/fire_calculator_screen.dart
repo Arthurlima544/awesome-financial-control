@@ -21,6 +21,11 @@ import 'package:afc/widgets/action_card/action_card.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 
 class FireCalculatorScreen extends StatefulWidget {
   const FireCalculatorScreen({super.key});
@@ -105,34 +110,49 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.fireCalcTitle)),
-      body: BlocBuilder<FireCalculatorBloc, FireCalculatorState>(
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            children: [
-              _buildInputs(context),
-              const SizedBox(height: AppSpacing.lg),
-              _buildInflationToggle(),
-              const SizedBox(height: AppSpacing.xl),
-              if (state.status == FireCalculatorStatus.loading)
-                const Center(child: CircularProgressIndicator())
-              else if (state.status == FireCalculatorStatus.success) ...[
-                Text(l10n.calcResultTitle, style: AppTextStyles.titleMedium),
-                const SizedBox(height: AppSpacing.md),
-                _buildResults(context, state.result!),
-                const SizedBox(height: AppSpacing.xl),
-                _buildAboutFire(),
-              ] else if (state.status == FireCalculatorStatus.failure)
-                Text(
-                  l10n.calcErrorMessage(state.errorMessage ?? ''),
-                  style: const TextStyle(color: AppColors.error),
-                ),
-            ],
-          );
-        },
-      ),
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, settingsState) {
+        final currency = settingsState.selectedCurrency;
+        final currencyService = sl<CurrencyService>();
+
+        return Scaffold(
+          appBar: AppBar(title: Text(l10n.fireCalcTitle)),
+          body: BlocBuilder<FireCalculatorBloc, FireCalculatorState>(
+            builder: (context, state) {
+              return ListView(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                children: [
+                  _buildInputs(context),
+                  const SizedBox(height: AppSpacing.lg),
+                  _buildInflationToggle(),
+                  const SizedBox(height: AppSpacing.xl),
+                  if (state.status == FireCalculatorStatus.loading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (state.status == FireCalculatorStatus.success) ...[
+                    Text(
+                      l10n.calcResultTitle,
+                      style: AppTextStyles.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _buildResults(
+                      context,
+                      state.result!,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildAboutFire(),
+                  ] else if (state.status == FireCalculatorStatus.failure)
+                    Text(
+                      l10n.calcErrorMessage(state.errorMessage ?? ''),
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -325,9 +345,13 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     );
   }
 
-  Widget _buildResults(BuildContext context, FireCalculatorResult result) {
+  Widget _buildResults(
+    BuildContext context,
+    FireCalculatorResult result,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final fireNumber = result.fireNumber;
     final monthsToFire = result.monthsToFire;
     final retirementDate = result.retirementDate;
@@ -352,7 +376,10 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               children: [
                 _buildResultRow(
                   l10n.fireCalcFireNumberLabel,
-                  currencyFormat.format(fireNumber),
+                  CurrencyFormatter.format(
+                    currencyService.convert(fireNumber, currency),
+                    currency,
+                  ),
                   isTeal: true,
                   hasInfo: true,
                   isPrivate: true,
@@ -396,7 +423,12 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               children: [
                 SizedBox(
                   height: 250,
-                  child: _buildChart(yearlyTimeline, fireNumber),
+                  child: _buildChart(
+                    yearlyTimeline,
+                    fireNumber,
+                    currency,
+                    currencyService,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
@@ -473,7 +505,12 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     );
   }
 
-  Widget _buildChart(List<FireTimelinePoint> timeline, double fireNumber) {
+  Widget _buildChart(
+    List<FireTimelinePoint> timeline,
+    double fireNumber,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
     final spots = timeline.map((e) {
@@ -489,9 +526,11 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
             getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                final format = NumberFormat.simpleCurrency(locale: 'pt_BR');
                 return LineTooltipItem(
-                  format.format(spot.y),
+                  CurrencyFormatter.format(
+                    currencyService.convert(spot.y, currency),
+                    currency,
+                  ),
                   const TextStyle(color: Colors.white, fontSize: 10),
                 );
               }).toList();
@@ -516,20 +555,21 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               showTitles: true,
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
+                final symbol = currency.symbol;
                 if (value == 0) {
-                  return const PrivacyText(
-                    'R\$ 0',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  return PrivacyText(
+                    '$symbol 0',
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value >= 1000000) {
                   return PrivacyText(
-                    'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
+                    '$symbol ${(value / 1000000).toStringAsFixed(1)} mi',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 return PrivacyText(
-                  'R\$ ${(value / 1000).toStringAsFixed(0)}k',
+                  '$symbol ${(value / 1000).toStringAsFixed(0)}k',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 );
               },

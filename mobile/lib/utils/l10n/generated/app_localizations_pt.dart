@@ -1219,4 +1219,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String importErrorTitle(String error) {
     return 'Erro: $error';
   }
+
+  @override
+  String get settingsCurrencyTitle => 'Moeda de exibição';
 }

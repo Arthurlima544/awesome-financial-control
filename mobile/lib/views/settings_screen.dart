@@ -1,10 +1,10 @@
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/app_spacing.dart';
-import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/auth/auth_bloc.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
 import 'package:afc/view_models/theme/theme_cubit.dart';
+import 'package:afc/models/currency.dart';
 import 'package:afc/widgets/custom_list_tile/custom_list_tile.dart';
 import 'package:afc/widgets/feedback_sheet/feedback_sheet.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +16,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<SettingsBloc>(),
-      child: const _SettingsView(),
-    );
+    return const _SettingsView();
   }
 }
 
@@ -60,6 +57,15 @@ class _SettingsView extends StatelessWidget {
                 backgroundColor: AppColors.surface,
                 titleColor: AppColors.onSurface,
                 onTap: () => _showThemePicker(context, themeCubit),
+              ),
+              CustomListTile(
+                title: l10n.settingsCurrencyTitle,
+                description: state.selectedCurrency.code,
+                leadingIcon: Icons.attach_money,
+                backgroundColor: AppColors.surface,
+                titleColor: AppColors.onSurface,
+                onTap: () =>
+                    _showCurrencyPicker(context, state.selectedCurrency),
               ),
               const SizedBox(height: AppSpacing.lg),
               _SectionHeader(title: l10n.settingsNotifications),
@@ -232,6 +238,57 @@ class _SettingsView extends StatelessWidget {
               trailing: themeCubit.state == ThemeMode.dark
                   ? const Icon(Icons.check, color: AppColors.primary)
                   : null,
+            ),
+            const SizedBox(height: AppSpacing.md),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showCurrencyPicker(BuildContext context, Currency current) {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.lg),
+        ),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Text(
+                l10n.settingsCurrencyTitle,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            ...Currency.values.map(
+              (c) => ListTile(
+                leading: SizedBox(
+                  width: 32,
+                  child: Text(
+                    c.symbol,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                title: Text(c.code),
+                onTap: () {
+                  context.read<SettingsBloc>().add(SettingsCurrencyChanged(c));
+                  Navigator.pop(context);
+                },
+                trailing: current == c
+                    ? const Icon(Icons.check, color: AppColors.primary)
+                    : null,
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
           ],

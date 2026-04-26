@@ -11,6 +11,11 @@ import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
 import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
@@ -81,32 +86,47 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.investmentGoalCalcTitle)),
-      body: BlocBuilder<InvestmentGoalBloc, InvestmentGoalState>(
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            children: [
-              _buildInputs(context),
-              const SizedBox(height: AppSpacing.xl),
-              if (state.status == InvestmentGoalStatus.loading)
-                const Center(child: CircularProgressIndicator())
-              else if (state.status == InvestmentGoalStatus.success) ...[
-                Text(l10n.calcResultTitle, style: AppTextStyles.titleMedium),
-                const SizedBox(height: AppSpacing.md),
-                _buildResults(context, state.response!),
-                const SizedBox(height: AppSpacing.xl),
-                _buildGoalInfo(),
-              ] else if (state.status == InvestmentGoalStatus.failure)
-                Text(
-                  l10n.calcErrorMessage(state.errorMessage ?? ''),
-                  style: const TextStyle(color: AppColors.error),
-                ),
-            ],
-          );
-        },
-      ),
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, settingsState) {
+        final currency = settingsState.selectedCurrency;
+        final currencyService = sl<CurrencyService>();
+
+        return Scaffold(
+          appBar: AppBar(title: Text(l10n.investmentGoalCalcTitle)),
+          body: BlocBuilder<InvestmentGoalBloc, InvestmentGoalState>(
+            builder: (context, state) {
+              return ListView(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                children: [
+                  _buildInputs(context),
+                  const SizedBox(height: AppSpacing.xl),
+                  if (state.status == InvestmentGoalStatus.loading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (state.status == InvestmentGoalStatus.success) ...[
+                    Text(
+                      l10n.calcResultTitle,
+                      style: AppTextStyles.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _buildResults(
+                      context,
+                      state.response!,
+                      currency,
+                      currencyService,
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    _buildGoalInfo(),
+                  ] else if (state.status == InvestmentGoalStatus.failure)
+                    Text(
+                      l10n.calcErrorMessage(state.errorMessage ?? ''),
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -291,9 +311,13 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
     );
   }
 
-  Widget _buildResults(BuildContext context, InvestmentGoalResponse response) {
+  Widget _buildResults(
+    BuildContext context,
+    InvestmentGoalResponse response,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,19 +335,37 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               children: [
                 _buildResultRow(
                   l10n.investmentGoalCalcMonthlyContributionLabel,
-                  currencyFormat.format(response.requiredMonthlyContribution),
+                  CurrencyFormatter.format(
+                    currencyService.convert(
+                      response.requiredMonthlyContribution,
+                      currency,
+                    ),
+                    currency,
+                  ),
                   isTeal: true,
                   isBold: true,
                 ),
                 const Divider(height: AppSpacing.xl),
                 _buildResultRow(
                   l10n.investmentGoalCalcTotalContributedLabel,
-                  currencyFormat.format(response.totalContributed),
+                  CurrencyFormatter.format(
+                    currencyService.convert(
+                      response.totalContributed,
+                      currency,
+                    ),
+                    currency,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
                   l10n.investmentGoalCalcTotalInterestLabel,
-                  currencyFormat.format(response.totalInterestEarned),
+                  CurrencyFormatter.format(
+                    currencyService.convert(
+                      response.totalInterestEarned,
+                      currency,
+                    ),
+                    currency,
+                  ),
                   valueColor: AppColors.primary,
                 ),
               ],
@@ -347,7 +389,14 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 250, child: _buildChart(response.timeline)),
+                SizedBox(
+                  height: 250,
+                  child: _buildChart(
+                    response.timeline,
+                    currency,
+                    currencyService,
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.md),
                 _buildCompositionBar(response),
               ],
@@ -466,7 +515,11 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
     );
   }
 
-  Widget _buildChart(List<InvestmentGoalTimelineEntry> timeline) {
+  Widget _buildChart(
+    List<InvestmentGoalTimelineEntry> timeline,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
     final spots = timeline.map((e) => FlSpot(e.years, e.accumulated)).toList();
@@ -478,9 +531,11 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
             getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                final format = NumberFormat.simpleCurrency(locale: 'pt_BR');
                 return LineTooltipItem(
-                  format.format(spot.y),
+                  CurrencyFormatter.format(
+                    currencyService.convert(spot.y, currency),
+                    currency,
+                  ),
                   const TextStyle(color: Colors.white, fontSize: 10),
                 );
               }).toList();
@@ -505,20 +560,21 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               showTitles: true,
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
+                final symbol = currency.symbol;
                 if (value == 0) {
-                  return const PrivacyText(
-                    'R\$ 0',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  return PrivacyText(
+                    '$symbol 0',
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value >= 1000000) {
                   return PrivacyText(
-                    'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
+                    '$symbol ${(value / 1000000).toStringAsFixed(1)} mi',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 return PrivacyText(
-                  'R\$ ${(value / 1000).toStringAsFixed(0)}k',
+                  '$symbol ${(value / 1000).toStringAsFixed(0)}k',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 );
               },

@@ -13,6 +13,8 @@ import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
 
 import 'package:afc/utils/config/injection.dart' as di;
 import 'package:afc/utils/config/injection.dart';
@@ -20,6 +22,8 @@ import 'package:afc/utils/config/injection.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  await sl<CurrencyService>().init();
+  sl<SettingsBloc>().add(SettingsLoaded());
   runApp(const AfcApp());
 }
 
@@ -69,6 +73,7 @@ class _AfcAppState extends State<AfcApp> {
           create: (_) => sl<InvestmentBloc>()..add(LoadInvestments()),
         ),
         BlocProvider.value(value: sl<PrivacyCubit>()),
+        BlocProvider.value(value: sl<SettingsBloc>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

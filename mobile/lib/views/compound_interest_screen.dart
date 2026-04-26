@@ -1,4 +1,9 @@
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/widgets/custom_tooltip/custom_tooltip.dart';
@@ -13,7 +18,6 @@ import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field.dart';
 import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
-import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
@@ -95,30 +99,45 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.compoundCalcTitle)),
-      body: BlocBuilder<CompoundInterestBloc, CompoundInterestState>(
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            children: [
-              _buildInputs(context),
-              const SizedBox(height: AppSpacing.xl),
-              if (state.status == CompoundInterestStatus.loading)
-                const Center(child: CircularProgressIndicator())
-              else if (state.status == CompoundInterestStatus.success) ...[
-                Text(l10n.calcResultTitle, style: AppTextStyles.titleMedium),
-                const SizedBox(height: AppSpacing.md),
-                _buildResults(context, state.result!),
-              ] else if (state.status == CompoundInterestStatus.failure)
-                Text(
-                  l10n.calcErrorMessage(state.errorMessage ?? ''),
-                  style: const TextStyle(color: AppColors.error),
-                ),
-            ],
-          );
-        },
-      ),
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, settingsState) {
+        final currency = settingsState.selectedCurrency;
+        final currencyService = sl<CurrencyService>();
+
+        return Scaffold(
+          appBar: AppBar(title: Text(l10n.compoundCalcTitle)),
+          body: BlocBuilder<CompoundInterestBloc, CompoundInterestState>(
+            builder: (context, state) {
+              return ListView(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                children: [
+                  _buildInputs(context),
+                  const SizedBox(height: AppSpacing.xl),
+                  if (state.status == CompoundInterestStatus.loading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (state.status == CompoundInterestStatus.success) ...[
+                    Text(
+                      l10n.calcResultTitle,
+                      style: AppTextStyles.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    _buildResults(
+                      context,
+                      state.result!,
+                      currency,
+                      currencyService,
+                    ),
+                  ] else if (state.status == CompoundInterestStatus.failure)
+                    Text(
+                      l10n.calcErrorMessage(state.errorMessage ?? ''),
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -295,9 +314,13 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
     );
   }
 
-  Widget _buildResults(BuildContext context, CompoundInterestResult result) {
+  Widget _buildResults(
+    BuildContext context,
+    CompoundInterestResult result,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final finalAmount = result.finalAmount;
     final totalInvested = result.totalInvested;
     final totalInterest = result.totalInterest;
@@ -319,18 +342,27 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               children: [
                 _buildResultRow(
                   l10n.compoundCalcFinalAmountLabel,
-                  currencyFormat.format(finalAmount),
+                  CurrencyFormatter.format(
+                    currencyService.convert(finalAmount, currency),
+                    currency,
+                  ),
                   isTeal: true,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
                   l10n.compoundCalcTotalInvestedLabel,
-                  currencyFormat.format(totalInvested),
+                  CurrencyFormatter.format(
+                    currencyService.convert(totalInvested, currency),
+                    currency,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
                   l10n.compoundCalcTotalInterestLabel,
-                  currencyFormat.format(totalInterest),
+                  CurrencyFormatter.format(
+                    currencyService.convert(totalInterest, currency),
+                    currency,
+                  ),
                   isBold: true,
                 ),
               ],
@@ -354,7 +386,10 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 250, child: _buildChart(timeline)),
+                SizedBox(
+                  height: 250,
+                  child: _buildChart(timeline, currency, currencyService),
+                ),
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
@@ -418,7 +453,11 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
     );
   }
 
-  Widget _buildChart(List<CompoundTimelinePoint> timeline) {
+  Widget _buildChart(
+    List<CompoundTimelinePoint> timeline,
+    Currency currency,
+    CurrencyService currencyService,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
 
@@ -437,9 +476,11 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
             getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                final format = NumberFormat.simpleCurrency(locale: 'pt_BR');
                 return LineTooltipItem(
-                  format.format(spot.y),
+                  CurrencyFormatter.format(
+                    currencyService.convert(spot.y, currency),
+                    currency,
+                  ),
                   const TextStyle(color: Colors.white, fontSize: 10),
                 );
               }).toList();
@@ -464,20 +505,21 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               showTitles: true,
               reservedSize: 60,
               getTitlesWidget: (value, meta) {
+                final symbol = currency.symbol;
                 if (value == 0) {
-                  return const PrivacyText(
-                    'R\$ 0',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  return PrivacyText(
+                    '$symbol 0',
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value >= 1000000) {
                   return PrivacyText(
-                    'R\$ ${(value / 1000000).toStringAsFixed(1)} mi',
+                    '$symbol ${(value / 1000000).toStringAsFixed(1)} mi',
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 return PrivacyText(
-                  'R\$ ${(value / 1000).toStringAsFixed(0)}k',
+                  '$symbol ${(value / 1000).toStringAsFixed(0)}k',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 );
               },

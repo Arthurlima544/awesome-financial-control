@@ -13,6 +13,11 @@ import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
+import 'package:afc/view_models/settings/settings_bloc.dart';
+import 'package:afc/services/currency_service.dart';
+import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/currency_formatter.dart';
+import 'package:afc/models/currency.dart';
 
 class InvestmentsScreen extends StatelessWidget {
   const InvestmentsScreen({super.key});
@@ -20,123 +25,134 @@ class InvestmentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final percentFormat = NumberFormat.decimalPercentPattern(
       locale: 'pt_BR',
       decimalDigits: 2,
     );
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 120.0,
-            floating: false,
-            pinned: true,
-            backgroundColor: AppColors.surface,
-            elevation: 0,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.analytics_outlined),
-                onPressed: () => context.push('/investments/dashboard'),
-                tooltip: 'Análise do Portfólio',
-              ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                l10n.investmentsTitle,
-                style: AppTextStyles.headlineSmall.copyWith(
-                  color: AppColors.onSurface,
-                ),
-              ),
-              centerTitle: false,
-              titlePadding: const EdgeInsets.only(
-                left: AppSpacing.lg,
-                bottom: AppSpacing.md,
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: BlocBuilder<InvestmentBloc, InvestmentState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      FadeInAnimation(
-                        trigger: null,
-                        child: _PortfolioSummaryCard(
-                          totalInvested: state.totalInvested,
-                          totalCurrentValue: state.totalCurrentValue,
-                          totalGainLoss: state.totalGainLoss,
-                          totalGainLossPercentage:
-                              state.totalGainLossPercentage,
-                          currencyFormat: currencyFormat,
-                          percentFormat: percentFormat,
-                          l10n: l10n,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-          BlocBuilder<InvestmentBloc, InvestmentState>(
-            builder: (context, state) {
-              if (state.status == InvestmentStatus.loading &&
-                  state.investments.isEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, settingsState) {
+        final currency = settingsState.selectedCurrency;
+        final currencyService = sl<CurrencyService>();
 
-              if (state.investments.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      l10n.investmentsNoInvestments,
-                      style: AppTextStyles.bodyMedium,
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 120.0,
+                floating: false,
+                pinned: true,
+                backgroundColor: AppColors.surface,
+                elevation: 0,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.analytics_outlined),
+                    onPressed: () => context.push('/investments/dashboard'),
+                    tooltip: 'Análise do Portfólio',
+                  ),
+                ],
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    l10n.investmentsTitle,
+                    style: AppTextStyles.headlineSmall.copyWith(
+                      color: AppColors.onSurface,
                     ),
                   ),
-                );
-              }
+                  centerTitle: false,
+                  titlePadding: const EdgeInsets.only(
+                    left: AppSpacing.lg,
+                    bottom: AppSpacing.md,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: BlocBuilder<InvestmentBloc, InvestmentState>(
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          FadeInAnimation(
+                            trigger: null,
+                            child: _PortfolioSummaryCard(
+                              totalInvested: state.totalInvested,
+                              totalCurrentValue: state.totalCurrentValue,
+                              totalGainLoss: state.totalGainLoss,
+                              totalGainLossPercentage:
+                                  state.totalGainLossPercentage,
+                              percentFormat: percentFormat,
+                              l10n: l10n,
+                              currency: currency,
+                              currencyService: currencyService,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              BlocBuilder<InvestmentBloc, InvestmentState>(
+                builder: (context, state) {
+                  if (state.status == InvestmentStatus.loading &&
+                      state.investments.isEmpty) {
+                    return const SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
 
-              return SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final investment = state.investments[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                      child: FadeInAnimation(
-                        trigger: null,
-                        delay: Duration(milliseconds: 100 + (index * 50)),
-                        child: _InvestmentCard(
-                          investment: investment,
-                          currencyFormat: currencyFormat,
-                          percentFormat: percentFormat,
-                          onTap: () => _showInvestmentForm(context, investment),
+                  if (state.investments.isEmpty) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text(
+                          l10n.investmentsNoInvestments,
+                          style: AppTextStyles.bodyMedium,
                         ),
                       ),
                     );
-                  }, childCount: state.investments.length),
-                ),
-              );
-            },
+                  }
+
+                  return SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final investment = state.investments[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: FadeInAnimation(
+                            trigger: null,
+                            delay: Duration(milliseconds: 100 + (index * 50)),
+                            child: _InvestmentCard(
+                              investment: investment,
+                              percentFormat: percentFormat,
+                              onTap: () =>
+                                  _showInvestmentForm(context, investment),
+                              currency: currency,
+                              currencyService: currencyService,
+                            ),
+                          ),
+                        );
+                      }, childCount: state.investments.length),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: BlocProvider(
-        create: (_) => CircularButtonCubit(),
-        child: CircularButton(
-          icon: Icons.add,
-          onPressed: () => _showInvestmentForm(context),
-          semanticLabel: l10n.add,
-        ),
-      ),
+          floatingActionButton: BlocProvider(
+            create: (_) => CircularButtonCubit(),
+            child: CircularButton(
+              icon: Icons.add,
+              onPressed: () => _showInvestmentForm(context),
+              semanticLabel: l10n.add,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -161,18 +177,20 @@ class _PortfolioSummaryCard extends StatelessWidget {
   final double totalCurrentValue;
   final double totalGainLoss;
   final double totalGainLossPercentage;
-  final NumberFormat currencyFormat;
   final NumberFormat percentFormat;
   final AppLocalizations l10n;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   const _PortfolioSummaryCard({
     required this.totalInvested,
     required this.totalCurrentValue,
     required this.totalGainLoss,
     required this.totalGainLossPercentage,
-    required this.currencyFormat,
     required this.percentFormat,
     required this.l10n,
+    required this.currency,
+    required this.currencyService,
   });
 
   @override
@@ -200,7 +218,10 @@ class _PortfolioSummaryCard extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xs),
             PrivacyText(
-              currencyFormat.format(totalCurrentValue),
+              CurrencyFormatter.format(
+                currencyService.convert(totalCurrentValue, currency),
+                currency,
+              ),
               style: AppTextStyles.displaySmall.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppColors.onSurface,
@@ -216,7 +237,7 @@ class _PortfolioSummaryCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 PrivacyText(
-                  '${currencyFormat.format(totalGainLoss.abs())} (${percentFormat.format(totalGainLossPercentage / 100)})',
+                  '${CurrencyFormatter.format(currencyService.convert(totalGainLoss.abs(), currency), currency)} (${percentFormat.format(totalGainLossPercentage / 100)})',
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: color,
                     fontWeight: FontWeight.w600,
@@ -236,7 +257,10 @@ class _PortfolioSummaryCard extends StatelessWidget {
                   style: AppTextStyles.bodySmall,
                 ),
                 PrivacyText(
-                  currencyFormat.format(totalInvested),
+                  CurrencyFormatter.format(
+                    currencyService.convert(totalInvested, currency),
+                    currency,
+                  ),
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -252,15 +276,17 @@ class _PortfolioSummaryCard extends StatelessWidget {
 
 class _InvestmentCard extends StatelessWidget {
   final InvestmentModel investment;
-  final NumberFormat currencyFormat;
   final NumberFormat percentFormat;
   final VoidCallback onTap;
+  final Currency currency;
+  final CurrencyService currencyService;
 
   const _InvestmentCard({
     required this.investment,
-    required this.currencyFormat,
     required this.percentFormat,
     required this.onTap,
+    required this.currency,
+    required this.currencyService,
   });
 
   @override
@@ -308,7 +334,10 @@ class _InvestmentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 PrivacyText(
-                  currencyFormat.format(investment.currentValue),
+                  CurrencyFormatter.format(
+                    currencyService.convert(investment.currentValue, currency),
+                    currency,
+                  ),
                   style: AppTextStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
