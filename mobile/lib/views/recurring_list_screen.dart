@@ -4,10 +4,10 @@ import 'package:afc/view_models/recurring/recurring_bloc.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:afc/widgets/recurring_form_sheet/recurring_form_sheet.dart';
 import 'package:afc/widgets/empty_state/empty_state.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/utils/app_formatters.dart';
 
 class RecurringListScreen extends StatelessWidget {
   const RecurringListScreen({super.key});
@@ -71,8 +71,6 @@ class _RecurringItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
-    final dateFormat = DateFormat.yMd('pt_BR');
 
     String frequencyLabel = switch (rule.frequency) {
       RecurrenceFrequency.daily => l10n.recurringFrequencyDaily,
@@ -100,9 +98,13 @@ class _RecurringItem extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$frequencyLabel • ${currencyFormat.format(rule.amount)}'),
           Text(
-            l10n.recurringNextDue(dateFormat.format(rule.nextDueAt)),
+            '$frequencyLabel • ${AppFormatters.currencyPtBR.format(rule.amount)}',
+          ),
+          Text(
+            l10n.recurringNextDue(
+              AppFormatters.dayMonthYearShort.format(rule.nextDueAt),
+            ),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           if (rule.isPaidThisMonth)

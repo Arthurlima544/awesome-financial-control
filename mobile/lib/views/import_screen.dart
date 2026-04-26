@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
 
 import 'package:afc/utils/config/app_colors.dart';
 import 'package:afc/utils/config/injection.dart';
@@ -12,6 +11,7 @@ import 'package:afc/view_models/import/import_bloc.dart';
 import 'package:afc/view_models/import/import_event.dart';
 import 'package:afc/view_models/import/import_state.dart';
 import 'package:afc/models/transaction_model.dart';
+import 'package:afc/utils/app_formatters.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button.dart';
 import 'package:afc/widgets/adaptive_button/adaptive_button_cubit.dart';
 import 'package:afc/widgets/adaptive_badge/adaptive_badge.dart';
@@ -206,12 +206,6 @@ class _ImportView extends StatelessWidget {
     ImportState state,
     AppLocalizations l10n,
   ) {
-    final currencyFormatter = NumberFormat.currency(
-      locale: 'pt_BR',
-      symbol: 'R\$',
-    );
-    final dateFormatter = DateFormat('dd/MM/yyyy');
-
     return Column(
       children: [
         Padding(
@@ -273,7 +267,7 @@ class _ImportView extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(dateFormatter.format(c.occurredAt)),
+                    Text(AppFormatters.dayMonthYear.format(c.occurredAt)),
                     const SizedBox(height: 4),
                     Wrap(
                       spacing: 8.0,
@@ -315,7 +309,7 @@ class _ImportView extends StatelessWidget {
                   ],
                 ),
                 trailing: Text(
-                  currencyFormatter.format(c.amount),
+                  AppFormatters.currencyPtBR.format(c.amount),
                   style: TextStyle(
                     color: amountColor,
                     fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:afc/models/investment_goal.dart';
+import 'package:afc/utils/app_formatters.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,11 +18,11 @@ import 'package:afc/utils/config/injection.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
-import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
+import 'package:afc/widgets/finance_line_chart/finance_line_chart.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
 
@@ -173,7 +174,7 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
                   const Icon(Icons.calendar_today_outlined, color: Colors.grey),
                   const SizedBox(width: AppSpacing.md),
                   Text(
-                    DateFormat('MMMM / yyyy', 'pt_BR').format(_targetDate),
+                    AppFormatters.monthYearFull.format(_targetDate),
                     style: AppTextStyles.labelLarge,
                   ),
                 ],
@@ -392,10 +393,47 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
               children: [
                 SizedBox(
                   height: 250,
-                  child: _buildChart(
-                    response.timeline,
-                    currency,
-                    currencyService,
+                  child: FinanceLineChart(
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: response.timeline.map((e) {
+                          return FlSpot(
+                            e.years,
+                            currencyService.convert(e.accumulated, currency),
+                          );
+                        }).toList(),
+                        isCurved: true,
+                        color: AppColors.primary,
+                        barWidth: 3,
+                        dotData: const FlDotData(show: false),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                        ),
+                      ),
+                    ],
+                    currency: currency,
+                    bottomTitleWidget: (value, meta) {
+                      if (value == 0) {
+                        return Text(
+                          l10n.calcChartTodayLabel,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                      if (value % 5 == 0) {
+                        return Text(
+                          l10n.calcChartYearLabel(value.toInt()),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -513,110 +551,6 @@ class _InvestmentGoalScreenState extends State<InvestmentGoalScreen> {
           style: AppTextStyles.labelSmall.copyWith(color: Colors.grey),
         ),
       ],
-    );
-  }
-
-  Widget _buildChart(
-    List<InvestmentGoalTimelineEntry> timeline,
-    Currency currency,
-    CurrencyService currencyService,
-  ) {
-    final l10n = AppLocalizations.of(context)!;
-    if (timeline.isEmpty) return const SizedBox.shrink();
-    final spots = timeline.map((e) => FlSpot(e.years, e.accumulated)).toList();
-
-    return LineChart(
-      LineChartData(
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots.map((spot) {
-                return LineTooltipItem(
-                  CurrencyFormatter.format(
-                    currencyService.convert(spot.y, currency),
-                    currency,
-                  ),
-                  const TextStyle(color: Colors.white, fontSize: 10),
-                );
-              }).toList();
-            },
-          ),
-        ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) =>
-              FlLine(color: Colors.grey.shade200, strokeWidth: 1),
-        ),
-        titlesData: FlTitlesData(
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 60,
-              getTitlesWidget: (value, meta) {
-                final symbol = currency.symbol;
-                if (value == 0) {
-                  return PrivacyText(
-                    '$symbol 0',
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                if (value >= 1000000) {
-                  return PrivacyText(
-                    '$symbol ${(value / 1000000).toStringAsFixed(1)} mi',
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                return PrivacyText(
-                  '$symbol ${(value / 1000).toStringAsFixed(0)}k',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                );
-              },
-            ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                if (value == 0) {
-                  return Text(
-                    l10n.calcChartTodayLabel,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                if (value % 5 == 0) {
-                  return Text(
-                    l10n.calcChartYearLabel(value.toInt()),
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(show: false),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            color: AppColors.primary,
-            barWidth: 3,
-            dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(
-              show: true,
-              color: AppColors.primary.withValues(alpha: 0.1),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

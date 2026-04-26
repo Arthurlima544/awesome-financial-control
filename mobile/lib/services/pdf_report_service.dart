@@ -2,7 +2,7 @@ import 'package:afc/models/monthly_report_model.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:intl/intl.dart';
+import 'package:afc/utils/app_formatters.dart';
 
 class PdfReportService {
   Future<void> generateAndShare(
@@ -10,8 +10,7 @@ class PdfReportService {
     DateTime month,
   ) async {
     final pdf = pw.Document();
-    final monthStr = DateFormat('MMMM yyyy', 'pt_BR').format(month);
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
+    final monthStr = AppFormatters.monthYearFull.format(month);
 
     pdf.addPage(
       pw.MultiPage(
@@ -39,11 +38,11 @@ class PdfReportService {
             children: [
               _buildSummaryItem(
                 'Entradas',
-                currencyFormat.format(report.totalIncome),
+                AppFormatters.currencyPtBR.format(report.totalIncome),
               ),
               _buildSummaryItem(
                 'Saidas',
-                currencyFormat.format(report.totalExpenses),
+                AppFormatters.currencyPtBR.format(report.totalExpenses),
               ),
               _buildSummaryItem(
                 'Economia',
@@ -65,7 +64,7 @@ class PdfReportService {
               ...report.categories.map(
                 (c) => [
                   c.category ?? 'Outros',
-                  currencyFormat.format(c.amount),
+                  AppFormatters.currencyPtBR.format(c.amount),
                   '${c.percentage.toStringAsFixed(1)}%',
                 ],
               ),
@@ -85,12 +84,12 @@ class PdfReportService {
               ...report.comparison.map((c) {
                 final diff = c.currentAmount - c.previousAmount;
                 final diffStr = diff > 0
-                    ? '+${currencyFormat.format(diff)}'
-                    : currencyFormat.format(diff);
+                    ? '+${AppFormatters.currencyPtBR.format(diff)}'
+                    : AppFormatters.currencyPtBR.format(diff);
                 return [
                   c.category ?? 'Outros',
-                  currencyFormat.format(c.previousAmount),
-                  currencyFormat.format(c.currentAmount),
+                  AppFormatters.currencyPtBR.format(c.previousAmount),
+                  AppFormatters.currencyPtBR.format(c.currentAmount),
                   diffStr,
                 ];
               }),

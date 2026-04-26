@@ -16,6 +16,38 @@ import 'package:afc/models/currency.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
 
 class NetWorthScreen extends StatelessWidget {
+  static const List<String> _monthNamesShort = [
+    '',
+    'Jan',
+    'Fev',
+    'Mar',
+    'Abr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Set',
+    'Out',
+    'Nov',
+    'Dez',
+  ];
+
+  static const List<String> _monthNamesFull = [
+    '',
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
+
   const NetWorthScreen({super.key});
 
   @override
@@ -203,23 +235,8 @@ class NetWorthScreen extends StatelessWidget {
                                 if (parts.length == 2) {
                                   final month = parts[1];
                                   final year = parts[0].substring(2);
-                                  final monthNames = [
-                                    '',
-                                    'Jan',
-                                    'Fev',
-                                    'Mar',
-                                    'Abr',
-                                    'Mai',
-                                    'Jun',
-                                    'Jul',
-                                    'Ago',
-                                    'Set',
-                                    'Out',
-                                    'Nov',
-                                    'Dez',
-                                  ];
                                   final monthName =
-                                      monthNames[int.parse(month)];
+                                      _monthNamesShort[int.parse(month)];
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Text(
@@ -310,22 +327,7 @@ class NetWorthScreen extends StatelessWidget {
       if (parts.length == 2) {
         final year = parts[0];
         final month = int.parse(parts[1]);
-        final monthNames = [
-          '',
-          'Janeiro',
-          'Fevereiro',
-          'Março',
-          'Abril',
-          'Maio',
-          'Junho',
-          'Julho',
-          'Agosto',
-          'Setembro',
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-        ];
-        return '${monthNames[month]} $year';
+        return '${_monthNamesFull[month]} $year';
       }
     } catch (e) {
       debugPrint('Error formatting month: $e');

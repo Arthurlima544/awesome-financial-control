@@ -7,8 +7,8 @@ import 'package:afc/utils/config/injection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/animations/fade_in_animation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
+import 'package:afc/utils/app_formatters.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/view_models/privacy/privacy_cubit.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
@@ -164,7 +164,7 @@ class _MonthPicker extends StatelessWidget {
           },
         ),
         Text(
-          DateFormat('MMMM yyyy', 'pt_BR').format(selectedMonth).toUpperCase(),
+          AppFormatters.monthYearFull.format(selectedMonth).toUpperCase(),
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         IconButton(

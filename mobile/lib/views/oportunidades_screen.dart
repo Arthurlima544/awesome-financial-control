@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:afc/repositories/market_repository.dart';
 import 'package:afc/view_models/market_opportunity/market_opportunity_bloc.dart';
 import 'package:afc/utils/config/app_spacing.dart';
@@ -10,6 +9,7 @@ import 'package:afc/widgets/privacy_text/privacy_text.dart';
 import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
+import 'package:afc/utils/app_formatters.dart';
 
 class OportunidadesScreen extends StatelessWidget {
   const OportunidadesScreen({super.key});
@@ -55,7 +55,7 @@ class OportunidadesScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: AppSpacing.md),
                     child: Text(
                       l10n.marketLastUpdated(
-                        DateFormat('dd/MM/yyyy HH:mm').format(
+                        AppFormatters.dayMonthYear.format(
                           state.opportunities.first.lastUpdated.toLocal(),
                         ),
                       ),
@@ -240,7 +240,6 @@ class OportunidadesScreen extends StatelessWidget {
 
   Widget _buildOpportunityCard(BuildContext context, MarketOpportunity o) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -301,7 +300,7 @@ class OportunidadesScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 PrivacyText(
-                  currencyFormat.format(o.price),
+                  AppFormatters.currencyPtBR.format(o.price),
                   style: AppTextStyles.labelLarge,
                 ),
                 PrivacyText(

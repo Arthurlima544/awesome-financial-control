@@ -22,6 +22,7 @@ import 'package:afc/widgets/adaptive_text_field/adaptive_text_field_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
 
+import 'package:afc/widgets/finance_line_chart/finance_line_chart.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
 
@@ -389,7 +390,58 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
               children: [
                 SizedBox(
                   height: 250,
-                  child: _buildChart(timeline, currency, currencyService),
+                  child: FinanceLineChart(
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: timeline.map((e) {
+                          return FlSpot(
+                            e.year,
+                            currencyService.convert(e.accumulated, currency),
+                          );
+                        }).toList(),
+                        isCurved: true,
+                        color: AppColors.primary,
+                        barWidth: 3,
+                        dotData: const FlDotData(show: false),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      LineChartBarData(
+                        spots: timeline.map((e) {
+                          return FlSpot(
+                            e.year,
+                            currencyService.convert(e.invested, currency),
+                          );
+                        }).toList(),
+                        isCurved: true,
+                        color: Colors.grey.shade400,
+                        barWidth: 2,
+                        dashArray: [5, 5],
+                        dotData: const FlDotData(show: false),
+                      ),
+                    ],
+                    currency: currency,
+                    bottomTitleWidget: (value, meta) {
+                      if (value == 0) {
+                        return Text(
+                          l10n.calcChartTodayLabel,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                      return Text(
+                        l10n.calcChartYearLabel(value.toInt()),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Row(
@@ -451,122 +503,6 @@ class _CompoundInterestScreenState extends State<CompoundInterestScreen> {
           style: AppTextStyles.labelSmall.copyWith(color: Colors.grey),
         ),
       ],
-    );
-  }
-
-  Widget _buildChart(
-    List<CompoundTimelinePoint> timeline,
-    Currency currency,
-    CurrencyService currencyService,
-  ) {
-    final l10n = AppLocalizations.of(context)!;
-    if (timeline.isEmpty) return const SizedBox.shrink();
-
-    final accumulatedSpots = timeline.map((e) {
-      return FlSpot(e.year, e.accumulated);
-    }).toList();
-
-    final investedSpots = timeline.map((e) {
-      return FlSpot(e.year, e.invested);
-    }).toList();
-
-    return LineChart(
-      LineChartData(
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots.map((spot) {
-                return LineTooltipItem(
-                  CurrencyFormatter.format(
-                    currencyService.convert(spot.y, currency),
-                    currency,
-                  ),
-                  const TextStyle(color: Colors.white, fontSize: 10),
-                );
-              }).toList();
-            },
-          ),
-        ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) =>
-              FlLine(color: Colors.grey.shade200, strokeWidth: 1),
-        ),
-        titlesData: FlTitlesData(
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 60,
-              getTitlesWidget: (value, meta) {
-                final symbol = currency.symbol;
-                if (value == 0) {
-                  return PrivacyText(
-                    '$symbol 0',
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                if (value >= 1000000) {
-                  return PrivacyText(
-                    '$symbol ${(value / 1000000).toStringAsFixed(1)} mi',
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                return PrivacyText(
-                  '$symbol ${(value / 1000).toStringAsFixed(0)}k',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                );
-              },
-            ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                if (value == 0) {
-                  return Text(
-                    l10n.calcChartTodayLabel,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                return Text(
-                  l10n.calcChartYearLabel(value.toInt()),
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                );
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(show: false),
-        lineBarsData: [
-          LineChartBarData(
-            spots: accumulatedSpots,
-            isCurved: true,
-            color: AppColors.primary,
-            barWidth: 3,
-            dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(
-              show: true,
-              color: AppColors.primary.withValues(alpha: 0.1),
-            ),
-          ),
-          LineChartBarData(
-            spots: investedSpots,
-            isCurved: true,
-            color: Colors.grey.shade400,
-            barWidth: 2,
-            dashArray: [5, 5],
-            dotData: const FlDotData(show: false),
-          ),
-        ],
-      ),
     );
   }
 }

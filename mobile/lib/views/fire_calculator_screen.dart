@@ -1,3 +1,4 @@
+import 'package:afc/utils/config/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/utils/config/app_colors.dart';
@@ -15,7 +16,6 @@ import 'package:afc/view_models/home/home_bloc.dart';
 import 'package:afc/view_models/investments/investment_bloc.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch.dart';
 import 'package:afc/widgets/adaptive_switch/adaptive_switch_cubit.dart';
-import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:afc/widgets/action_card/action_card.dart';
 import 'package:afc/widgets/privacy_text/privacy_text.dart';
@@ -23,7 +23,8 @@ import 'package:afc/widgets/app_tooltip_icon/app_tooltip_icon.dart';
 import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:afc/view_models/settings/settings_bloc.dart';
 import 'package:afc/services/currency_service.dart';
-import 'package:afc/utils/config/injection.dart';
+import 'package:afc/utils/app_formatters.dart';
+import 'package:afc/widgets/finance_line_chart/finance_line_chart.dart';
 import 'package:afc/utils/currency_formatter.dart';
 import 'package:afc/models/currency.dart';
 import 'package:afc/widgets/error_state/error_state.dart';
@@ -394,7 +395,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
                   l10n.fireCalcEstimatedDateLabel,
-                  DateFormat('MM/yyyy').format(retirementDate),
+                  AppFormatters.monthYear.format(retirementDate),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
@@ -424,11 +425,82 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               children: [
                 SizedBox(
                   height: 250,
-                  child: _buildChart(
-                    yearlyTimeline,
-                    fireNumber,
-                    currency,
-                    currencyService,
+                  child: FinanceLineChart(
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: yearlyTimeline.map((e) {
+                          return FlSpot(
+                            e.year,
+                            currencyService.convert(e.portfolioValue, currency),
+                          );
+                        }).toList(),
+                        isCurved: true,
+                        color: AppColors.primary,
+                        barWidth: 2,
+                        dashArray: [5, 5],
+                        dotData: const FlDotData(show: false),
+                        belowBarData: BarAreaData(show: false),
+                      ),
+                      LineChartBarData(
+                        spots: [
+                          FlSpot(
+                            0,
+                            currencyService.convert(fireNumber, currency),
+                          ),
+                          FlSpot(
+                            yearlyTimeline.isNotEmpty
+                                ? yearlyTimeline.last.year
+                                : 50,
+                            currencyService.convert(fireNumber, currency),
+                          ),
+                        ],
+                        dashArray: [5, 5],
+                        color: AppColors.primary.withValues(alpha: 0.5),
+                        barWidth: 2,
+                        dotData: const FlDotData(show: false),
+                      ),
+                    ],
+                    extraLinesData: ExtraLinesData(
+                      verticalLines: [
+                        VerticalLine(
+                          x: 0,
+                          color: Colors.grey.shade300,
+                          strokeWidth: 1,
+                          dashArray: [5, 5],
+                          label: VerticalLineLabel(
+                            show: true,
+                            alignment: Alignment.topRight,
+                            labelResolver: (line) => l10n.calcChartTodayLabel,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    currency: currency,
+                    bottomTitleWidget: (value, meta) {
+                      if (value == 0) {
+                        return Text(
+                          l10n.calcChartTodayLabel,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                      if (value % 10 == 0) {
+                        return Text(
+                          l10n.calcChartYearLabel(value.toInt()),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -503,139 +575,6 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 ),
               ),
       ],
-    );
-  }
-
-  Widget _buildChart(
-    List<FireTimelinePoint> timeline,
-    double fireNumber,
-    Currency currency,
-    CurrencyService currencyService,
-  ) {
-    final l10n = AppLocalizations.of(context)!;
-    if (timeline.isEmpty) return const SizedBox.shrink();
-    final spots = timeline.map((e) {
-      return FlSpot(e.year, e.portfolioValue);
-    }).toList();
-
-    final tealColor = AppColors.primary;
-
-    return LineChart(
-      LineChartData(
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (_) => Colors.blueGrey.withValues(alpha: 0.8),
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots.map((spot) {
-                return LineTooltipItem(
-                  CurrencyFormatter.format(
-                    currencyService.convert(spot.y, currency),
-                    currency,
-                  ),
-                  const TextStyle(color: Colors.white, fontSize: 10),
-                );
-              }).toList();
-            },
-          ),
-        ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) =>
-              FlLine(color: Colors.grey.shade200, strokeWidth: 1),
-        ),
-        titlesData: FlTitlesData(
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 60,
-              getTitlesWidget: (value, meta) {
-                final symbol = currency.symbol;
-                if (value == 0) {
-                  return PrivacyText(
-                    '$symbol 0',
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                if (value >= 1000000) {
-                  return PrivacyText(
-                    '$symbol ${(value / 1000000).toStringAsFixed(1)} mi',
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                return PrivacyText(
-                  '$symbol ${(value / 1000).toStringAsFixed(0)}k',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                );
-              },
-            ),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                if (value == 0) {
-                  return Text(
-                    l10n.calcChartTodayLabel,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                if (value % 10 == 0) {
-                  return Text(
-                    l10n.calcChartYearLabel(value.toInt()),
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(show: false),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            color: tealColor,
-            barWidth: 2,
-            dashArray: [5, 5],
-            dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(show: false),
-          ),
-          LineChartBarData(
-            spots: [
-              FlSpot(0, fireNumber),
-              FlSpot(spots.isNotEmpty ? spots.last.x : 50, fireNumber),
-            ],
-            dashArray: [5, 5],
-            color: tealColor.withValues(alpha: 0.5),
-            barWidth: 2,
-            dotData: const FlDotData(show: false),
-          ),
-        ],
-        extraLinesData: ExtraLinesData(
-          verticalLines: [
-            VerticalLine(
-              x: 0,
-              color: Colors.grey.shade300,
-              strokeWidth: 1,
-              dashArray: [5, 5],
-              label: VerticalLineLabel(
-                show: true,
-                alignment: Alignment.topRight,
-                labelResolver: (line) => l10n.calcChartTodayLabel,
-                style: const TextStyle(fontSize: 10, color: Colors.grey),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
