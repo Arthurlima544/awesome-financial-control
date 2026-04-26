@@ -124,6 +124,25 @@ public class TransactionSteps {
     }
 
     @When(
+            "I create a transaction with description {string} amount {bigdecimal} type {word} linked to investment {string} occurred today")
+    public void iCreateATransactionLinkedToInvestment(
+            String description, BigDecimal amount, String type, String investmentId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body =
+                String.format(
+                        "{\"description\":\"%s\",\"amount\":%s,\"type\":\"%s\",\"investmentId\":\"%s\",\"occurredAt\":\"%s\"}",
+                        description,
+                        amount.toPlainString(),
+                        type,
+                        investmentId,
+                        Instant.now().toString());
+        ctx.response =
+                restTemplate.postForEntity(
+                        "/api/v1/transactions", new HttpEntity<>(body, headers), String.class);
+    }
+
+    @When(
             "I create a transaction with description {string} amount {double} type {word} category {string} occurred today")
     public void iCreateATransactionWithCategory(
             String description, Double amount, String type, String category) {
