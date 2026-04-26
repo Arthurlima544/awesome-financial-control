@@ -28,7 +28,9 @@ void main() {
       );
 
       // Access the internal Cubit to simulate an error
-      final BuildContext context = tester.element(find.byType(Align).first);
+      final BuildContext context = tester.element(
+        find.byType(MessageBubble).first,
+      );
       context.read<MessageBubbleCubit>().setError('Delivery failed');
       await tester.pumpAndSettle();
 

@@ -51,6 +51,7 @@ void main() {
           child: FinanceLineChart(
             lineBarsData: lineBarsData,
             currency: Currency.usd,
+            bottomInterval: 1,
             bottomTitleWidget: (value, meta) {
               return Text('Year ${value.toInt()}');
             },

@@ -96,7 +96,7 @@ void main() {
 
       final container = tester.widget<AnimatedContainer>(
         find.descendant(
-          of: find.byType(Focus),
+          of: find.byType(AdaptiveTextField),
           matching: find.byType(AnimatedContainer),
         ),
       );

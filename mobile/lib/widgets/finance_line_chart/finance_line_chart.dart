@@ -12,6 +12,7 @@ class FinanceLineChart extends StatelessWidget {
   final double? minY;
   final double? maxY;
   final double reservedSizeLeft;
+  final double? bottomInterval;
 
   const FinanceLineChart({
     super.key,
@@ -22,6 +23,7 @@ class FinanceLineChart extends StatelessWidget {
     this.minY,
     this.maxY,
     this.reservedSizeLeft = 60,
+    this.bottomInterval,
   });
 
   @override
@@ -91,6 +93,7 @@ class FinanceLineChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: bottomTitleWidget ?? _defaultBottomTitle,
+              interval: bottomInterval,
             ),
           ),
         ),
