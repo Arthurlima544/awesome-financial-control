@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:afc/utils/currency_formatter.dart';
 
-class LimitModel {
+class LimitModel extends Equatable {
   const LimitModel({
     required this.id,
     required this.categoryName,
@@ -21,4 +22,7 @@ class LimitModel {
     amount: (json['amount'] as num).toDouble(),
     createdAt: DateTime.parse(json['createdAt'] as String),
   );
+
+  @override
+  List<Object?> get props => [id, categoryName, amount, createdAt];
 }

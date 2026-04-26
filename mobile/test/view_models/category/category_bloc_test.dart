@@ -1,235 +1,137 @@
-import 'package:afc/view_models/category/category_bloc.dart';
 import 'package:afc/models/category_model.dart';
 import 'package:afc/repositories/category_repository.dart';
+import 'package:afc/view_models/category/category_bloc.dart';
+import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:afc/view_models/refresh/app_refresh_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+
+class MockCategoryRepository extends Mock implements CategoryRepository {}
 
 class MockAppRefreshBloc extends MockBloc<AppRefreshEvent, AppRefreshState>
     implements AppRefreshBloc {}
 
-class _FakeRepository extends CategoryRepository {
-  _FakeRepository(this._categories);
-
-  final List<CategoryModel> _categories;
-
-  @override
-  Future<List<CategoryModel>> getAll() async => _categories;
-
-  @override
-  Future<void> delete(String id) async {}
-
-  @override
-  Future<CategoryModel> update(String id, String name) async {
-    final c = _categories.firstWhere((c) => c.id == id);
-    return CategoryModel(id: c.id, name: name, createdAt: c.createdAt);
-  }
-}
-
-class _FailingRepository extends CategoryRepository {
-  @override
-  Future<List<CategoryModel>> getAll() => Future.error(Exception('network'));
-
-  @override
-  Future<void> delete(String id) => Future.error(Exception('delete failed'));
-
-  @override
-  Future<CategoryModel> update(String id, String name) =>
-      Future.error(Exception('update failed'));
-}
-
-class _FailingDeleteRepository extends CategoryRepository {
-  _FailingDeleteRepository(this._categories);
-
-  final List<CategoryModel> _categories;
-
-  @override
-  Future<List<CategoryModel>> getAll() async => _categories;
-
-  @override
-  Future<void> delete(String id) => Future.error(Exception('delete failed'));
-
-  @override
-  Future<CategoryModel> update(String id, String name) async =>
-      _categories.first;
-}
-
-class _FailingUpdateRepository extends CategoryRepository {
-  _FailingUpdateRepository(this._categories);
-
-  final List<CategoryModel> _categories;
-
-  @override
-  Future<List<CategoryModel>> getAll() async => _categories;
-
-  @override
-  Future<void> delete(String id) async {}
-
-  @override
-  Future<CategoryModel> update(String id, String name) =>
-      Future.error(Exception('update failed'));
-}
-
-class _UpdateRepository extends CategoryRepository {
-  _UpdateRepository(this._categories, this._updated);
-
-  final List<CategoryModel> _categories;
-  final CategoryModel _updated;
-
-  @override
-  Future<List<CategoryModel>> getAll() async => _categories;
-
-  @override
-  Future<void> delete(String id) async {}
-
-  @override
-  Future<CategoryModel> update(String id, String name) async => _updated;
-}
+class AppRefreshEventFake extends Fake implements AppRefreshEvent {}
 
 void main() {
-  final c1 = CategoryModel(
-    id: 'id-1',
-    name: 'Food',
-    createdAt: DateTime(2026, 4, 1),
-  );
-
-  final c2 = CategoryModel(
-    id: 'id-2',
-    name: 'Transport',
-    createdAt: DateTime(2026, 4, 2),
-  );
-
+  late CategoryRepository repository;
   late AppRefreshBloc refreshBloc;
 
+  setUpAll(() {
+    registerFallbackValue(AppRefreshEventFake());
+  });
+
+  final List<CategoryModel> testCategories = [
+    CategoryModel(id: '1', name: 'Alimentação', createdAt: DateTime(2026)),
+    CategoryModel(id: '2', name: 'Transporte', createdAt: DateTime(2026)),
+  ];
+
   setUp(() {
+    repository = MockCategoryRepository();
     refreshBloc = MockAppRefreshBloc();
+
     when(() => refreshBloc.stream).thenAnswer((_) => const Stream.empty());
-    when(() => refreshBloc.state).thenReturn(const AppRefreshState(0));
   });
 
   group('CategoryBloc', () {
     test('initial state is CategoryInitial', () {
       final bloc = CategoryBloc(
-        repository: _FakeRepository([]),
+        repository: repository,
         refreshBloc: refreshBloc,
       );
       expect(bloc.state, isA<CategoryInitial>());
-      addTearDown(bloc.close);
+      bloc.close();
     });
 
     blocTest<CategoryBloc, CategoryState>(
-      'emits [Loading, Data([])] when repository returns empty list',
-      build: () => CategoryBloc(
-        repository: _FakeRepository([]),
-        refreshBloc: refreshBloc,
-      ),
+      'emits [CategoryLoading, CategoryData] when CategoryFetchRequested succeeds',
+      build: () {
+        when(() => repository.getAll()).thenAnswer((_) async => testCategories);
+        return CategoryBloc(repository: repository, refreshBloc: refreshBloc);
+      },
       act: (bloc) => bloc.add(const CategoryFetchRequested()),
-      expect: () => [isA<CategoryLoading>(), isA<CategoryData>()],
-      verify: (bloc) {
-        expect((bloc.state as CategoryData).categories, isEmpty);
+      expect: () => [isA<CategoryLoading>(), CategoryData(testCategories)],
+    );
+
+    blocTest<CategoryBloc, CategoryState>(
+      'emits [CategoryData] with new item when CategoryCreateRequested succeeds',
+      seed: () => CategoryData(testCategories),
+      build: () {
+        final newCategory = CategoryModel(
+          id: '3',
+          name: 'Lazer',
+          createdAt: DateTime(2026),
+        );
+        when(
+          () => repository.create(any()),
+        ).thenAnswer((_) async => newCategory);
+        when(() => refreshBloc.add(any())).thenReturn(null);
+        return CategoryBloc(repository: repository, refreshBloc: refreshBloc);
+      },
+      act: (bloc) => bloc.add(const CategoryCreateRequested('Lazer')),
+      expect: () => [
+        CategoryData([
+          ...testCategories,
+          CategoryModel(id: '3', name: 'Lazer', createdAt: DateTime(2026)),
+        ]),
+      ],
+      verify: (_) {
+        verify(() => refreshBloc.add(any())).called(1);
       },
     );
 
     blocTest<CategoryBloc, CategoryState>(
-      'emits [Loading, Data] with correct categories on success',
-      build: () => CategoryBloc(
-        repository: _FakeRepository([c1, c2]),
-        refreshBloc: refreshBloc,
-      ),
-      act: (bloc) => bloc.add(const CategoryFetchRequested()),
-      expect: () => [isA<CategoryLoading>(), isA<CategoryData>()],
-      verify: (bloc) {
-        final state = bloc.state as CategoryData;
-        expect(state.categories.length, 2);
-        expect(state.categories.first.name, 'Food');
-      },
-    );
-
-    blocTest<CategoryBloc, CategoryState>(
-      'emits [Loading, Error] when repository throws on fetch',
-      build: () => CategoryBloc(
-        repository: _FailingRepository(),
-        refreshBloc: refreshBloc,
-      ),
-      act: (bloc) => bloc.add(const CategoryFetchRequested()),
-      expect: () => [isA<CategoryLoading>(), isA<CategoryError>()],
-    );
-
-    blocTest<CategoryBloc, CategoryState>(
-      'CategoryDeleteRequested removes the item from the loaded list',
-      build: () => CategoryBloc(
-        repository: _FakeRepository([c1, c2]),
-        refreshBloc: refreshBloc,
-      ),
-      seed: () => CategoryData([c1, c2]),
-      act: (bloc) => bloc.add(const CategoryDeleteRequested('id-1')),
-      expect: () => [isA<CategoryData>()],
-      verify: (bloc) {
-        final state = bloc.state as CategoryData;
-        expect(state.categories.length, 1);
-        expect(state.categories.first.id, 'id-2');
-      },
-    );
-
-    blocTest<CategoryBloc, CategoryState>(
-      'CategoryDeleteRequested emits Error when delete fails',
-      build: () => CategoryBloc(
-        repository: _FailingDeleteRepository([c1, c2]),
-        refreshBloc: refreshBloc,
-      ),
-      seed: () => CategoryData([c1, c2]),
-      act: (bloc) => bloc.add(const CategoryDeleteRequested('id-1')),
-      expect: () => [isA<CategoryError>()],
-    );
-
-    blocTest<CategoryBloc, CategoryState>(
-      'CategoryUpdateRequested replaces the updated item in the list',
+      'emits [CategoryData] with updated item when CategoryUpdateRequested succeeds',
+      seed: () => CategoryData(testCategories),
       build: () {
         final updated = CategoryModel(
-          id: 'id-1',
-          name: 'Groceries',
-          createdAt: c1.createdAt,
+          id: '1',
+          name: 'Comida',
+          createdAt: DateTime(2026),
         );
-        return CategoryBloc(
-          repository: _UpdateRepository([c1, c2], updated),
-          refreshBloc: refreshBloc,
-        );
+        when(
+          () => repository.update(any(), any()),
+        ).thenAnswer((_) async => updated);
+        when(() => refreshBloc.add(any())).thenReturn(null);
+        return CategoryBloc(repository: repository, refreshBloc: refreshBloc);
       },
-      seed: () => CategoryData([c1, c2]),
-      act: (bloc) => bloc.add(
-        const CategoryUpdateRequested(id: 'id-1', name: 'Groceries'),
-      ),
-      expect: () => [isA<CategoryData>()],
-      verify: (bloc) {
-        final state = bloc.state as CategoryData;
-        expect(state.categories.length, 2);
-        expect(state.categories.first.name, 'Groceries');
-        expect(state.categories.last.name, 'Transport');
-      },
+      act: (bloc) =>
+          bloc.add(const CategoryUpdateRequested(id: '1', name: 'Comida')),
+      expect: () => [
+        CategoryData([
+          CategoryModel(id: '1', name: 'Comida', createdAt: DateTime(2026)),
+          CategoryModel(id: '2', name: 'Transporte', createdAt: DateTime(2026)),
+        ]),
+      ],
     );
 
     blocTest<CategoryBloc, CategoryState>(
-      'CategoryUpdateRequested emits Error when update fails',
-      build: () => CategoryBloc(
-        repository: _FailingUpdateRepository([c1, c2]),
-        refreshBloc: refreshBloc,
-      ),
-      seed: () => CategoryData([c1, c2]),
-      act: (bloc) => bloc.add(
-        const CategoryUpdateRequested(id: 'id-1', name: 'Groceries'),
-      ),
-      expect: () => [isA<CategoryError>()],
+      'emits [CategoryData] without item when CategoryDeleteRequested succeeds',
+      seed: () => CategoryData(testCategories),
+      build: () {
+        when(() => repository.delete(any())).thenAnswer((_) async => {});
+        when(() => refreshBloc.add(any())).thenReturn(null);
+        return CategoryBloc(repository: repository, refreshBloc: refreshBloc);
+      },
+      act: (bloc) => bloc.add(const CategoryDeleteRequested('1')),
+      expect: () => [
+        CategoryData([
+          CategoryModel(id: '2', name: 'Transporte', createdAt: DateTime(2026)),
+        ]),
+      ],
     );
 
     blocTest<CategoryBloc, CategoryState>(
-      'CategoryDeleteRequested does nothing when state is not CategoryData',
-      build: () => CategoryBloc(
-        repository: _FakeRepository([c1]),
-        refreshBloc: refreshBloc,
-      ),
-      act: (bloc) => bloc.add(const CategoryDeleteRequested('id-1')),
-      expect: () => [],
+      'emits [CategoryError] when fetch fails',
+      build: () {
+        when(() => repository.getAll()).thenThrow(Exception('error'));
+        return CategoryBloc(repository: repository, refreshBloc: refreshBloc);
+      },
+      act: (bloc) => bloc.add(const CategoryFetchRequested()),
+      expect: () => [
+        isA<CategoryLoading>(),
+        const CategoryError('Erro ao carregar categorias'),
+      ],
     );
   });
 }

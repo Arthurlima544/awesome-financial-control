@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:afc/utils/currency_formatter.dart';
 
-class LimitProgressModel {
+class LimitProgressModel extends Equatable {
   const LimitProgressModel({
     required this.id,
     required this.categoryName,
@@ -32,4 +33,7 @@ class LimitProgressModel {
       percentage: (json['percentage'] as num).toDouble(),
     );
   }
+
+  @override
+  List<Object?> get props => [id, categoryName, limitAmount, spent, percentage];
 }
