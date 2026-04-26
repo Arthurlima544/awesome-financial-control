@@ -236,9 +236,9 @@ class _CategoryPieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     if (categories.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 200,
-        child: Center(child: Text('Sem gastos')),
+        child: Center(child: Text(l10n.reportNoExpenses)),
       );
     }
 
@@ -364,9 +364,9 @@ class _ComparisonBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     if (comparison.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 200,
-        child: Center(child: Text('Sem dados')),
+        child: Center(child: Text(l10n.reportNoDataSimple)),
       );
     }
 

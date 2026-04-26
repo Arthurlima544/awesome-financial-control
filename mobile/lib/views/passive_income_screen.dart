@@ -1,3 +1,4 @@
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/passive_income/passive_income_bloc.dart';
@@ -14,8 +15,9 @@ class PassiveIncomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Renda Passiva')),
+      appBar: AppBar(title: Text(l10n.passiveIncomeTitle)),
       body: BlocBuilder<PassiveIncomeBloc, PassiveIncomeState>(
         builder: (context, state) {
           if (state.status == PassiveIncomeStatus.loading) {
@@ -23,11 +25,13 @@ class PassiveIncomeScreen extends StatelessWidget {
           }
 
           if (state.status == PassiveIncomeStatus.failure) {
-            return Center(child: Text('Erro: ${state.errorMessage}'));
+            return Center(
+              child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
+            );
           }
 
           if (state.data == null) {
-            return const Center(child: Text('Nenhum dado disponível'));
+            return Center(child: Text(l10n.screenNoDataAvailable));
           }
 
           final data = state.data!;
@@ -41,13 +45,14 @@ class PassiveIncomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(AppSpacing.lg),
               children: [
                 _buildFreedomGauge(
+                  context,
                   data['freedomIndex'],
                   data['totalPassiveIncomeCurrentMonth'],
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                _buildProgressionChart(data['monthlyProgression']),
+                _buildProgressionChart(context, data['monthlyProgression']),
                 const SizedBox(height: AppSpacing.xl),
-                _buildIncomeBySource(data['incomeByInvestment']),
+                _buildIncomeBySource(context, data['incomeByInvestment']),
               ],
             ),
           );
@@ -56,7 +61,12 @@ class PassiveIncomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFreedomGauge(double index, dynamic amount) {
+  Widget _buildFreedomGauge(
+    BuildContext context,
+    double index,
+    dynamic amount,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final isComplete = index >= 100;
 
@@ -71,7 +81,7 @@ class PassiveIncomeScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Índice de Liberdade Financeira',
+              l10n.passiveIncomeFreedomIndexTitle,
               style: AppTextStyles.titleMedium,
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -103,7 +113,10 @@ class PassiveIncomeScreen extends StatelessWidget {
                                 : AppColors.onSurface,
                           ),
                         ),
-                        Text('da meta mensal', style: AppTextStyles.labelSmall),
+                        Text(
+                          l10n.passiveIncomeFreedomIndexGoal,
+                          style: AppTextStyles.labelSmall,
+                        ),
                       ],
                     ),
                   ],
@@ -112,7 +125,9 @@ class PassiveIncomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             PrivacyText(
-              'Recebido este mês: ${currencyFormat.format(amount)}',
+              l10n.passiveIncomeReceivedThisMonth(
+                currencyFormat.format(amount),
+              ),
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -121,7 +136,7 @@ class PassiveIncomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  '🎉 Suas despesas fixas estão cobertas!',
+                  l10n.passiveIncomeGoalCovered,
                   style: TextStyle(
                     color: AppColors.success,
                     fontWeight: FontWeight.bold,
@@ -134,11 +149,18 @@ class PassiveIncomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressionChart(List<dynamic> progression) {
+  Widget _buildProgressionChart(
+    BuildContext context,
+    List<dynamic> progression,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Evolução Mensal', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.passiveIncomeMonthlyEvolutionTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Card(
           elevation: 0,
@@ -234,14 +256,18 @@ class PassiveIncomeScreen extends StatelessWidget {
     return max == 0 ? 100 : max * 1.2;
   }
 
-  Widget _buildIncomeBySource(Map<dynamic, dynamic> sources) {
+  Widget _buildIncomeBySource(
+    BuildContext context,
+    Map<dynamic, dynamic> sources,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     if (sources.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Fontes de Renda', style: AppTextStyles.titleMedium),
+        Text(l10n.passiveIncomeSourcesTitle, style: AppTextStyles.titleMedium),
         const SizedBox(height: AppSpacing.md),
         ...sources.entries.map(
           (e) => Card(

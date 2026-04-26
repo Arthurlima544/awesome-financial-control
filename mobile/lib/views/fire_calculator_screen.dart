@@ -103,8 +103,9 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Calculadora FIRE')),
+      appBar: AppBar(title: Text(l10n.fireCalcTitle)),
       body: BlocBuilder<FireCalculatorBloc, FireCalculatorState>(
         builder: (context, state) {
           return ListView(
@@ -117,14 +118,14 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               if (state.status == FireCalculatorStatus.loading)
                 const Center(child: CircularProgressIndicator())
               else if (state.status == FireCalculatorStatus.success) ...[
-                Text('Resultado', style: AppTextStyles.titleMedium),
+                Text(l10n.calcResultTitle, style: AppTextStyles.titleMedium),
                 const SizedBox(height: AppSpacing.md),
                 _buildResults(context, state.result!),
                 const SizedBox(height: AppSpacing.xl),
                 _buildAboutFire(),
               ] else if (state.status == FireCalculatorStatus.failure)
                 Text(
-                  'Erro: ${state.errorMessage}',
+                  l10n.calcErrorMessage(state.errorMessage ?? ''),
                   style: const TextStyle(color: AppColors.error),
                 ),
             ],
@@ -135,15 +136,14 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
   }
 
   Widget _buildInputs(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildFieldWithTitle(
-          label: 'Gastos mensais (R\$)',
-          tooltipTitle: 'Gastos Mensais',
-          tooltipDesc:
-              'O custo total para manter seu padrão de vida atual. '
-              'Quanto mais baixo, menor será seu Número FIRE.',
+          label: l10n.fireCalcExpensesLabel,
+          tooltipTitle: l10n.fireCalcExpensesTooltipTitle,
+          tooltipDesc: l10n.fireCalcExpensesTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -158,11 +158,9 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Investimento mensal (R\$)',
-          tooltipTitle: 'Aporte Mensal',
-          tooltipDesc:
-              'Quanto você economiza e investe todos os meses. '
-              'Este é o motor que acelera sua independência financeira.',
+          label: l10n.fireCalcSavingsLabel,
+          tooltipTitle: l10n.fireCalcSavingsTooltipTitle,
+          tooltipDesc: l10n.fireCalcSavingsTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -177,10 +175,9 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Patrimônio atual (R\$)',
-          tooltipTitle: 'Patrimônio',
-          tooltipDesc:
-              'A soma de todos os seus investimentos atuais e saldo em conta.',
+          label: l10n.fireCalcPortfolioLabel,
+          tooltipTitle: l10n.fireCalcPortfolioTooltipTitle,
+          tooltipDesc: l10n.fireCalcPortfolioTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -195,11 +192,9 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         _buildFieldWithTitle(
-          label: 'Retorno anual esperado (%)',
-          tooltipTitle: 'Rentabilidade',
-          tooltipDesc:
-              'A rentabilidade média estimada dos seus investimentos. '
-              'Um valor conservador costuma ser entre 4% e 7% ao ano acima da inflação.',
+          label: l10n.fireCalcReturnLabel,
+          tooltipTitle: l10n.calcRentabilidadeTooltipTitle,
+          tooltipDesc: l10n.fireCalcReturnTooltipDesc,
           child: BlocProvider(
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
@@ -214,7 +209,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Taxa de Retirada (SWR)',
+          l10n.fireCalcSwrLabel,
           style: AppTextStyles.labelLarge.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -222,15 +217,18 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
           children: [
-            _buildSwrChip('Lean FIRE (3%)', 0.03),
-            _buildSwrChip('Padrão (4%)', 0.04),
-            _buildSwrChip('Fat FIRE (5%)', 0.05),
+            _buildSwrChip(l10n.fireCalcSwrLeanChip, 0.03),
+            _buildSwrChip(l10n.fireCalcSwrStandardChip, 0.04),
+            _buildSwrChip(l10n.fireCalcSwrFatChip, 0.05),
           ],
         ),
         const SizedBox(height: AppSpacing.xl),
         BlocProvider(
           create: (_) => AdaptiveButtonCubit(),
-          child: AdaptiveButton(text: 'Calcular', onPressed: _calculate),
+          child: AdaptiveButton(
+            text: l10n.calcButtonCalcular,
+            onPressed: _calculate,
+          ),
         ),
       ],
     );
@@ -268,6 +266,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
   }
 
   Widget _buildInflationToggle() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -283,13 +282,13 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Ajuste de Inflação',
+                    l10n.calcInflationToggleLabel,
                     style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Valores em poder de compra de hoje',
+                    l10n.calcInflationToggleSubtitle,
                     style: AppTextStyles.labelSmall.copyWith(
                       color: Colors.grey,
                     ),
@@ -301,7 +300,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               create: (_) =>
                   AdaptiveSwitchCubit(initialValue: _adjustForInflation),
               child: AdaptiveSwitch(
-                semanticLabel: 'Ajuste de Inflação',
+                semanticLabel: l10n.calcInflationToggleLabel,
                 onChanged: (value) {
                   setState(() => _adjustForInflation = value);
                   _calculate();
@@ -326,6 +325,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
   }
 
   Widget _buildResults(BuildContext context, Map<String, dynamic> result) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final fireNumber = result['fireNumber'] as double;
     final monthsToFire = result['monthsToFire'] as int;
@@ -350,7 +350,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
             child: Column(
               children: [
                 _buildResultRow(
-                  'Número FIRE',
+                  l10n.fireCalcFireNumberLabel,
                   currencyFormat.format(fireNumber),
                   isTeal: true,
                   hasInfo: true,
@@ -358,29 +358,29 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
-                  'Tempo até FIRE',
-                  '$years anos e $months meses',
+                  l10n.fireCalcTimeToFireLabel,
+                  l10n.fireCalcTimeToFireValue(years, months),
                   isBold: true,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
-                  'Data estimada',
+                  l10n.fireCalcEstimatedDateLabel,
                   DateFormat('MM/yyyy').format(retirementDate),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _buildResultRow(
-                  AppLocalizations.of(context)!.tooltipFIScoreTitle,
+                  l10n.tooltipFIScoreTitle,
                   '${((result['fiScore'] ?? 0.0) as num).toDouble().toStringAsFixed(1)}%',
                   isBold: true,
                   hasInfo: true,
-                  tooltipDesc: AppLocalizations.of(context)!.tooltipFIScoreDesc,
+                  tooltipDesc: l10n.tooltipFIScoreDesc,
                 ),
               ],
             ),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text('Trajetória do Portfólio', style: AppTextStyles.titleMedium),
+        Text(l10n.fireCalcChartTitle, style: AppTextStyles.titleMedium),
         const SizedBox(height: AppSpacing.md),
         Card(
           elevation: 0,
@@ -399,11 +399,11 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  'Projeção até ${retirementDate.year + 20}',
+                  l10n.fireCalcChartProjectionLabel(retirementDate.year + 20),
                   style: AppTextStyles.labelSmall.copyWith(color: Colors.grey),
                 ),
                 Text(
-                  'Taxa de retirada segura: ${(_swr * 100).toInt()}% a.a.',
+                  l10n.fireCalcChartSwrLabel((_swr * 100).toInt()),
                   style: AppTextStyles.labelSmall.copyWith(color: Colors.grey),
                 ),
               ],
@@ -423,6 +423,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
     bool isPrivate = false,
     String? tooltipDesc,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -440,8 +441,8 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
                 title: label,
                 description:
                     tooltipDesc ??
-                    (label == 'Número FIRE'
-                        ? AppLocalizations.of(context)!.tooltipFIREDesc
+                    (label == l10n.fireCalcFireNumberLabel
+                        ? l10n.tooltipFIREDesc
                         : ''),
                 iconSize: 14,
               ),
@@ -472,6 +473,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
   }
 
   Widget _buildChart(List<dynamic> timeline, double fireNumber) {
+    final l10n = AppLocalizations.of(context)!;
     if (timeline.isEmpty) return const SizedBox.shrink();
     final spots = timeline.map((e) {
       return FlSpot(
@@ -540,14 +542,14 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               showTitles: true,
               getTitlesWidget: (value, meta) {
                 if (value == 0) {
-                  return const Text(
-                    'Hoje',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                  return Text(
+                    l10n.calcChartTodayLabel,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
                 if (value % 10 == 0) {
                   return Text(
-                    'A${value.toInt()}',
+                    l10n.calcChartYearLabel(value.toInt()),
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
                   );
                 }
@@ -588,7 +590,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
               label: VerticalLineLabel(
                 show: true,
                 alignment: Alignment.topRight,
-                labelResolver: (line) => 'Hoje',
+                labelResolver: (line) => l10n.calcChartTodayLabel,
                 style: const TextStyle(fontSize: 10, color: Colors.grey),
               ),
             ),
@@ -599,14 +601,13 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
   }
 
   Widget _buildAboutFire() {
+    final l10n = AppLocalizations.of(context)!;
     return ActionCard(
       style: ActionCardStyle.iconHeader,
-      title: 'O que é o Movimento FIRE?',
-      description:
-          'Financial Independence, Retire Early (Independência Financeira, Aposentadoria Precoce). '
-          'O objetivo é acumular patrimônio suficiente para viver apenas dos rendimentos de seus investimentos.',
+      title: l10n.fireCalcAboutCardTitle,
+      description: l10n.fireCalcAboutCardDesc,
       leadingIcon: Icons.lightbulb_outline,
-      buttonText: 'Saber mais',
+      buttonText: l10n.fireCalcAboutCardButton,
       onAction: () {
         showModalBottomSheet(
           context: context,
@@ -621,6 +622,7 @@ class _FireCalculatorScreenState extends State<FireCalculatorScreen> {
 class _FireExplanationSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: const BoxDecoration(
@@ -631,32 +633,24 @@ class _FireExplanationSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Conceitos do FIRE', style: AppTextStyles.titleLarge),
+          Text(l10n.fireCalcSheetTitle, style: AppTextStyles.titleLarge),
           const SizedBox(height: AppSpacing.md),
           _buildInfoItem(
-            'Número FIRE',
-            'É o valor total que você precisa ter investido para se aposentar. '
-                'Geralmente calculado como 25x seus gastos anuais.',
+            l10n.fireCalcSheetFireNumberTitle,
+            l10n.fireCalcSheetFireNumberDesc,
           ),
+          _buildInfoItem(l10n.fireCalcSheetSwrTitle, l10n.fireCalcSheetSwrDesc),
           _buildInfoItem(
-            'Regra dos 4% (SWR)',
-            'Safe Withdrawal Rate (Taxa de Retirada Segura). É a porcentagem do seu patrimônio '
-                'que você pode sacar anualmente sem que o dinheiro acabe.',
+            l10n.fireCalcSheetLeanTitle,
+            l10n.fireCalcSheetLeanDesc,
           ),
-          _buildInfoItem(
-            'Lean FIRE',
-            'Foco em uma vida minimalista e gastos extremamente baixos para se aposentar mais rápido.',
-          ),
-          _buildInfoItem(
-            'Fat FIRE',
-            'Foco em manter um padrão de vida alto, exigindo um patrimônio muito maior.',
-          ),
+          _buildInfoItem(l10n.fireCalcSheetFatTitle, l10n.fireCalcSheetFatDesc),
           const SizedBox(height: AppSpacing.xl),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Entendi'),
+              child: Text(l10n.calcButtonEntendi),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),

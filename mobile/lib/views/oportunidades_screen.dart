@@ -15,8 +15,9 @@ class OportunidadesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Oportunidades de Mercado')),
+      appBar: AppBar(title: Text(l10n.marketScreenTitle)),
       body: BlocBuilder<MarketOpportunityBloc, MarketOpportunityState>(
         builder: (context, state) {
           if (state.status == MarketOpportunityStatus.loading) {
@@ -26,7 +27,7 @@ class OportunidadesScreen extends StatelessWidget {
           if (state.status == MarketOpportunityStatus.failure) {
             return Center(
               child: Text(
-                'Erro: ${state.errorMessage}',
+                l10n.calcErrorMessage(state.errorMessage ?? ''),
                 style: const TextStyle(color: AppColors.error),
               ),
             );
@@ -50,7 +51,11 @@ class OportunidadesScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.md),
                     child: Text(
-                      'Última atualização: ${DateFormat('dd/MM/yyyy HH:mm').format(state.opportunities.first.lastUpdated.toLocal())}',
+                      l10n.marketLastUpdated(
+                        DateFormat('dd/MM/yyyy HH:mm').format(
+                          state.opportunities.first.lastUpdated.toLocal(),
+                        ),
+                      ),
                       style: AppTextStyles.labelSmall.copyWith(
                         color: Colors.grey,
                       ),
@@ -65,7 +70,7 @@ class OportunidadesScreen extends StatelessWidget {
                 _buildSortOptions(context, state),
                 const SizedBox(height: AppSpacing.lg),
                 ...state.filteredOpportunities.map(
-                  (o) => _buildOpportunityCard(o),
+                  (o) => _buildOpportunityCard(context, o),
                 ),
               ],
             ),
@@ -91,7 +96,7 @@ class OportunidadesScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Benchmarks Fixos',
+            l10n.marketBenchmarksTitle,
             style: AppTextStyles.titleMedium.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -102,23 +107,17 @@ class OportunidadesScreen extends StatelessWidget {
             children: [
               _buildBenchmarkItem(
                 context,
-                'CDI',
+                l10n.tooltipCDITitle,
                 '${benchmarks.cdiRate.toStringAsFixed(2)}%',
                 hasInfo: true,
+                description: l10n.tooltipCDIDesc,
               ),
               _buildBenchmarkItem(
                 context,
-                'Selic',
+                l10n.tooltipSelicTitle,
                 '${benchmarks.selicRate.toStringAsFixed(2)}%',
                 hasInfo: true,
                 description: l10n.tooltipSelicDesc,
-              ),
-              _buildBenchmarkItem(
-                context,
-                'IPCA (est.)',
-                '4.50%',
-                hasInfo: true,
-                description: l10n.tooltipIPCADesc,
               ),
             ],
           ),
@@ -134,16 +133,15 @@ class OportunidadesScreen extends StatelessWidget {
     bool hasInfo = false,
     String? description,
   }) {
-    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
           children: [
             Text(label, style: AppTextStyles.labelSmall),
-            if (hasInfo && (description != null || label == 'CDI'))
+            if (hasInfo && description != null)
               AppTooltipIcon(
                 title: label,
-                description: description ?? l10n.tooltipCDIDesc,
+                description: description,
                 iconSize: 12,
               ),
           ],
@@ -160,25 +158,26 @@ class OportunidadesScreen extends StatelessWidget {
   }
 
   Widget _buildFilters(BuildContext context, MarketOpportunityState state) {
+    final l10n = AppLocalizations.of(context)!;
     return Wrap(
       spacing: AppSpacing.sm,
       children: [
         FilterChip(
-          label: const Text('Todos'),
+          label: Text(l10n.marketFilterAll),
           selected: state.filter == MarketFilter.all,
           onSelected: (_) => context.read<MarketOpportunityBloc>().add(
             MarketFilterChanged(MarketFilter.all),
           ),
         ),
         FilterChip(
-          label: const Text('Ações'),
+          label: Text(l10n.marketFilterStocks),
           selected: state.filter == MarketFilter.stocks,
           onSelected: (_) => context.read<MarketOpportunityBloc>().add(
             MarketFilterChanged(MarketFilter.stocks),
           ),
         ),
         FilterChip(
-          label: const Text('FIIs'),
+          label: Text(l10n.marketFilterFiis),
           selected: state.filter == MarketFilter.fiis,
           onSelected: (_) => context.read<MarketOpportunityBloc>().add(
             MarketFilterChanged(MarketFilter.fiis),
@@ -189,20 +188,31 @@ class OportunidadesScreen extends StatelessWidget {
   }
 
   Widget _buildSortOptions(BuildContext context, MarketOpportunityState state) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildSortChip(context, 'Maior DY', MarketSort.dyDesc, state.sort),
+          _buildSortChip(
+            context,
+            l10n.marketSortHighestDy,
+            MarketSort.dyDesc,
+            state.sort,
+          ),
           const SizedBox(width: AppSpacing.sm),
           _buildSortChip(
             context,
-            'DY vs CDI',
+            l10n.marketSortDyVsCdi,
             MarketSort.dyVsCdiDesc,
             state.sort,
           ),
           const SizedBox(width: AppSpacing.sm),
-          _buildSortChip(context, 'Menor P/L', MarketSort.peAsc, state.sort),
+          _buildSortChip(
+            context,
+            l10n.marketSortLowestPe,
+            MarketSort.peAsc,
+            state.sort,
+          ),
         ],
       ),
     );
@@ -225,7 +235,8 @@ class OportunidadesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOpportunityCard(MarketOpportunity o) {
+  Widget _buildOpportunityCard(BuildContext context, MarketOpportunity o) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     return Card(
@@ -304,7 +315,10 @@ class OportunidadesScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('DY (ano)', style: AppTextStyles.labelSmall),
+                Text(
+                  l10n.marketDyColumnHeader,
+                  style: AppTextStyles.labelSmall,
+                ),
                 PrivacyText(
                   '${o.dividendYield.toStringAsFixed(2)}%',
                   style: AppTextStyles.labelLarge.copyWith(
@@ -314,7 +328,7 @@ class OportunidadesScreen extends StatelessWidget {
                 ),
                 if (o.dyVsCdi > 0)
                   PrivacyText(
-                    '${(o.dyVsCdi * 100).toStringAsFixed(0)}% do CDI',
+                    l10n.marketDyVsCdiPercent((o.dyVsCdi * 100).toInt()),
                     style: AppTextStyles.labelSmall.copyWith(fontSize: 10),
                   ),
               ],

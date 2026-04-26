@@ -185,7 +185,7 @@ class _ImportView extends StatelessWidget {
                   messenger.showSnackBar(
                     SnackBar(
                       content: CustomSnackbar(
-                        title: 'Error: $e',
+                        title: l10n.importErrorTitle(e.toString()),
                         backgroundColor: AppColors.error,
                       ),
                       backgroundColor: Colors.transparent,

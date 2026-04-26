@@ -134,7 +134,7 @@ class _HomeViewState extends State<_HomeView> {
                         color: Colors.white,
                       ),
                       const SizedBox(width: 8),
-                      Expanded(child: Text('Limite excedido: $limitNames')),
+                      Expanded(child: Text(l10n.homeLimitExceeded(limitNames))),
                     ],
                   ),
                   backgroundColor: AppColors.error,

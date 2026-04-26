@@ -104,6 +104,7 @@ class _GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final deadlineFormat = DateFormat.yMMMMd('pt_BR');
 
@@ -132,7 +133,9 @@ class _GoalCard extends StatelessWidget {
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       PrivacyText(
-                        'Meta: ${currencyFormat.format(goal.targetAmount)}',
+                        l10n.goalTargetAmountLabel(
+                          currencyFormat.format(goal.targetAmount),
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -142,13 +145,13 @@ class _GoalCard extends StatelessWidget {
                   icon: const Icon(Icons.add_circle_outline),
                   onPressed: () => _showContributionDialog(context),
                   color: AppColors.primary,
-                  tooltip: 'Adicionar contribuição',
+                  tooltip: l10n.goalContributionTooltip,
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline, size: 20),
                   onPressed: () => _showDeleteConfirm(context),
                   color: AppColors.error,
-                  tooltip: 'Excluir objetivo',
+                  tooltip: l10n.goalDeleteTooltip,
                 ),
               ],
             ),
@@ -178,7 +181,7 @@ class _GoalCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${goal.daysRemaining} dias restantes',
+                  l10n.goalDaysRemaining(goal.daysRemaining),
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
@@ -189,7 +192,7 @@ class _GoalCard extends StatelessWidget {
                 const Icon(Icons.calendar_today, size: 10, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
-                  'Até ${deadlineFormat.format(goal.deadline)}',
+                  l10n.goalDeadlineUntil(deadlineFormat.format(goal.deadline)),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     fontSize: 10,
                     color: Colors.grey,
@@ -204,11 +207,12 @@ class _GoalCard extends StatelessWidget {
   }
 
   void _showContributionDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final amountController = TextEditingController();
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Adicionar Contribuição'),
+        title: Text(l10n.goalContributionDialogTitle),
         content: SizedBox(
           width: 300,
           height: 100,
@@ -216,7 +220,7 @@ class _GoalCard extends StatelessWidget {
             create: (_) => AdaptiveTextFieldCubit(),
             child: AdaptiveTextField(
               controller: amountController,
-              hintText: 'Valor',
+              hintText: l10n.goalContributionValueLabel,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
@@ -228,12 +232,12 @@ class _GoalCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
+            child: Text(l10n.cancel),
           ),
           BlocProvider(
             create: (_) => AdaptiveButtonCubit(),
             child: AdaptiveButton(
-              text: 'Adicionar',
+              text: l10n.add,
               primaryColor: AppColors.primary,
               onPressed: () {
                 final amount = double.tryParse(amountController.text);
@@ -252,20 +256,21 @@ class _GoalCard extends StatelessWidget {
   }
 
   void _showDeleteConfirm(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Excluir Objetivo'),
-        content: Text('Deseja realmente excluir o objetivo "${goal.name}"?'),
+        title: Text(l10n.goalDeleteConfirmTitle),
+        content: Text(l10n.goalDeleteConfirmMessage(goal.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
+            child: Text(l10n.cancel),
           ),
           BlocProvider(
             create: (_) => AdaptiveButtonCubit(),
             child: AdaptiveButton(
-              text: 'Excluir',
+              text: l10n.delete,
               primaryColor: AppColors.error,
               onPressed: () {
                 context.read<GoalBloc>().add(DeleteGoal(goal.id));

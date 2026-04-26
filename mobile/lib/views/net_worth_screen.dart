@@ -1,3 +1,4 @@
+import 'package:afc/utils/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:afc/view_models/net_worth/net_worth_bloc.dart';
@@ -14,8 +15,9 @@ class NetWorthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Evolução do Patrimônio')),
+      appBar: AppBar(title: Text(l10n.calcPatrimonioEvolutionTitle)),
       body: BlocBuilder<NetWorthBloc, NetWorthState>(
         builder: (context, state) {
           if (state.status == NetWorthStatus.loading) {
@@ -23,11 +25,13 @@ class NetWorthScreen extends StatelessWidget {
           }
 
           if (state.status == NetWorthStatus.failure) {
-            return Center(child: Text('Erro: ${state.errorMessage}'));
+            return Center(
+              child: Text(l10n.calcErrorMessage(state.errorMessage ?? '')),
+            );
           }
 
           if (state.data.isEmpty) {
-            return const Center(child: Text('Nenhum dado disponível'));
+            return Center(child: Text(l10n.screenNoDataAvailable));
           }
 
           return RefreshIndicator(
@@ -37,11 +41,11 @@ class NetWorthScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(AppSpacing.lg),
               children: [
-                _buildSummary(state.data.last),
+                _buildSummary(context, state.data.last),
                 const SizedBox(height: AppSpacing.xl),
-                _buildEvolutionChart(state.data),
+                _buildEvolutionChart(context, state.data),
                 const SizedBox(height: AppSpacing.xl),
-                _buildDetailsList(state.data),
+                _buildDetailsList(context, state.data),
               ],
             ),
           );
@@ -50,7 +54,8 @@ class NetWorthScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummary(dynamic latest) {
+  Widget _buildSummary(BuildContext context, dynamic latest) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     return Card(
       elevation: 0,
@@ -62,7 +67,7 @@ class NetWorthScreen extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           children: [
-            Text('Patrimônio Líquido Atual', style: AppTextStyles.titleMedium),
+            Text(l10n.netWorthNetWorthLabel, style: AppTextStyles.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             PrivacyText(
               currencyFormat.format(latest.total),
@@ -75,8 +80,16 @@ class NetWorthScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildMiniStat('Ativos', latest.assets, AppColors.success),
-                _buildMiniStat('Passivos', latest.liabilities, AppColors.error),
+                _buildMiniStat(
+                  l10n.netWorthAssetsLabel,
+                  latest.assets,
+                  AppColors.success,
+                ),
+                _buildMiniStat(
+                  l10n.netWorthLiabilitiesLabel,
+                  latest.liabilities,
+                  AppColors.error,
+                ),
               ],
             ),
           ],
@@ -98,11 +111,15 @@ class NetWorthScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEvolutionChart(List<dynamic> data) {
+  Widget _buildEvolutionChart(BuildContext context, List<dynamic> data) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Evolução do Patrimônio', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.calcPatrimonioEvolutionTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Card(
           elevation: 0,
@@ -257,14 +274,18 @@ class NetWorthScreen extends StatelessWidget {
     return monthStr;
   }
 
-  Widget _buildDetailsList(List<dynamic> data) {
+  Widget _buildDetailsList(BuildContext context, List<dynamic> data) {
+    final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.simpleCurrency(locale: 'pt_BR');
     final reversedData = data.reversed.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Histórico Mensal', style: AppTextStyles.titleMedium),
+        Text(
+          l10n.netWorthMonthlyHistoryTitle,
+          style: AppTextStyles.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         ...reversedData.map(
           (p) => ListTile(
@@ -272,7 +293,9 @@ class NetWorthScreen extends StatelessWidget {
               _formatMonth(p.month),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: PrivacyText('Ativos: ${currencyFormat.format(p.assets)}'),
+            subtitle: PrivacyText(
+              l10n.netWorthAssetsSubtitle(currencyFormat.format(p.assets)),
+            ),
             trailing: PrivacyText(
               currencyFormat.format(p.total),
               style: TextStyle(
