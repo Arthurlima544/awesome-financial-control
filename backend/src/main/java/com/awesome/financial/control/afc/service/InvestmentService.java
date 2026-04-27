@@ -91,8 +91,15 @@ public class InvestmentService {
 
     @Transactional
     public InvestmentResponse createInvestment(InvestmentRequest request) {
-        Investment investment = new Investment();
-        updateEntityFromRequest(investment, request);
+        Investment investment =
+                Investment.builder()
+                        .name(request.name())
+                        .ticker(request.ticker())
+                        .type(request.type())
+                        .quantity(request.quantity())
+                        .avgCost(request.avgCost())
+                        .currentPrice(request.currentPrice())
+                        .build();
         Investment saved = investmentRepository.save(investment);
         return investmentMapper.toResponse(saved);
     }

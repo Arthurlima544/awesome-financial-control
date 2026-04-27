@@ -3,6 +3,8 @@ package com.awesome.financial.control.afc.model;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Feedback {
 
     @Id
@@ -33,6 +37,7 @@ public class Feedback {
     @Column(nullable = false)
     private String platform;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 }
