@@ -13,7 +13,9 @@ import jakarta.validation.constraints.Min;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,12 +38,17 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @GetMapping("/transactions")
-    @Operation(summary = "List transactions ordered by date descending; omit limit to get all")
-    public List<TransactionResponse> getTransactions(
-            @RequestParam(required = false) @Min(1) @Max(50) Integer limit) {
-        return limit != null
-                ? transactionService.getLastTransactions(limit)
-                : transactionService.getAllTransactions();
+    @Operation(
+            summary =
+                    "List transactions ordered by date descending; use limit for last N (dashboard) or page/size for pagination")
+    public ResponseEntity<?> getTransactions(
+            @RequestParam(required = false) @Min(1) @Max(50) Integer limit,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") @Max(100) int size) {
+        if (limit != null) {
+            return ResponseEntity.ok(transactionService.getLastTransactions(limit));
+        }
+        return ResponseEntity.ok(transactionService.getAllTransactions(PageRequest.of(page, size)));
     }
 
     @DeleteMapping("/transactions/{id}")
