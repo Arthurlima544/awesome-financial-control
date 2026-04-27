@@ -64,18 +64,12 @@ public class CategoryService {
     private void checkUniqueness(String name, UUID excludeId) {
         String normalized =
                 com.awesome.financial.control.afc.utils.StringNormalizer.normalize(name);
-        categoryRepository.findAll().stream()
-                .filter(c -> !c.getId().equals(excludeId))
-                .filter(
-                        c ->
-                                com.awesome.financial.control.afc.utils.StringNormalizer.normalize(
-                                                c.getName())
-                                        .equals(normalized))
-                .findAny()
-                .ifPresent(
-                        c -> {
-                            throw new com.awesome.financial.control.afc.exception.ConflictException(
-                                    "Category already exists: " + name);
-                        });
+        boolean exists =
+                excludeId == null
+                        ? categoryRepository.existsByNormalizedName(normalized)
+                        : categoryRepository.existsByNormalizedNameAndIdNot(normalized, excludeId);
+        if (exists) {
+            throw new ConflictException("Category already exists: " + name);
+        }
     }
 }

@@ -65,17 +65,7 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponse createTransaction(CreateTransactionRequest request) {
-        Transaction transaction =
-                Transaction.builder()
-                        .description(request.description())
-                        .amount(request.amount())
-                        .type(request.type())
-                        .category(request.category())
-                        .occurredAt(request.occurredAt())
-                        .isPassive(request.isPassive())
-                        .investmentId(request.investmentId())
-                        .build();
-        Transaction saved = transactionRepository.save(transaction);
+        Transaction saved = transactionRepository.save(toEntity(request));
         matchRecurringTransaction(saved);
         return transactionMapper.toResponse(saved);
     }
@@ -83,24 +73,22 @@ public class TransactionService {
     @Transactional
     public List<TransactionResponse> createTransactionsBulk(
             List<CreateTransactionRequest> requests) {
-        List<Transaction> transactions =
-                requests.stream()
-                        .map(
-                                request ->
-                                        Transaction.builder()
-                                                .description(request.description())
-                                                .amount(request.amount())
-                                                .type(request.type())
-                                                .category(request.category())
-                                                .occurredAt(request.occurredAt())
-                                                .isPassive(request.isPassive())
-                                                .investmentId(request.investmentId())
-                                                .build())
-                        .toList();
-
-        List<Transaction> saved = transactionRepository.saveAll(transactions);
+        List<Transaction> saved =
+                transactionRepository.saveAll(requests.stream().map(this::toEntity).toList());
         saved.forEach(this::matchRecurringTransaction);
         return saved.stream().map(transactionMapper::toResponse).toList();
+    }
+
+    private Transaction toEntity(CreateTransactionRequest request) {
+        return Transaction.builder()
+                .description(request.description())
+                .amount(request.amount())
+                .type(request.type())
+                .category(request.category())
+                .occurredAt(request.occurredAt())
+                .isPassive(request.isPassive())
+                .investmentId(request.investmentId())
+                .build();
     }
 
     @Transactional(readOnly = true)
