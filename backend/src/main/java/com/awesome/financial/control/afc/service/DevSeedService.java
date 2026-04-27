@@ -255,9 +255,14 @@ public class DevSeedService {
     }
 
     private Category saveCategory(String name) {
-        Category c = new Category();
-        c.setName(name);
-        return categoryRepository.save(c);
+        return categoryRepository
+                .findByName(name)
+                .orElseGet(
+                        () -> {
+                            Category c = new Category();
+                            c.setName(name);
+                            return categoryRepository.save(c);
+                        });
     }
 
     private void saveLimit(Category category, String amount) {
