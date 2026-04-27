@@ -6,6 +6,7 @@ import com.awesome.financial.control.afc.dto.LimitResponse;
 import com.awesome.financial.control.afc.dto.UpdateLimitRequest;
 import com.awesome.financial.control.afc.exception.ConflictException;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
+import com.awesome.financial.control.afc.mapper.LimitMapper;
 import com.awesome.financial.control.afc.model.Category;
 import com.awesome.financial.control.afc.model.Limit;
 import com.awesome.financial.control.afc.model.TransactionType;
@@ -30,6 +31,7 @@ public class LimitService {
     private final LimitRepository limitRepository;
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final LimitMapper limitMapper;
 
     @Transactional
     public LimitResponse createLimit(CreateLimitRequest request) {
@@ -41,7 +43,6 @@ public class LimitService {
                                         new ResourceNotFoundException(
                                                 "Category", request.categoryId()));
 
-        // Check if limit for this category already exists
         limitRepository.findAll().stream()
                 .filter(l -> l.getCategory().getId().equals(request.categoryId()))
                 .findAny()
@@ -53,29 +54,15 @@ public class LimitService {
                                             + "' already exists.");
                         });
 
-        Limit limit = Limit.builder().category(category).amount(request.amount()).build();
-        Limit saved = limitRepository.save(limit);
-
-        return LimitResponse.builder()
-                .id(saved.getId())
-                .categoryName(saved.getCategory().getName())
-                .amount(saved.getAmount())
-                .createdAt(saved.getCreatedAt())
-                .build();
+        Limit saved =
+                limitRepository.save(
+                        Limit.builder().category(category).amount(request.amount()).build());
+        return limitMapper.toResponse(saved);
     }
 
     @Transactional(readOnly = true)
     public List<LimitResponse> getAllLimits() {
-        return limitRepository.findAllWithCategory().stream()
-                .map(
-                        l ->
-                                LimitResponse.builder()
-                                        .id(l.getId())
-                                        .categoryName(l.getCategory().getName())
-                                        .amount(l.getAmount())
-                                        .createdAt(l.getCreatedAt())
-                                        .build())
-                .toList();
+        return limitRepository.findAllWithCategory().stream().map(limitMapper::toResponse).toList();
     }
 
     @Transactional
@@ -93,13 +80,7 @@ public class LimitService {
                         .findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Limit", id));
         limit.setAmount(request.amount());
-        Limit saved = limitRepository.save(limit);
-        return LimitResponse.builder()
-                .id(saved.getId())
-                .categoryName(saved.getCategory().getName())
-                .amount(saved.getAmount())
-                .createdAt(saved.getCreatedAt())
-                .build();
+        return limitMapper.toResponse(limitRepository.save(limit));
     }
 
     @Transactional(readOnly = true)
@@ -111,11 +92,13 @@ public class LimitService {
         return limitRepository.findAllWithCategory().stream()
                 .map(
                         limit -> {
-                            String categoryName = limit.getCategory().getName();
                             BigDecimal spent =
                                     transactionRepository
                                             .sumAmountByTypeAndCategoryAndOccurredAtBetween(
-                                                    TransactionType.EXPENSE, categoryName, from, to)
+                                                    TransactionType.EXPENSE,
+                                                    limit.getCategory().getName(),
+                                                    from,
+                                                    to)
                                             .orElse(BigDecimal.ZERO);
                             double percentage =
                                     limit.getAmount().compareTo(BigDecimal.ZERO) == 0
@@ -126,13 +109,7 @@ public class LimitService {
                                                             2,
                                                             RoundingMode.HALF_UP)
                                                     .doubleValue();
-                            return LimitProgressResponse.builder()
-                                    .id(limit.getId())
-                                    .categoryName(categoryName)
-                                    .limitAmount(limit.getAmount())
-                                    .spent(spent)
-                                    .percentage(percentage)
-                                    .build();
+                            return limitMapper.toProgressResponse(limit, spent, percentage);
                         })
                 .toList();
     }

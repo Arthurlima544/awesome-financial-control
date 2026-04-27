@@ -1,6 +1,7 @@
 package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.PassiveIncomeDashboardResponse;
+import com.awesome.financial.control.afc.mapper.PassiveIncomeMapper;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
@@ -20,6 +21,7 @@ public class PassiveIncomeService {
 
     private final TransactionRepository transactionRepository;
     private final InvestmentRepository investmentRepository;
+    private final PassiveIncomeMapper passiveIncomeMapper;
 
     @Transactional(readOnly = true)
     public PassiveIncomeDashboardResponse getDashboardData() {
@@ -82,15 +84,7 @@ public class PassiveIncomeService {
                     new PassiveIncomeDashboardResponse.MonthlyPassiveIncome(ym.toString(), amount));
         }
 
-        return PassiveIncomeDashboardResponse.builder()
-                .totalPassiveIncomeCurrentMonth(passiveIncome.setScale(2, RoundingMode.HALF_UP))
-                .totalExpensesCurrentMonth(expenses.setScale(2, RoundingMode.HALF_UP))
-                .freedomIndex(
-                        Math.min(
-                                freedomIndex,
-                                100.0)) // Cap at 100% for display usually, but could be more
-                .incomeByInvestment(incomeByInvestment)
-                .monthlyProgression(progression)
-                .build();
+        return passiveIncomeMapper.toDashboardResponse(
+                passiveIncome, expenses, freedomIndex, incomeByInvestment, progression);
     }
 }

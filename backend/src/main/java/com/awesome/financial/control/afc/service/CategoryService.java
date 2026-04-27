@@ -5,6 +5,7 @@ import com.awesome.financial.control.afc.dto.CreateCategoryRequest;
 import com.awesome.financial.control.afc.dto.UpdateCategoryRequest;
 import com.awesome.financial.control.afc.exception.ConflictException;
 import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
+import com.awesome.financial.control.afc.mapper.CategoryMapper;
 import com.awesome.financial.control.afc.model.Category;
 import com.awesome.financial.control.afc.repository.CategoryRepository;
 import com.awesome.financial.control.afc.repository.LimitRepository;
@@ -20,18 +21,11 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final LimitRepository limitRepository;
+    private final CategoryMapper categoryMapper;
 
     @Transactional(readOnly = true)
     public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll().stream()
-                .map(
-                        c ->
-                                CategoryResponse.builder()
-                                        .id(c.getId())
-                                        .name(c.getName())
-                                        .createdAt(c.getCreatedAt())
-                                        .build())
-                .toList();
+        return categoryRepository.findAll().stream().map(categoryMapper::toResponse).toList();
     }
 
     @Transactional
@@ -49,13 +43,8 @@ public class CategoryService {
     @Transactional
     public CategoryResponse createCategory(CreateCategoryRequest request) {
         checkUniqueness(request.name(), null);
-        Category category = Category.builder().name(request.name()).build();
-        Category saved = categoryRepository.save(category);
-        return CategoryResponse.builder()
-                .id(saved.getId())
-                .name(saved.getName())
-                .createdAt(saved.getCreatedAt())
-                .build();
+        Category saved = categoryRepository.save(categoryMapper.toEntity(request));
+        return categoryMapper.toResponse(saved);
     }
 
     @Transactional
@@ -69,11 +58,7 @@ public class CategoryService {
 
         category.setName(request.name());
         Category saved = categoryRepository.save(category);
-        return CategoryResponse.builder()
-                .id(saved.getId())
-                .name(saved.getName())
-                .createdAt(saved.getCreatedAt())
-                .build();
+        return categoryMapper.toResponse(saved);
     }
 
     private void checkUniqueness(String name, UUID excludeId) {
