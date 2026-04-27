@@ -52,3 +52,8 @@ Feature: Categories management
     When I delete the last created category
     Then the response status is 409
     And the response contains "Categoria possui um limite associado"
+
+  Scenario: Create a category with a duplicate name returns 409
+    Given a category named "Saúde"
+    When I create a category named "Saúde"
+    Then the response status is 409

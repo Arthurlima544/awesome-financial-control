@@ -13,6 +13,7 @@ public class BillMapper {
                 bill.getName(),
                 bill.getAmount(),
                 bill.getDueDay(),
-                bill.getCategoryId());
+                bill.getCategoryId(),
+                bill.getCreatedAt());
     }
 }

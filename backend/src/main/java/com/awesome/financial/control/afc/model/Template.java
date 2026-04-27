@@ -1,7 +1,7 @@
 package com.awesome.financial.control.afc.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,5 +27,5 @@ public class Template {
     private TransactionType type;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

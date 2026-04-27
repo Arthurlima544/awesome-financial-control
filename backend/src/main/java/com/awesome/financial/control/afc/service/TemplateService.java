@@ -6,7 +6,7 @@ import com.awesome.financial.control.afc.exception.ResourceNotFoundException;
 import com.awesome.financial.control.afc.mapper.TemplateMapper;
 import com.awesome.financial.control.afc.model.Template;
 import com.awesome.financial.control.afc.repository.TemplateRepository;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class TemplateService {
                         .description(request.description())
                         .category(request.category())
                         .type(request.type())
-                        .createdAt(LocalDateTime.now())
+                        .createdAt(Instant.now())
                         .build();
 
         return templateMapper.toDto(templateRepository.save(template));

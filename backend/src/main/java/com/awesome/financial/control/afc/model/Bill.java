@@ -7,11 +7,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "bills")
@@ -35,5 +37,9 @@ public class Bill {
     private Integer dueDay;
 
     @Column(name = "category_id")
-    private String categoryId;
+    private UUID categoryId;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 }

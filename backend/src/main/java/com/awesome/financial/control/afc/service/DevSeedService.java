@@ -255,12 +255,18 @@ public class DevSeedService {
     }
 
     private Category saveCategory(String name) {
-        Category c = new Category();
-        c.setName(name);
-        return categoryRepository.save(c);
+        return categoryRepository
+                .findByName(name)
+                .orElseGet(
+                        () -> {
+                            Category c = new Category();
+                            c.setName(name);
+                            return categoryRepository.save(c);
+                        });
     }
 
     private void saveLimit(Category category, String amount) {
+        if (limitRepository.existsByCategoryId(category.getId())) return;
         Limit l = new Limit();
         l.setCategory(category);
         l.setAmount(new BigDecimal(amount));
