@@ -18,13 +18,14 @@ public class FeedbackService {
 
     @Transactional
     public FeedbackResponse submitFeedback(FeedbackRequest request) {
-        Feedback feedback = new Feedback();
-        feedback.setUserId(request.userId());
-        feedback.setRating(request.rating());
-        feedback.setMessage(request.message());
-        feedback.setAppVersion(request.appVersion());
-        feedback.setPlatform(request.platform());
-
+        Feedback feedback =
+                Feedback.builder()
+                        .userId(request.userId())
+                        .rating(request.rating())
+                        .message(request.message())
+                        .appVersion(request.appVersion())
+                        .platform(request.platform())
+                        .build();
         Feedback saved = feedbackRepository.save(feedback);
         return feedbackMapper.toResponse(saved);
     }

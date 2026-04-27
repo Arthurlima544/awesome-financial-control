@@ -10,9 +10,15 @@ import org.springframework.stereotype.Component;
 public class RecurringTransactionMapper {
 
     public RecurringTransaction toEntity(RecurringTransactionRequest request) {
-        RecurringTransaction entity = new RecurringTransaction();
-        updateEntity(entity, request);
-        return entity;
+        return RecurringTransaction.builder()
+                .description(request.description())
+                .amount(request.amount())
+                .type(request.type())
+                .category(request.category())
+                .frequency(request.frequency())
+                .nextDueAt(request.nextDueAt())
+                .active(request.active())
+                .build();
     }
 
     public void updateEntity(RecurringTransaction entity, RecurringTransactionRequest request) {
@@ -40,12 +46,12 @@ public class RecurringTransactionMapper {
     }
 
     public Transaction toTransaction(RecurringTransaction recurring) {
-        Transaction t = new Transaction();
-        t.setDescription(recurring.getDescription());
-        t.setAmount(recurring.getAmount());
-        t.setType(recurring.getType());
-        t.setCategory(recurring.getCategory());
-        t.setOccurredAt(recurring.getNextDueAt()); // The due date becomes the occurred date
-        return t;
+        return Transaction.builder()
+                .description(recurring.getDescription())
+                .amount(recurring.getAmount())
+                .type(recurring.getType())
+                .category(recurring.getCategory())
+                .occurredAt(recurring.getNextDueAt())
+                .build();
     }
 }

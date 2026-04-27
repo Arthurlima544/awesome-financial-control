@@ -1,5 +1,6 @@
 package com.awesome.financial.control.afc.service;
 
+import com.awesome.financial.control.afc.dto.CreateTransactionRequest;
 import com.awesome.financial.control.afc.dto.SummaryResponse;
 import com.awesome.financial.control.afc.dto.TransactionResponse;
 import com.awesome.financial.control.afc.dto.UpdateTransactionRequest;
@@ -63,16 +64,17 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionResponse createTransaction(
-            com.awesome.financial.control.afc.dto.CreateTransactionRequest request) {
-        Transaction transaction = new Transaction();
-        transaction.setDescription(request.description());
-        transaction.setAmount(request.amount());
-        transaction.setType(request.type());
-        transaction.setCategory(request.category());
-        transaction.setOccurredAt(request.occurredAt());
-        transaction.setPassive(request.isPassive());
-        transaction.setInvestmentId(request.investmentId());
+    public TransactionResponse createTransaction(CreateTransactionRequest request) {
+        Transaction transaction =
+                Transaction.builder()
+                        .description(request.description())
+                        .amount(request.amount())
+                        .type(request.type())
+                        .category(request.category())
+                        .occurredAt(request.occurredAt())
+                        .isPassive(request.isPassive())
+                        .investmentId(request.investmentId())
+                        .build();
         Transaction saved = transactionRepository.save(transaction);
         matchRecurringTransaction(saved);
         return transactionMapper.toResponse(saved);
@@ -80,21 +82,20 @@ public class TransactionService {
 
     @Transactional
     public List<TransactionResponse> createTransactionsBulk(
-            List<com.awesome.financial.control.afc.dto.CreateTransactionRequest> requests) {
+            List<CreateTransactionRequest> requests) {
         List<Transaction> transactions =
                 requests.stream()
                         .map(
-                                request -> {
-                                    Transaction transaction = new Transaction();
-                                    transaction.setDescription(request.description());
-                                    transaction.setAmount(request.amount());
-                                    transaction.setType(request.type());
-                                    transaction.setCategory(request.category());
-                                    transaction.setOccurredAt(request.occurredAt());
-                                    transaction.setPassive(request.isPassive());
-                                    transaction.setInvestmentId(request.investmentId());
-                                    return transaction;
-                                })
+                                request ->
+                                        Transaction.builder()
+                                                .description(request.description())
+                                                .amount(request.amount())
+                                                .type(request.type())
+                                                .category(request.category())
+                                                .occurredAt(request.occurredAt())
+                                                .isPassive(request.isPassive())
+                                                .investmentId(request.investmentId())
+                                                .build())
                         .toList();
 
         List<Transaction> saved = transactionRepository.saveAll(transactions);
