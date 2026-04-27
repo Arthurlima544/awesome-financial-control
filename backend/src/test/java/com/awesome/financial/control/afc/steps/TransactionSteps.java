@@ -89,13 +89,27 @@ public class TransactionSteps {
 
     @And("the transaction list is empty")
     public void theTransactionListIsEmpty() {
-        assertThat((String) ctx.response.getBody()).isEqualTo("[]");
+        String body = (String) ctx.response.getBody();
+        if (body.startsWith("[")) {
+            assertThat(body).isEqualTo("[]");
+        } else {
+            assertThat(body).contains("\"content\":[]");
+        }
     }
 
     @And("the transaction list has {int} items")
     public void theTransactionListHasItems(int count) {
-        long commaCount = ((String) ctx.response.getBody()).chars().filter(c -> c == '{').count();
-        assertThat(commaCount).isEqualTo(count);
+        String body = (String) ctx.response.getBody();
+        long itemCount;
+        if (body.startsWith("[")) {
+            itemCount = body.chars().filter(c -> c == '{').count();
+        } else {
+            int start = body.indexOf("\"content\":[") + "\"content\":[".length();
+            int end = body.indexOf("]", start);
+            String content = body.substring(start, end);
+            itemCount = content.isBlank() ? 0 : content.chars().filter(c -> c == '{').count();
+        }
+        assertThat(itemCount).isEqualTo((long) count);
     }
 
     @And("the first transaction description is {string}")
