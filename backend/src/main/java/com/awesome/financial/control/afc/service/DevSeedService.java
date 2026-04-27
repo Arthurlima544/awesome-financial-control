@@ -266,6 +266,7 @@ public class DevSeedService {
     }
 
     private void saveLimit(Category category, String amount) {
+        if (limitRepository.existsByCategoryId(category.getId())) return;
         Limit l = new Limit();
         l.setCategory(category);
         l.setAmount(new BigDecimal(amount));
