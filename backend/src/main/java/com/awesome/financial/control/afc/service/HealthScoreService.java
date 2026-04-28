@@ -14,6 +14,8 @@ import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,18 +91,22 @@ public class HealthScoreService {
         List<Limit> limits = limitRepository.findAllWithCategory();
         if (limits.isEmpty()) return 25;
 
+        Map<String, BigDecimal> expensesByCategory =
+                transactionRepository
+                        .sumAmountByTypeGroupByCategoryAndOccurredAtBetween(
+                                TransactionType.EXPENSE, from, to)
+                        .stream()
+                        .collect(
+                                Collectors.toMap(
+                                        row -> (String) row[0], row -> (BigDecimal) row[1]));
+
         long exceededCount =
                 limits.stream()
                         .filter(
                                 limit -> {
                                     BigDecimal spent =
-                                            transactionRepository
-                                                    .sumAmountByTypeAndCategoryAndOccurredAtBetween(
-                                                            TransactionType.EXPENSE,
-                                                            limit.getCategory().getName(),
-                                                            from,
-                                                            to)
-                                                    .orElse(BigDecimal.ZERO);
+                                            expensesByCategory.getOrDefault(
+                                                    limit.getCategory().getName(), BigDecimal.ZERO);
                                     return spent.compareTo(limit.getAmount()) > 0;
                                 })
                         .count();

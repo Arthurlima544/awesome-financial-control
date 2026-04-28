@@ -85,9 +85,11 @@ class HealthScoreServiceTest {
         cat.setName("Food");
         Limit limit = Limit.builder().category(cat).amount(new BigDecimal("1000.00")).build();
         when(limitRepository.findAllWithCategory()).thenReturn(List.of(limit));
-        when(transactionRepository.sumAmountByTypeAndCategoryAndOccurredAtBetween(
-                        eq(TransactionType.EXPENSE), eq("Food"), any(), any()))
-                .thenReturn(Optional.of(new BigDecimal("1500.00")));
+        List<Object[]> foodExpenses = new java.util.ArrayList<>();
+        foodExpenses.add(new Object[] {"Food", new BigDecimal("1500.00")});
+        when(transactionRepository.sumAmountByTypeGroupByCategoryAndOccurredAtBetween(
+                        eq(TransactionType.EXPENSE), any(), any()))
+                .thenReturn(foodExpenses);
 
         // Goals: 1 goal, 0/1000 progress -> 0 pts
         Goal goal =

@@ -2,6 +2,7 @@ package com.awesome.financial.control.afc.service;
 
 import com.awesome.financial.control.afc.dto.PassiveIncomeDashboardResponse;
 import com.awesome.financial.control.afc.mapper.PassiveIncomeMapper;
+import com.awesome.financial.control.afc.model.Investment;
 import com.awesome.financial.control.afc.model.TransactionType;
 import com.awesome.financial.control.afc.repository.InvestmentRepository;
 import com.awesome.financial.control.afc.repository.TransactionRepository;
@@ -11,6 +12,8 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,28 +48,36 @@ public class PassiveIncomeService {
                                 * 100
                         : (passiveIncome.compareTo(BigDecimal.ZERO) > 0 ? 100.0 : 0.0);
 
-        Map<String, BigDecimal> incomeByInvestment = new HashMap<>();
         List<Object[]> grouped =
                 transactionRepository.sumPassiveIncomeGroupByInvestmentAndOccurredAtBetween(
                         from, to);
 
+        List<UUID> investmentIds =
+                grouped.stream()
+                        .map(row -> (UUID) row[0])
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .collect(Collectors.toList());
+
+        Map<UUID, Investment> investmentMap =
+                investmentRepository.findAllById(investmentIds).stream()
+                        .collect(Collectors.toMap(Investment::getId, Function.identity()));
+
+        Map<String, BigDecimal> incomeByInvestment = new HashMap<>();
         for (Object[] row : grouped) {
             UUID investmentId = (UUID) row[0];
             BigDecimal amount = (BigDecimal) row[1];
             String label = "Outros";
             if (investmentId != null) {
-                label =
-                        investmentRepository
-                                .findById(investmentId)
-                                .map(
-                                        inv -> {
-                                            if (inv.getTicker() != null
-                                                    && !inv.getTicker().isBlank()) {
-                                                return inv.getTicker();
-                                            }
-                                            return inv.getName();
-                                        })
-                                .orElse("Desconhecido");
+                Investment inv = investmentMap.get(investmentId);
+                if (inv != null) {
+                    label =
+                            (inv.getTicker() != null && !inv.getTicker().isBlank())
+                                    ? inv.getTicker()
+                                    : inv.getName();
+                } else {
+                    label = "Desconhecido";
+                }
             }
             incomeByInvestment.put(label, amount);
         }

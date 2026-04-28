@@ -63,6 +63,10 @@ public class StatsService {
         List<NetWorthPoint> result = new ArrayList<>(EVOLUTION_MONTHS);
 
         List<Investment> allInvestments = investmentRepository.findAll();
+        BigDecimal billsTotal =
+                billRepository.findAll().stream()
+                        .map(b -> b.getAmount())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         for (int i = EVOLUTION_MONTHS - 1; i >= 0; i--) {
             YearMonth month = current.minusMonths(i);
@@ -86,11 +90,8 @@ public class StatsService {
                             .map(inv -> inv.getQuantity().multiply(inv.getCurrentPrice()))
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            // 3. Liabilities (Current month's bills as a proxy)
-            BigDecimal liabilities =
-                    billRepository.findAll().stream()
-                            .map(b -> b.getAmount())
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            // 3. Liabilities (bills sum, constant across months)
+            BigDecimal liabilities = billsTotal;
 
             BigDecimal assets = cash.add(investments);
             BigDecimal total = assets.subtract(liabilities);

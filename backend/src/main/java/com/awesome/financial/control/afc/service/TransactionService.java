@@ -18,7 +18,10 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +34,13 @@ public class TransactionService {
     private final RecurringTransactionRepository recurringTransactionRepository;
 
     @Transactional(readOnly = true)
-    public List<TransactionResponse> getAllTransactions() {
-        return transactionRepository.findAllByOrderByOccurredAtDesc().stream()
-                .map(transactionMapper::toResponse)
-                .toList();
+    public Page<TransactionResponse> getAllTransactions(Pageable pageable) {
+        Pageable sorted =
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        Sort.by("occurredAt").descending());
+        return transactionRepository.findAll(sorted).map(transactionMapper::toResponse);
     }
 
     @Transactional
