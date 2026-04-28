@@ -27,3 +27,9 @@ Feature: Market Opportunities Feed
     When I request the market opportunities
     Then the data should be refreshed from the Brapi API
     And the new data should be saved to the database
+
+  Scenario: Get market benchmarks returns CDI and Selic rates
+    When I request the market benchmarks
+    Then the response status is 200
+    And the response should contain "cdiRate"
+    And the response should contain "selicRate"

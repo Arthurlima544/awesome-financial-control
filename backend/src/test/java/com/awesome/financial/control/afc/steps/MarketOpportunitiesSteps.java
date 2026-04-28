@@ -156,6 +156,11 @@ public class MarketOpportunitiesSteps {
         when(clock.getZone()).thenReturn(dateTime.getZone());
     }
 
+    @When("I request the market benchmarks")
+    public void iRequestTheMarketBenchmarks() {
+        context.response = restTemplate.getForEntity("/api/v1/market/benchmarks", String.class);
+    }
+
     @SuppressWarnings("unchecked")
     private List<MarketOpportunityDTO> getResponseBody() {
         return (List<MarketOpportunityDTO>) context.response.getBody();
