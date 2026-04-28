@@ -23,8 +23,11 @@ class TransactionListService {
   final Dio _dio;
 
   Future<List<TransactionModel>> fetchAll() async {
-    final response = await _dio.get<List<dynamic>>('/api/v1/transactions');
-    return response.data!
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/api/v1/transactions',
+    );
+    final content = response.data!['content'] as List<dynamic>;
+    return content
         .map((e) => TransactionModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
