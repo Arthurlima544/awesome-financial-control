@@ -52,3 +52,9 @@ Feature: Recurring Transactions management
   Scenario: Create a recurring rule with invalid data returns 422
     When I create a "MONTHLY" recurring transaction "" with amount -10.00 in category "Test" due in 5 days
     Then the response status is 422
+
+  Scenario: Process pending recurring transactions returns 202 and materialises due rule
+    Given I create a "DAILY" recurring transaction "Bill" with amount 50.00 in category "Bills" due in -1 days
+    When I trigger recurring processing and capture response
+    Then the response status is 202
+    And the database has 1 transactions

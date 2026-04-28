@@ -64,6 +64,16 @@ public class RecurringSteps {
         restTemplate.postForEntity("/api/v1/recurring/process", null, Void.class);
     }
 
+    @When("I trigger recurring processing and capture response")
+    public void iTriggerRecurringProcessingAndCaptureResponse() {
+        ctx.response =
+                restTemplate.exchange(
+                        "/api/v1/recurring/process",
+                        org.springframework.http.HttpMethod.POST,
+                        null,
+                        String.class);
+    }
+
     @And("the recurring rule {string} next due date is updated")
     public void theRecurringRuleNextDueDateIsUpdated(String description) {
         com.awesome.financial.control.afc.model.RecurringTransaction rule =

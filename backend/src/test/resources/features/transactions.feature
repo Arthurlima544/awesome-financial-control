@@ -64,3 +64,12 @@ Feature: Last transactions
     When I create a transaction with description "Dividend" amount 100.00 type INCOME linked to investment "00000000-0000-0000-0000-000000000000" occurred today
     Then the response status is 409
     And the response should contain "A operação viola uma restrição de integridade de dados"
+
+  Scenario: Bulk create 3 transactions returns 201 and array of 3
+    When I create the following transactions in bulk:
+      | description | amount | type    | category |
+      | Salary      | 5000   | INCOME  | Work     |
+      | Rent        | 1200   | EXPENSE | Housing  |
+      | Groceries   | 300    | EXPENSE | Food     |
+    Then the response status is 201
+    And the transaction list has 3 items
