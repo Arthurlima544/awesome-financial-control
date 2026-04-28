@@ -4,7 +4,6 @@ import com.awesome.financial.control.afc.dto.MarketBenchmarkDTO;
 import com.awesome.financial.control.afc.dto.MarketOpportunityDTO;
 import com.awesome.financial.control.afc.service.MarketService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,12 @@ public class MarketController {
 
     @GetMapping("/opportunities")
     @Operation(summary = "Get curated market opportunities (stocks and FIIs)")
-    @ApiResponse(responseCode = "200", description = "Market opportunities")
     public List<MarketOpportunityDTO> getOpportunities() {
         return marketService.getOpportunities();
     }
 
     @GetMapping("/benchmarks")
     @Operation(summary = "Get current market benchmarks (CDI, Selic)")
-    @ApiResponse(responseCode = "200", description = "Market benchmarks")
     public MarketBenchmarkDTO getBenchmarks() {
         return marketService.getBenchmarks();
     }

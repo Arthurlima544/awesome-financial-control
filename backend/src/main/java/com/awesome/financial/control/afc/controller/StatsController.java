@@ -3,7 +3,6 @@ package com.awesome.financial.control.afc.controller;
 import com.awesome.financial.control.afc.dto.MonthlyStatsResponse;
 import com.awesome.financial.control.afc.service.StatsService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +20,12 @@ public class StatsController {
 
     @GetMapping("/stats/monthly")
     @Operation(summary = "Monthly income and expenses for the last 6 months")
-    @ApiResponse(responseCode = "200", description = "Monthly statistics")
     public List<MonthlyStatsResponse> getMonthlyStats() {
         return statsService.getMonthlyStats();
     }
 
     @GetMapping("/stats/net-worth")
     @Operation(summary = "Net worth evolution for the last 12 months")
-    @ApiResponse(responseCode = "200", description = "Net worth evolution")
     public List<com.awesome.financial.control.afc.dto.NetWorthPoint> getNetWorthEvolution() {
         return statsService.getNetWorthEvolution();
     }

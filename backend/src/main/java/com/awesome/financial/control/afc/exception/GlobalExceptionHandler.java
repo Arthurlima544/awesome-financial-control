@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,7 +21,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Hidden
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -69,11 +75,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleDateTimeParse(DateTimeParseException ex, HttpServletRequest req) {
+    public ErrorResponse handleDateTimeParse(
+            DateTimeParseException ex, HttpServletRequest req, Locale locale) {
         log.warn("Invalid date-time format: {}", ex.getMessage());
         return new ErrorResponse(
                 "BAD_REQUEST",
-                "Formato de mês inválido. Use yyyy-MM (ex: 2024-03)",
+                messageSource.getMessage("error.date_parse", null, locale),
                 HttpStatus.BAD_REQUEST.value(),
                 req.getRequestURI());
     }
@@ -93,11 +100,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDataIntegrityViolation(
-            DataIntegrityViolationException ex, HttpServletRequest req) {
+            DataIntegrityViolationException ex, HttpServletRequest req, Locale locale) {
         log.warn("Data integrity violation: {}", ex.getMessage());
         return new ErrorResponse(
                 "CONFLICT",
-                "A operação viola uma restrição de integridade de dados",
+                messageSource.getMessage("error.data_integrity", null, locale),
                 HttpStatus.CONFLICT.value(),
                 req.getRequestURI());
     }
@@ -105,22 +112,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadable(
-            HttpMessageNotReadableException ex, HttpServletRequest req) {
+            HttpMessageNotReadableException ex, HttpServletRequest req, Locale locale) {
         log.warn("Malformed JSON request: {}", ex.getMessage());
         return new ErrorResponse(
                 "BAD_REQUEST",
-                "Malformed JSON request",
+                messageSource.getMessage("error.unreadable", null, locale),
                 HttpStatus.BAD_REQUEST.value(),
                 req.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleGeneric(Exception ex, HttpServletRequest req) {
+    public ErrorResponse handleGeneric(Exception ex, HttpServletRequest req, Locale locale) {
         log.error("Unexpected error", ex);
         return new ErrorResponse(
                 "INTERNAL_ERROR",
-                "An unexpected error occurred",
+                messageSource.getMessage("error.internal", null, locale),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 req.getRequestURI());
     }

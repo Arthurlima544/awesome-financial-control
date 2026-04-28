@@ -58,4 +58,4 @@ Feature: Savings Goals management
   Scenario: Send malformed JSON to create a goal returns 400
     When I send a POST request to "/api/v1/goals" with malformed JSON
     Then the response status is 400
-    And the response should contain "Malformed JSON request"
+    And the response should contain "BAD_REQUEST"
