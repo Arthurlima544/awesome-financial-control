@@ -2,6 +2,7 @@ package com.awesome.financial.control.afc.controller;
 
 import com.awesome.financial.control.afc.service.DevSeedService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -24,6 +25,7 @@ public class DevSeedController {
     @PostMapping("/seed")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Populate sample categories, limits and transactions (local only)")
+    @ApiResponse(responseCode = "201", description = "Sample data seeded")
     public void seed() {
         devSeedService.seed();
     }
@@ -31,6 +33,7 @@ public class DevSeedController {
     @DeleteMapping("/reset")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete all data (local only)")
+    @ApiResponse(responseCode = "204", description = "All data deleted")
     public void reset() {
         devSeedService.reset();
     }

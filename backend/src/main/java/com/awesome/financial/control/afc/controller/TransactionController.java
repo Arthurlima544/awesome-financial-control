@@ -1,11 +1,15 @@
 package com.awesome.financial.control.afc.controller;
 
 import com.awesome.financial.control.afc.dto.CreateTransactionRequest;
+import com.awesome.financial.control.afc.dto.ErrorResponse;
 import com.awesome.financial.control.afc.dto.SummaryResponse;
 import com.awesome.financial.control.afc.dto.TransactionResponse;
 import com.awesome.financial.control.afc.dto.UpdateTransactionRequest;
 import com.awesome.financial.control.afc.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -41,6 +45,7 @@ public class TransactionController {
     @Operation(
             summary =
                     "List transactions ordered by date descending; use limit for last N (dashboard) or page/size for pagination")
+    @ApiResponse(responseCode = "200", description = "List of transactions")
     public ResponseEntity<?> getTransactions(
             @RequestParam(required = false) @Min(1) @Max(50) Integer limit,
             @RequestParam(defaultValue = "0") int page,
@@ -54,12 +59,26 @@ public class TransactionController {
     @DeleteMapping("/transactions/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a transaction by id")
+    @ApiResponse(responseCode = "204", description = "Transaction deleted")
+    @ApiResponse(
+            responseCode = "404",
+            description = "Transaction not found",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     public void deleteTransaction(@PathVariable UUID id) {
         transactionService.deleteTransaction(id);
     }
 
     @PutMapping("/transactions/{id}")
     @Operation(summary = "Update a transaction")
+    @ApiResponse(responseCode = "200", description = "Transaction updated")
+    @ApiResponse(
+            responseCode = "404",
+            description = "Transaction not found",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validation error",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     public TransactionResponse updateTransaction(
             @PathVariable UUID id, @Valid @RequestBody UpdateTransactionRequest request) {
         return transactionService.updateTransaction(id, request);
@@ -68,6 +87,15 @@ public class TransactionController {
     @PostMapping("/transactions")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new transaction")
+    @ApiResponse(responseCode = "201", description = "Transaction created")
+    @ApiResponse(
+            responseCode = "409",
+            description = "Linked investment not found",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validation error",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     public TransactionResponse createTransaction(
             @Valid @RequestBody CreateTransactionRequest request) {
         return transactionService.createTransaction(request);
@@ -76,6 +104,11 @@ public class TransactionController {
     @PostMapping("/transactions/bulk")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create multiple transactions")
+    @ApiResponse(responseCode = "201", description = "Transactions created")
+    @ApiResponse(
+            responseCode = "422",
+            description = "Validation error",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     public List<TransactionResponse> createTransactionsBulk(
             @Valid @RequestBody List<CreateTransactionRequest> requests) {
         return transactionService.createTransactionsBulk(requests);
@@ -83,6 +116,7 @@ public class TransactionController {
 
     @GetMapping("/summary")
     @Operation(summary = "Current month financial summary: income, expenses, balance")
+    @ApiResponse(responseCode = "200", description = "Financial summary")
     public SummaryResponse getSummary() {
         return transactionService.getCurrentMonthSummary();
     }
