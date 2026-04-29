@@ -49,7 +49,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     } catch (e) {
-      emit(HomeError('Erro ao carregar painel'));
+      emit(HomeError(e.toString()));
     }
   }
 }

@@ -166,9 +166,10 @@ class _HomeViewState extends State<_HomeView> {
                     SkeletonList(itemCount: 3, padding: EdgeInsets.zero),
                   ],
                 ),
-                HomeError() => ErrorState(
+                HomeError(:final message) => ErrorState(
                   key: const ValueKey('homeError'),
-                  message: l10n.homeErrorLoading,
+                  message:
+                      '${l10n.homeErrorLoading}\nURL: ${AppConfig.apiBaseUrl}\nError: $message',
                   onRetry: () =>
                       context.read<HomeBloc>().add(const HomeDashboardLoaded()),
                 ),
@@ -303,8 +304,9 @@ class _HomeViewState extends State<_HomeView> {
                               CardSkeleton(),
                             ],
                           ),
-                          LimitError() => ErrorState(
-                            message: l10n.limitErrorLoading,
+                          LimitError(:final message) => ErrorState(
+                            message:
+                                '${l10n.limitErrorLoading}\nURL: ${AppConfig.apiBaseUrl}\nError: $message',
                             onRetry: () => context.read<LimitBloc>().add(
                               const LimitProgressLoaded(),
                             ),
