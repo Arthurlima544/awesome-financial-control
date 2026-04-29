@@ -21,6 +21,13 @@ class AppConfig {
 
   static String get apiBaseUrl {
     if (_apiBaseUrlEnv.isNotEmpty) return _apiBaseUrlEnv;
+
+    // Only allow fallback in local dev
+    assert(
+      isLocal,
+      'API_BASE_URL must be set for staging/prod builds via --dart-define',
+    );
+
     if (!kIsWeb && Platform.isAndroid) return 'http://10.0.2.2:8080';
     return 'http://localhost:8080';
   }
