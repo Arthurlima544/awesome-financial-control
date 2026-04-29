@@ -36,10 +36,10 @@ class AppConfig {
   static String get geminiModel => _geminiModelEnv;
 
   static AppFlavor get flavor => switch (_flavor) {
-    'staging' => AppFlavor.staging,
-    'prod' => AppFlavor.prod,
-    _ => AppFlavor.local,
-  };
+        'staging' => AppFlavor.staging,
+        'prod' => AppFlavor.prod,
+        _ => AppFlavor.local,
+      };
 
   static bool get isLocal => flavor == AppFlavor.local;
   static bool get isStaging => flavor == AppFlavor.staging;
