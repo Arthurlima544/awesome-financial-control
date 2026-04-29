@@ -25,7 +25,7 @@ class LimitBloc extends Bloc<LimitEvent, LimitState> {
       final limits = await _repository.getLimitsProgress();
       emit(LimitLoaded(limits));
     } catch (e) {
-      emit(LimitError('Erro ao carregar progresso dos limites'));
+      emit(LimitError(e.toString()));
     }
   }
 }
